@@ -1,0 +1,22 @@
+BasedOnStyle: LLVM
+IndentWidth: 4
+UseTab: Never
+AllowShortIfStatementsOnASingleLine: false
+IndentCaseLabels: true
+BreakBeforeBraces: Mozilla
+BreakStringLiterals: true
+ColumnLimit: 120
+AlignTrailingComments: true
+AlignEscapedNewlines: Right
+AlignConsecutiveMacros: true
+AllowShortBlocksOnASingleLine: Empty
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortEnumsOnASingleLine: true
+IncludeBlocks: Regroup
+PointerAlignment: Left
+AlignOperands: Align
+AlignConsecutiveAssignments: true
+IncludeCategories:
+  - Regex:           'WinSock2'
+    Priority:        3
+    SortPriority:   -1

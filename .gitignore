@@ -1,0 +1,33 @@
+# Ignore object and library files
+*.o
+*.a
+*.obj
+*.lib
+# Ignore build folders
+build/
+out/
+
+# Ignore User-specific files
+*.rsuser
+*.suo
+*.user
+
+# Ignore VS cache/options directory
+.vs/
+
+# Ignore VSCode user settings
+.vscode
+
+# Ignore cmake stuff
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeSettings.json
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
