@@ -16,7 +16,3 @@ IncludeBlocks: Regroup
 PointerAlignment: Left
 AlignOperands: Align
 AlignConsecutiveAssignments: true
-IncludeCategories:
-  - Regex:           'WinSock2'
-    Priority:        3
-    SortPriority:   -1
