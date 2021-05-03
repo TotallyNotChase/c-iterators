@@ -8,6 +8,8 @@ project(iterators LANGUAGES C)
 # Set C language standard
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED True)
+# Disable non standard extensions
+set(CMAKE_C_EXTENSIONS OFF)
 
 # Don't skimp on warnings
 add_compile_options(-Wall -Wextra -Wpedantic)
