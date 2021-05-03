@@ -17,11 +17,16 @@ if(WIN32)
     # But ignore the stupid "Use *_s function instead of deprecated function bla bla" warning
     add_compile_options(-Wno-deprecated-declarations)
 endif()
-# Also add link time optimization (if possible) in release mode
+
+# Add link time optimization (if possible) in release mode
 if(CMAKE_BUILD_TYPE MATCHES Release)
   include(CheckIPOSupported)
-  check_ipo_supported(RESULT supported OUTPUT error)
-  set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+  check_ipo_supported(RESULT supported OUTPUT output)
+  if(supported)
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+  else()
+    message(WARNING "IPO is not supported: ${output}")
+  endif()
 endif()
 
 ##################################################
