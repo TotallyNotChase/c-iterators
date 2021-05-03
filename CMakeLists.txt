@@ -12,9 +12,13 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 set(CMAKE_C_EXTENSIONS OFF)
 
 # Don't skimp on warnings
-add_compile_options(-Wall -Wextra -Wpedantic)
+if(MSVC)
+  add_compile_options(/W4 /WX)
+else()
+  add_compile_options(-Wall -Wextra -pedantic -Werror)
+endif()
 if(WIN32)
-    # But ignore the stupid "Use *_s function instead of deprecated function bla bla" warning
+    # But ignore the Microsoft "Use *_s functions" warning
     add_compile_options(-Wno-deprecated-declarations)
 endif()
 
