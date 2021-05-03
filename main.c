@@ -1,32 +1,35 @@
-﻿#include "func_iter.h"
+﻿#include "array_iterable.h"
+#include "func_iter.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
-typedef struct
+/* Generic function for any iterator of element type int */
+static void print_intit(Iterator(Int) it)
 {
-    size_t i;
-    size_t size;
-} ArrItCtx;
-
-static Maybe(Int) intarrnxt(int** arr, ArrItCtx* ctx)
-{
-    return ctx->i < ctx->size ? (Maybe(Int)){.tag = Some, .val = (*arr)[ctx->i++]} : (Maybe(Int)){0};
+    while (1) {
+        Maybe(Int) res = it.inst.next(it.self, it.inst.ctx);
+        if (is_nothing(res)) {
+            break;
+        }
+        printf("%d ", res.val);
+    }
+    puts("\n");
 }
 
-instance_iterator(int*, Int, ArrItCtx, intarrnxt, prep_intarr_itr)
+static void print_intarr(int** arr, size_t sz)
+{
+    ArrItCtx ctx      = {.size = sz};
+    IntIterator intit = prep_intarr_itr(arr, &ctx);
+    print_intit(intit);
+}
 
 int main(void)
 {
-    int arr[]         = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-    int* parr         = arr;
-    IntIterator intit = prep_intarr_itr(&parr);
-    ArrItCtx ctx      = {.size = sizeof(arr) / sizeof(*arr)};
-    while (1) {
-        Maybe(Int) res = intit.inst.next(intit.self, &ctx);
-        if (res.tag == None) {
-            break;
-        }
-        printf("%d\n", res.val);
-    }
+    /* Use array's iterator instance */
+    int arr[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    int* parr = arr;
+    print_intarr(&parr, sizeof(arr) / sizeof(*arr));
+
     return 0;
 }
