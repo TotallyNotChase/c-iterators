@@ -9,7 +9,7 @@
 
 #define Iterator(ElmntTypename) ElmntTypename##Iterator
 
-#define instance_iterator(ItrType, ElmntTypename, CtxType, next_f, Name)                                               \
+#define impl_iterator(ItrType, ElmntTypename, CtxType, next_f, Name)                                                   \
     ElmntTypename##Iterator Name(ItrType* x, CtxType* init_ctx)                                                        \
     {                                                                                                                  \
         Maybe(ElmntTypename) (*const next_)(ItrType * self, CtxType * ctx) = (next_f);                                 \
