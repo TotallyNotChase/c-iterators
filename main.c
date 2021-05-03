@@ -8,7 +8,7 @@
 static void print_intit(Iterator(Int) it)
 {
     while (1) {
-        Maybe(Int) res = it.inst.next(it.self, it.inst.ctx);
+        Maybe(Int) res = it.next(it.self, it.ctx);
         if (is_nothing(res)) {
             break;
         }
