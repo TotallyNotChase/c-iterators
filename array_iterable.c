@@ -6,7 +6,7 @@
 
 static Maybe(Int) intarrnxt(int** arr, ArrItCtx* ctx)
 {
-    return ctx->i < ctx->size ? (Maybe(Int)){.tag = Some, .val = (*arr)[ctx->i++]} : (Maybe(Int)){0};
+    return ctx->i < ctx->size ? Some((*arr)[ctx->i++], Int) : Nothing(Int);
 }
 
 instance_iterator(int*, Int, ArrItCtx, intarrnxt, prep_intarr_itr)
