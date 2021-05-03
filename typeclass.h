@@ -1,10 +1,10 @@
 #ifndef IT_TYPECLASS_H
 #define IT_TYPECLASS_H
 
-#define typeclass(funcs, Name)                                                                                         \
+#define typeclass(membs, Name)                                                                                         \
     typedef struct                                                                                                     \
     {                                                                                                                  \
-        funcs;                                                                                                         \
+        membs;                                                                                                         \
     } Name##Instance;                                                                                                  \
     typedef struct                                                                                                     \
     {                                                                                                                  \
