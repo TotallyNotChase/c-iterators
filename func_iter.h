@@ -5,8 +5,12 @@
 #include "maybe.h"
 #include "typeclass.h"
 
+typedef char* string;
+
 DefineMaybe(int, Int)
+DefineMaybe(string, Str)
 
 DeclareIteratorOf(Int);
+DeclareIteratorOf(Str);
 
 #endif /* !FUNC_ITER_H */

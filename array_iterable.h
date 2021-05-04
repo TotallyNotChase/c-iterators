@@ -12,5 +12,6 @@ typedef struct
 } ArrItCtx;
 
 Iterator(Int) prep_intarr_itr(int** x, ArrItCtx* init_ctx);
+Iterator(Str) prep_strarr_itr(string** x, ArrItCtx* init_ctx);
 
 #endif /* !IT_ARR_ITRBLE_H */
