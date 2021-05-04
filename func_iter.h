@@ -5,7 +5,7 @@
 #include "maybe.h"
 #include "typeclass.h"
 
-DefineMaybe(int, Int);
+DefineMaybe(int, Int)
 
 DeclareIteratorOf(Int);
 
