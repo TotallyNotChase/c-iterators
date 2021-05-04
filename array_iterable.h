@@ -2,7 +2,6 @@
 #define IT_ARR_ITRBLE_H
 
 #include "func_iter.h"
-#include "iterator.h"
 
 #include <stdlib.h>
 
