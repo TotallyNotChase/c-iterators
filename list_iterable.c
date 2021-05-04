@@ -8,11 +8,6 @@
 static IntNode* create_intnode(int val)
 {
     IntNode* node = malloc(sizeof(*node));
-    if (node == NULL) {
-        /* Exiting here for demonstration purposes, don't exit in real code */
-        fputs("Memory allocation failure", stderr);
-        exit(EXIT_FAILURE);
-    }
     node->val  = val;
     node->next = NULL;
     return node;
