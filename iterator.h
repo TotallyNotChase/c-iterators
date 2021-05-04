@@ -12,7 +12,7 @@ upto the user to decide, however the type names for each type **must** be consis
 given ElmntTypename **must** also exist
 */
 #define DeclareIteratorOf(ElmntTypename)                                                                               \
-    typeclass(Maybe(ElmntTypename) (*next)(void* self, void* ctx); void* ctx) ElmntTypename##Iterator
+    typeclass(Maybe(ElmntTypename) (*const next)(void* self, void* ctx); void* ctx) ElmntTypename##Iterator
 
 /*
 Convenience macro to get the name of the Iterator with given element type name
@@ -41,7 +41,7 @@ the impl is for an array of ints
     {                                                                                                                  \
         Maybe(ElmntTypename) (*const next_)(ItrType * self, CtxType * ctx) = (next_f);                                 \
         return (ElmntTypename##Iterator){                                                                              \
-            .next = (Maybe(ElmntTypename)(*)(void*, void*))next_, .ctx = init_ctx, .self = x};                         \
+            .next = (Maybe(ElmntTypename)(*const)(void*, void*))next_, .ctx = init_ctx, .self = x};                    \
     }
 
 #endif /* !IT_ITERATOR_H */
