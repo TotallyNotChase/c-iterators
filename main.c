@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* Generic function for any iterator of element type int */
+/* Generic function to sum values from an iterator yielding int */
 static int sum_intit(Iterator(Int) it)
 {
     int sum = 0;
@@ -21,15 +21,15 @@ static int sum_intit(Iterator(Int) it)
 
 static int sum_intarr(int** arr, size_t sz)
 {
-    ArrItCtx ctx      = {.size = sz};
-    IntIterator intit = prep_intarr_itr(arr, &ctx);
+    ArrItCtx ctx        = {.size = sz};
+    Iterator(Int) intit = prep_intarr_itr(arr, &ctx);
     return sum_intit(intit);
 }
 
 static int sum_intlist(IntList* list)
 {
-    IntListItCtx ctx  = {.curr = *list};
-    IntIterator intit = prep_intlist_itr(list, &ctx);
+    IntListItCtx ctx    = {.curr = *list};
+    Iterator(Int) intit = prep_intlist_itr(list, &ctx);
     return sum_intit(intit);
 }
 
