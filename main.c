@@ -33,45 +33,53 @@ static IntList list_from_intit(Iterator(Int) it)
     }
 }
 
-static int sum_intarr(int** arr, size_t sz)
+static Iterator(Int) intit_from_arr(int** arr, size_t sz)
 {
-    ArrItCtx ctx        = {.size = sz};
-    Iterator(Int) intit = prep_intarr_itr(arr, &ctx);
-    return sum_intit(intit);
+    ArrItCtx* ctx       = calloc(1, sizeof(*ctx));
+    ctx->size           = sz;
+    Iterator(Int) intit = prep_intarr_itr(arr, ctx);
+    return intit;
 }
 
-static int sum_intlist(IntList* list)
+static Iterator(Int) intit_from_list(IntList* list)
 {
-    IntListItCtx ctx    = {.curr = *list};
-    Iterator(Int) intit = prep_intlist_itr(list, &ctx);
-    return sum_intit(intit);
+    IntListItCtx* ctx   = calloc(1, sizeof(*ctx));
+    ctx->curr           = *list;
+    Iterator(Int) intit = prep_intlist_itr(list, ctx);
+    return intit;
 }
 
 int main(void)
 {
     /* Use array's iterator instance */
-    int arr[]        = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-    int* parr        = arr;
-    int const sumarr = sum_intarr(&parr, sizeof(arr) / sizeof(*arr));
+    int arr[]           = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    int* parr           = arr;
+    Iterator(Int) arrit = intit_from_arr(&parr, sizeof(arr) / sizeof(*arr));
+    int const sumarr    = sum_intit(arrit);
     printf("Sum of array values: %d\n", sumarr);
+    free(arrit.ctx);
 
     /* Use list's iterator instance */
-    IntList list      = prepend_intnode(prepend_intnode(prepend_intnode(prepend_intnode(Nil, 5), 6), 1), 9);
-    int const sumlist = sum_intlist(&list);
+    IntList list         = prepend_intnode(prepend_intnode(prepend_intnode(prepend_intnode(Nil, 5), 6), 1), 9);
+    Iterator(Int) listit = intit_from_list(&list);
+    int const sumlist    = sum_intit(listit);
     printf("Sum of list values: %d\n", sumlist);
     list = free_intlist(list);
+    free(listit.ctx);
 
     /* Use an iterator to build a list */
     /* Prepare an iterator from an array */
-    int arrex[]         = {42, 3, 17, 25};
-    int* parrex         = arrex;
-    ArrItCtx arrctx     = {.size = sizeof(arrex) / sizeof(*arrex)};
-    Iterator(Int) intit = prep_intarr_itr(&parrex, &arrctx);
+    int arrex[]           = {42, 3, 17, 25};
+    int* parrex           = arrex;
+    Iterator(Int) arrexit = intit_from_arr(&parrex, sizeof(arrex) / sizeof(*arrex));
     /* Use the iterator to build the list */
-    IntList list_from_it      = list_from_intit(intit);
-    int const sumlist_from_it = sum_intlist(&list_from_it);
-    printf("Sum of list from iterator values: %d\n", sumlist_from_it);
-    list_from_it = free_intlist(list_from_it);
+    IntList listex         = list_from_intit(arrexit);
+    Iterator(Int) listexit = intit_from_list(&listex);
+    int const sumlistex    = sum_intit(listexit);
+    printf("Sum of list from iterator values: %d\n", sumlistex);
+    listex = free_intlist(listex);
+    free(arrexit.ctx);
+    free(listexit.ctx);
 
     return 0;
 }
