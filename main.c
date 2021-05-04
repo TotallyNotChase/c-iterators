@@ -19,6 +19,18 @@ static int sum_intit(Iterator(Int) it)
     }
 }
 
+static void print_strit(Iterator(Str) it)
+{
+    while (1) {
+        Maybe(Str) res = it.next(it.self, it.ctx);
+        if (is_nothing(res)) {
+            puts("");
+            return;
+        }
+        printf("%s ", from_just(res, Str));
+    }
+}
+
 /* Generic function to create IntList from any iterator yielding int */
 static IntList list_from_intit(Iterator(Int) it)
 {
@@ -41,6 +53,14 @@ static Iterator(Int) intit_from_arr(int** arr, size_t sz)
     return intit;
 }
 
+static Iterator(Str) strit_from_arr(string** arr, size_t sz)
+{
+    ArrItCtx* ctx       = calloc(1, sizeof(*ctx));
+    ctx->size           = sz;
+    Iterator(Str) strit = prep_strarr_itr(arr, ctx);
+    return strit;
+}
+
 static Iterator(Int) intit_from_list(IntList* list)
 {
     IntListItCtx* ctx   = calloc(1, sizeof(*ctx));
@@ -52,12 +72,19 @@ static Iterator(Int) intit_from_list(IntList* list)
 int main(void)
 {
     /* Use array's iterator instance */
+    /* For int array */
     int arr[]           = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     int* parr           = arr;
     Iterator(Int) arrit = intit_from_arr(&parr, sizeof(arr) / sizeof(*arr));
     int const sumarr    = sum_intit(arrit);
     printf("Sum of array values: %d\n", sumarr);
     free(arrit.ctx);
+    /* For string array */
+    string strarr[]        = {"fear", "surprise", "ruthless-efficiency"};
+    string* pstrarr        = strarr;
+    Iterator(Str) strarrit = strit_from_arr(&pstrarr, 3);
+    print_strit(strarrit);
+    free(strarrit.ctx);
 
     /* Use list's iterator instance */
     IntList list         = prepend_intnode(prepend_intnode(prepend_intnode(prepend_intnode(Nil, 5), 6), 1), 9);
