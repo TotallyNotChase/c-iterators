@@ -12,7 +12,7 @@ static void print_intit(Iterator(Int) it)
         if (is_nothing(res)) {
             break;
         }
-        printf("%d ", res.val);
+        printf("%d ", from_just(res, Int));
     }
     puts("\n");
 }
