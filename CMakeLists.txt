@@ -37,4 +37,4 @@ endif()
 # Configure target for building the executable
 
 # Add the main test executable
-add_executable(iterators "func_iter.h" "main.c" "typeclass.h" "maybe.h" "iterator.h" "array_iterable.c" "array_iterable.h")
+add_executable(iterators "typeclass.h" "maybe.h" "iterator.h" "array_iterable.h" "list_iterable.h" "func_iter.h" "main.c" "array_iterable.c" "list_iterable.c")
