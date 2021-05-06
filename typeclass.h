@@ -2,16 +2,27 @@
 #define IT_TYPECLASS_H
 
 /*
-Defines a typeclass with the given members/functions and the self argument
+Defines a typeclass with the given functions
 
-@param membs - A semicolon separated list of typeclass members.
-These are usually functions that take a `void* self` (or more arguments)
+@param funcs - A semicolon separated list of typeclass functions
+These are usually functions that take the `self` from the typeclass instance (or more arguments)
 */
-#define typeclass(membs)                                                                                               \
-    typedef struct                                                                                                     \
+#define typeclass(funcs, Name)                                                                                         \
+    struct Name                                                                                                        \
     {                                                                                                                  \
-        membs;                                                                                                         \
+        funcs;                                                                                                         \
+    }
+
+/*
+Defines a typeclass instance for the given typeclass
+
+This just contains a `void* self` member and the typeclass itself
+*/
+#define typeclass_instance(TypeclassName, Name)                                                                        \
+    struct Name                                                                                                        \
+    {                                                                                                                  \
         void* self;                                                                                                    \
+        TypeclassName tc;                                                                                              \
     }
 
 #endif /* !IT_TYPECLASS_H */

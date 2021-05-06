@@ -13,14 +13,24 @@ typeclass
 #define Iterator(ElmntTypename) ElmntTypename##Iterator
 
 /*
-Convenience macro to declare an Iterator typeclass of a specific element type
+Convenience macro to get the name of the Iterator with given element type name
+
+@param ElmntTypename - The "canonical" type name of a type, must be the same type name used while declaring the iterator
+typeclass
+*/
+#define Iterable(ElmntTypename) ElmntTypename##Iterable
+
+/*
+Convenience macro to define an Iterator typeclass of a specific element type
 
 @param ElmntTypename - The "canonical" type name of the type this iterator will yield, this is purely subjective and
 upto the user to decide, however the type names for each type **must** be consistent. A Maybe(ElmntTypename) for the
 given ElmntTypename **must** also exist
 */
-#define DeclareIteratorOf(ElmntTypename)                                                                               \
-    typeclass(Maybe(ElmntTypename) (*const next)(void* self, void* ctx); void* ctx) Iterator(ElmntTypename)
+#define DefineIteratorOf(ElmntTypename)                                                                               \
+    typedef typeclass(Maybe(ElmntTypename) (*const next)(void* self), Iterator(ElmntTypename##_))                      \
+        Iterator(ElmntTypename);                                                                                       \
+    typedef typeclass_instance(Iterator(ElmntTypename), Iterable(ElmntTypename##_)) Iterable(ElmntTypename)
 
 /*
 Implement a wrapper function for a specific type, which takes in a value of that type and wraps it in an `Iterator`
@@ -36,12 +46,12 @@ ints
 @param ElmntTypename - The "canonical" type name of the element of the type this impl is for - e.g type name of `int` if
 the impl is for an array of ints
 */
-#define impl_iterator(ItrbleType, ElmntTypename, CtxType, next_f, Name)                                                \
-    Iterator(ElmntTypename) Name(ItrbleType* x, CtxType* init_ctx)                                                     \
+#define impl_iterator(ItrbleType, ElmntTypename, next_f, Name)                                                         \
+    Iterable(ElmntTypename) Name(ItrbleType x)                                                                         \
     {                                                                                                                  \
-        Maybe(ElmntTypename) (*const next_)(ItrbleType * self, CtxType * ctx) = (next_f);                              \
-        return (ElmntTypename##Iterator){                                                                              \
-            .next = (Maybe(ElmntTypename)(*const)(void*, void*))next_, .ctx = init_ctx, .self = x};                    \
+        Maybe(ElmntTypename) (*const next_)(ItrbleType self) = (next_f);                                               \
+        (void)next_;                                                                                                   \
+        return (Iterable(ElmntTypename)){.tc = {.next = (Maybe(ElmntTypename)(*const)(void*))next_f}, .self = x};      \
     }
 
 #endif /* !IT_ITERATOR_H */
