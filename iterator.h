@@ -27,7 +27,7 @@ Convenience macro to define an Iterator typeclass of a specific element type
 upto the user to decide, however the type names for each type **must** be consistent. A Maybe(ElmntTypename) for the
 given ElmntTypename **must** also exist
 */
-#define DefineIteratorOf(ElmntTypename)                                                                               \
+#define DefineIteratorOf(ElmntTypename)                                                                                \
     typedef typeclass(Maybe(ElmntTypename) (*const next)(void* self), Iterator(ElmntTypename##_))                      \
         Iterator(ElmntTypename);                                                                                       \
     typedef typeclass_instance(Iterator(ElmntTypename), Iterable(ElmntTypename##_)) Iterable(ElmntTypename)

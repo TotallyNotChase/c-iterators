@@ -8,8 +8,8 @@
 static IntNode* create_intnode(int val)
 {
     IntNode* node = malloc(sizeof(*node));
-    node->val  = val;
-    node->next = NULL;
+    node->val     = val;
+    node->next    = NULL;
     return node;
 }
 
@@ -31,7 +31,7 @@ IntList free_intlist(IntNode* head)
     return Nil;
 }
 
-static Maybe(Int) intlistnxt(ListIter(Int)* x)
+static Maybe(Int) intlistnxt(ListIter(Int) * x)
 {
     (void)x;
     IntNode const* node = x->curr;
@@ -42,4 +42,4 @@ static Maybe(Int) intlistnxt(ListIter(Int)* x)
     return Just(node->val, Int);
 }
 
-impl_iterator(ListIter(Int)*, Int, intlistnxt, prep_intlist_itr)
+impl_iterator(ListIter(Int) *, Int, intlistnxt, prep_intlist_itr)
