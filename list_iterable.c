@@ -31,14 +31,13 @@ IntList free_intlist(IntNode* head)
     return Nil;
 }
 
-static Maybe(Int) intlistnxt(ListIter(Int) * x)
+static Maybe(Int) intlistnxt(ListIter(Int) * self)
 {
-    (void)x;
-    IntNode const* node = x->curr;
+    IntNode const* node = self->curr;
     if (node == Nil) {
         return Nothing(Int);
     }
-    x->curr = node->next;
+    self->curr = node->next;
     return Just(node->val, Int);
 }
 

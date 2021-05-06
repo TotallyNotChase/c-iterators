@@ -4,16 +4,16 @@
 
 #include <stdlib.h>
 
-static Maybe(Int) intarrnxt(ArrIter(Int) * arriter)
+static Maybe(Int) intarrnxt(ArrIter(Int) * self)
 {
-    int const* const arr = arriter->arr;
-    return arriter->i < arriter->size ? Just(arr[arriter->i++], Int) : Nothing(Int);
+    int const* const arr = self->arr;
+    return self->i < self->size ? Just(arr[self->i++], Int) : Nothing(Int);
 }
 
-static Maybe(Str) strarrnxt(ArrIter(Str) * arriter)
+static Maybe(Str) strarrnxt(ArrIter(Str) * self)
 {
-    string const* const arr = arriter->arr;
-    return arriter->i < arriter->size ? Just(arr[arriter->i++], Str) : Nothing(Str);
+    string const* const arr = self->arr;
+    return self->i < self->size ? Just(arr[self->i++], Str) : Nothing(Str);
 }
 
 // clang-format off
