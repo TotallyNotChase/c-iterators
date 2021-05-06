@@ -7,10 +7,12 @@
 
 typedef char* string;
 
+// clang-format off
 DefineMaybe(int, Int)
 DefineMaybe(string, Str)
 
-DeclareIteratorOf(Int);
-DeclareIteratorOf(Str);
+DefineIteratorOf(Int);
+DefineIteratorOf(Str);
+// clang-format on
 
 #endif /* !FUNC_ITER_H */
