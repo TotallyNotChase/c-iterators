@@ -8,7 +8,7 @@
 
 #define Cons prepend_intnode
 
-/* Generic function to sum values from any iterator yielding int */
+/* Generic function to sum values from any iterable yielding int */
 static int sum_intit(Iterable(Int) it)
 {
     int sum = 0;
@@ -21,6 +21,7 @@ static int sum_intit(Iterable(Int) it)
     }
 }
 
+/* Generic function to print values from any iterable yielding string */
 static void print_strit(Iterable(Str) it)
 {
     while (1) {
@@ -33,7 +34,7 @@ static void print_strit(Iterable(Str) it)
     }
 }
 
-/* Generic function to create IntList from any iterator yielding int */
+/* Generic function to create IntList from any iterable yielding int */
 static IntList list_from_intit(Iterable(Int) it)
 {
     IntList list = Nil;
