@@ -3,7 +3,6 @@
 
 #include "iterator.h"
 #include "maybe.h"
-#include "typeclass.h"
 
 typedef char* string;
 

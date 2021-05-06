@@ -1,6 +1,6 @@
 ﻿cmake_minimum_required(VERSION 3.15 FATAL_ERROR)
 
-project(iterators LANGUAGES C)
+project(generic_iterators LANGUAGES C)
 
 ##################################################
 # Configure some universal settings
@@ -33,8 +33,13 @@ if(CMAKE_BUILD_TYPE MATCHES Release)
   endif()
 endif()
 
-##################################################
-# Configure target for building the executable
+# Set library name
+set(LIBNAME iterators)
 
-# Add the main test executable
-add_executable(iterators "typeclass.h" "maybe.h" "iterator.h" "array_iterable.h" "list_iterable.h" "func_iter.h" "main.c" "array_iterable.c" "list_iterable.c")
+# Add the interface library target
+add_library(${LIBNAME} INTERFACE)
+
+# Add the headers to the library interface
+target_include_directories(${LIBNAME} INTERFACE .)
+
+add_subdirectory(examples)

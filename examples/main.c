@@ -1,38 +1,13 @@
 ﻿#include "array_iterable.h"
 #include "func_iter.h"
 #include "list_iterable.h"
+#include "iterable_utils.h"
 
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #define Cons prepend_intnode
-
-/* Generic function to sum values from any iterable yielding int */
-static int sum_intit(Iterable(Int) it)
-{
-    int sum = 0;
-    while (1) {
-        Maybe(Int) res = it.tc.next(it.self);
-        if (is_nothing(res)) {
-            return sum;
-        }
-        sum += from_just(res, Int);
-    }
-}
-
-/* Generic function to print values from any iterable yielding string */
-static void print_strit(Iterable(Str) it)
-{
-    while (1) {
-        Maybe(Str) res = it.tc.next(it.self);
-        if (is_nothing(res)) {
-            puts("");
-            return;
-        }
-        printf("%s ", from_just(res, Str));
-    }
-}
 
 /* Generic function to create IntList from any iterable yielding int */
 static IntList list_from_intit(Iterable(Int) it)
