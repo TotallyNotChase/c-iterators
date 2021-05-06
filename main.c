@@ -6,12 +6,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define Cons prepend_intnode
+
 /* Generic function to sum values from any iterator yielding int */
-static int sum_intit(Iterator(Int) it)
+static int sum_intit(Iterable(Int) it)
 {
     int sum = 0;
     while (1) {
-        Maybe(Int) res = it.next(it.self, it.ctx);
+        Maybe(Int) res = it.tc.next(it.self);
         if (is_nothing(res)) {
             return sum;
         }
@@ -19,10 +21,10 @@ static int sum_intit(Iterator(Int) it)
     }
 }
 
-static void print_strit(Iterator(Str) it)
+static void print_strit(Iterable(Str) it)
 {
     while (1) {
-        Maybe(Str) res = it.next(it.self, it.ctx);
+        Maybe(Str) res = it.tc.next(it.self);
         if (is_nothing(res)) {
             puts("");
             return;
@@ -32,81 +34,55 @@ static void print_strit(Iterator(Str) it)
 }
 
 /* Generic function to create IntList from any iterator yielding int */
-static IntList list_from_intit(Iterator(Int) it)
+static IntList list_from_intit(Iterable(Int) it)
 {
     IntList list = Nil;
     while (1) {
-        Maybe(Int) res = it.next(it.self, it.ctx);
+        Maybe(Int) res = it.tc.next(it.self);
         if (is_nothing(res)) {
             return list;
         }
         int val = from_just(res, Int);
-        list    = prepend_intnode(list, val);
+        list    = Cons(val, list);
     }
 }
 
-static Iterator(Int) intit_from_arr(int** arr, size_t sz)
-{
-    ArrItCtx* ctx       = calloc(1, sizeof(*ctx));
-    ctx->size           = sz;
-    Iterator(Int) intit = prep_intarr_itr(arr, ctx);
-    return intit;
-}
-
-static Iterator(Str) strit_from_arr(string** arr, size_t sz)
-{
-    ArrItCtx* ctx       = calloc(1, sizeof(*ctx));
-    ctx->size           = sz;
-    Iterator(Str) strit = prep_strarr_itr(arr, ctx);
-    return strit;
-}
-
-static Iterator(Int) intit_from_list(IntList* list)
-{
-    IntListItCtx* ctx   = calloc(1, sizeof(*ctx));
-    ctx->curr           = *list;
-    Iterator(Int) intit = prep_intlist_itr(list, ctx);
-    return intit;
-}
-
+/* TODO: Try passing incorrect types to the abstractions */
 int main(void)
 {
     /* Use array's iterator instance */
     /* For int array */
     int arr[]           = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-    int* parr           = arr;
-    Iterator(Int) arrit = intit_from_arr(&parr, sizeof(arr) / sizeof(*arr));
+    ArrIter(Int) arriter = arr_into_iter(arr, sizeof(arr) / sizeof(*arr), Int);
+    Iterable(Int) arrit = prep_intarr_itr(&arriter);
     int const sumarr    = sum_intit(arrit);
     printf("Sum of array values: %d\n", sumarr);
-    free(arrit.ctx);
     /* For string array */
     string strarr[]        = {"fear", "surprise", "ruthless-efficiency"};
-    string* pstrarr        = strarr;
-    Iterator(Str) strarrit = strit_from_arr(&pstrarr, 3);
+    ArrIter(Str) strarriter = arr_into_iter(strarr, sizeof(strarr) / sizeof(*strarr), Str);
+    Iterable(Str) strarrit = prep_strarr_itr(&strarriter);
     print_strit(strarrit);
-    free(strarrit.ctx);
 
     /* Use list's iterator instance */
-    IntList list         = prepend_intnode(prepend_intnode(prepend_intnode(prepend_intnode(Nil, 5), 6), 1), 9);
-    Iterator(Int) listit = intit_from_list(&list);
+    IntList list         = Cons(9, Cons(1, Cons(6, Cons(5, Nil))));
+    ListIter(Int) listiter = list_into_iter(list, Int);
+    Iterable(Int) listit = prep_intlist_itr(&listiter);
     int const sumlist    = sum_intit(listit);
     printf("Sum of list values: %d\n", sumlist);
     list = free_intlist(list);
-    free(listit.ctx);
 
     /* Use an iterator to build a list */
     /* Prepare an iterator from an array */
     int arrex[]           = {42, 3, 17, 25};
-    int* parrex           = arrex;
-    Iterator(Int) arrexit = intit_from_arr(&parrex, sizeof(arrex) / sizeof(*arrex));
+    ArrIter(Int) arrexiter = arr_into_iter(arrex, sizeof(arrex) / sizeof(*arrex), Int);
+    Iterable(Int) arrexit  = prep_intarr_itr(&arrexiter);
     /* Use the iterator to build the list */
     IntList listex         = list_from_intit(arrexit);
-    Iterator(Int) listexit = intit_from_list(&listex);
+    ListIter(Int) listexiter = list_into_iter(listex, Int);
+    Iterable(Int) listexit = prep_intlist_itr(&listexiter);
     int const sumlistex    = sum_intit(listexit);
     printf("Sum of list from iterator values: %d\n", sumlistex);
     listex = free_intlist(listex);
-    free(arrexit.ctx);
-    free(listexit.ctx);
 
     return 0;
 }

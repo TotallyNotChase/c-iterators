@@ -4,16 +4,19 @@
 
 #include <stdlib.h>
 
-static Maybe(Int) intarrnxt(int** arr, ArrItCtx* ctx)
+static Maybe(Int) intarrnxt(ArrIter(Int)* arriter)
 {
-    return ctx->i < ctx->size ? Just((*arr)[ctx->i++], Int) : Nothing(Int);
+    int const* const arr = arriter->arr;
+    return arriter->i < arriter->size ? Just(arr[arriter->i++], Int) : Nothing(Int);
 }
 
-static Maybe(Str) strarrnxt(string** arr, ArrItCtx* ctx)
+static Maybe(Str) strarrnxt(ArrIter(Str)* arriter)
 {
-    return ctx->i < ctx->size ? Just((*arr)[ctx->i++], Str) : Nothing(Str);
+    string const* const arr = arriter->arr;
+    return arriter->i < arriter->size ? Just(arr[arriter->i++], Str) : Nothing(Str);
 }
 
-impl_iterator(int*, Int, ArrItCtx, intarrnxt, prep_intarr_itr)
+impl_iterator(ArrIter(Int)*, Int, intarrnxt, prep_intarr_itr)
 
-impl_iterator(string*, Str, ArrItCtx, strarrnxt, prep_strarr_itr)
+impl_iterator(ArrIter(Str)*, Str, strarrnxt, prep_strarr_itr)
+

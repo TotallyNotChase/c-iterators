@@ -11,20 +11,21 @@ typedef struct int_node
 {
     int val;
     struct int_node* next;
-} IntNode;
+} IntNode, *IntList;
 
-typedef IntNode* IntList;
+#define ListIter(ElmntTypename) ElmntTypename##ListIter
 
-typedef struct
-{
-    IntNode* curr;
-} IntListItCtx;
+#define DefineListIterOf(T, Typename) typedef struct { T curr; } ListIter(Typename)
+
+#define list_into_iter(head, ElmntTypename)  (ListIter(ElmntTypename)){ .curr = head }
+
+DefineListIterOf(IntNode const*, Int);
 
 /* Create and prepend an IntNode to given IntList and return the new list */
-IntList prepend_intnode(IntList list, int val);
+IntList prepend_intnode(int val, IntList list);
 /* Free the given IntList */
-IntList free_intlist(IntList list);
+IntList free_intlist(IntList head);
 
-Iterator(Int) prep_intlist_itr(IntList* x, IntListItCtx* init_ctx);
+Iterable(Int) prep_intlist_itr(ListIter(Int)* x);
 
 #endif /* !IT_LIST_ITRBLE_H */

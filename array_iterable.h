@@ -5,13 +5,16 @@
 
 #include <stdlib.h>
 
-typedef struct
-{
-    size_t i;
-    size_t size;
-} ArrItCtx;
+#define ArrIter(ElmntTypename) ElmntTypename##ArrIter
 
-Iterator(Int) prep_intarr_itr(int** x, ArrItCtx* init_ctx);
-Iterator(Str) prep_strarr_itr(string** x, ArrItCtx* init_ctx);
+#define DefineArrIterOf(T, Typename) typedef struct { size_t i; size_t const size; T const* const arr; } ArrIter(Typename)
+
+#define arr_into_iter(srcarr, sz, ElmntTypename)  (ArrIter(ElmntTypename)){ .i = 0, .size = sz, .arr = srcarr }
+
+DefineArrIterOf(int, Int);
+DefineArrIterOf(string, Str);
+
+Iterable(Int) prep_intarr_itr(ArrIter(Int)* x);
+Iterable(Str) prep_strarr_itr(ArrIter(Str)* x);
 
 #endif /* !IT_ARR_ITRBLE_H */

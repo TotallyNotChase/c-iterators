@@ -13,33 +13,33 @@ static IntNode* create_intnode(int val)
     return node;
 }
 
-IntList prepend_intnode(IntList list, int val)
+IntList prepend_intnode(int val, IntList list)
 {
     IntNode* node = create_intnode(val);
     node->next    = list;
     return node;
 }
 
-IntList free_intlist(IntList list)
+IntList free_intlist(IntNode* head)
 {
     IntList tmp = Nil;
-    while (list != Nil) {
-        tmp  = list;
-        list = list->next;
+    while (head != Nil) {
+        tmp  = head;
+        head = head->next;
         free(tmp);
     }
     return Nil;
 }
 
-static Maybe(Int) intlistnxt(IntList* x, IntListItCtx* ctx)
+static Maybe(Int) intlistnxt(ListIter(Int)* x)
 {
     (void)x;
-    IntNode* node = ctx->curr;
+    IntNode const* node = x->curr;
     if (node == Nil) {
         return Nothing(Int);
     }
-    ctx->curr = node->next;
+    x->curr = node->next;
     return Just(node->val, Int);
 }
 
-impl_iterator(IntList, Int, IntListItCtx, intlistnxt, prep_intlist_itr)
+impl_iterator(ListIter(Int)*, Int, intlistnxt, prep_intlist_itr)
