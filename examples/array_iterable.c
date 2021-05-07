@@ -20,4 +20,3 @@ static Maybe(Str) strarrnxt(ArrIter(Str) * self)
 impl_iterator(ArrIter(Int)*, Int, intarrnxt, prep_intarr_itr)
 
 impl_iterator(ArrIter(Str)*, Str, strarrnxt, prep_strarr_itr)
-

@@ -20,6 +20,15 @@ IntList prepend_intnode(int val, IntList list)
     return node;
 }
 
+void print_intlist(IntNode const* head)
+{
+    while (head != Nil) {
+        printf("%d ", head->val);
+        head = head->next;
+    }
+    puts("");
+}
+
 IntList free_intlist(IntNode* head)
 {
     IntList tmp = Nil;

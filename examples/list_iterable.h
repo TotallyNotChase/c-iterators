@@ -13,6 +13,8 @@ typedef struct int_node
     struct int_node* next;
 } IntNode, *IntList;
 
+typedef IntNode const* ConstIntList;
+
 #define ListIter(ElmntTypename) ElmntTypename##ListIter
 
 #define DefineListIterOf(T, Typename)                                                                                  \
@@ -28,6 +30,8 @@ DefineListIterOf(IntNode const*, Int);
 
 /* Create and prepend an IntNode to given IntList and return the new list */
 IntList prepend_intnode(int val, IntList list);
+/* Print the given int list */
+void print_intlist(ConstIntList head);
 /* Free the given IntList */
 IntList free_intlist(IntList head);
 

@@ -1,7 +1,15 @@
 #include "func_iter.h"
 
 #include <stdio.h>
-#include <stdlib.h>
+
+/*
+* Definitions of generic functions that work on an Iterator instance, i.e Iterable
+* 
+* These functions don't need to care about the exact data structure backing the iterator
+* 
+* At the same time, the Iterator instance is lazy - so the data isn't pre-generated and put into
+* a common struct, instead - it's extracted from the actual source backing the iterator on demand
+*/
 
 /* Generic function to sum values from any iterable yielding int */
 int sum_intit(Iterable(Int) it)
