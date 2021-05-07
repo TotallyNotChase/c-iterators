@@ -31,3 +31,7 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 _deps
+
+# Ignore doxygen generated documentation
+html/
+xml/
