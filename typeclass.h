@@ -1,28 +1,38 @@
+/**
+ * @file
+ * Utilities to define a typeclass and its instance.
+ */
+
 #ifndef IT_TYPECLASS_H
 #define IT_TYPECLASS_H
 
-/*
-Defines a typeclass with the given functions
-
-@param funcs - A semicolon separated list of typeclass functions
-These are usually functions that take the `self` from the typeclass instance (or more arguments)
-*/
-#define typeclass(funcs, Name)                                                                                         \
-    struct Name                                                                                                        \
+/**
+ * @def typeclass(funcs)
+ * @brief Define a typeclass with the given functions.
+ *
+ * @param funcs A semicolon separated list of typeclass functions.
+ *
+ * @note The functions usually take the `self` from the typeclass instance (and possibly more arguments).
+ */
+#define typeclass(funcs)                                                                                               \
+    struct                                                                                                             \
     {                                                                                                                  \
         funcs;                                                                                                         \
     }
 
-/*
-Defines a typeclass instance for the given typeclass
-
-This just contains a `void* self` member and the typeclass itself
-*/
-#define typeclass_instance(TypeclassName, Name)                                                                        \
-    struct Name                                                                                                        \
+/**
+ * @def typeclass_instance(Typeclass)
+ * @brief Define a typeclass instance for the given typeclass.
+ *
+ * This just contains a `void* self` member and the typeclass itself.
+ *
+ * @param Typeclass The semantic type (C type) of the typeclass defined with #typeclass(funcs).
+ */
+#define typeclass_instance(Typeclass)                                                                                  \
+    struct                                                                                                             \
     {                                                                                                                  \
         void* self;                                                                                                    \
-        TypeclassName tc;                                                                                              \
+        Typeclass tc;                                                                                                  \
     }
 
 #endif /* !IT_TYPECLASS_H */
