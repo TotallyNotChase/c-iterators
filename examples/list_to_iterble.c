@@ -13,7 +13,7 @@ IntList revlist_from_intit(Iterable(Int) it)
         if (is_nothing(res)) {
             return list;
         }
-        int val = from_just(res, Int);
+        int val = from_just_(res);
         list    = Cons(val, list);
     }
 }
