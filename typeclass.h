@@ -9,9 +9,9 @@
 /**
  * @def typeclass(funcs)
  * @brief Define a typeclass with the given functions.
- * 
+ *
  * # Example
- * 
+ *
  * @code
  * typedef typeclass(char* (*show)(void* self)) Show;  // Defines a typeclass and names it `Show`
  * @endcode
@@ -32,12 +32,12 @@
  *
  * This just contains a `void* self` member and the typeclass itself.
  * # Example
- * 
+ *
  * @code
  * typedef typeclass(char* (*show)(void* self)) Show;
  * typdef typeclass_instance(Show) Showable; // Defines the typeclass instance for `Show` typeclass
  * @endcode
- * 
+ *
  * @param Typeclass The semantic type (C type) of the typeclass defined with #typeclass(funcs).
  */
 #define typeclass_instance(Typeclass)                                                                                  \

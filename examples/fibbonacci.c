@@ -1,8 +1,8 @@
-#include "fibonacci_iterable.h"
 #include "examples.h"
+#include "fibonacci_iterable.h"
 
-#include <stdlib.h>
 #include <inttypes.h>
+#include <stdlib.h>
 
 void test_fibonacci(void)
 {
