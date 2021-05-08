@@ -8,6 +8,8 @@
 void test_array(void);
 /* Use list's iterator instance */
 void test_list(void);
+/* Use fibbonacci iterator instance to print the first 10 items */
+void test_fibonacci(void);
 /* Turn an array into an iterator and use it to build a list */
 void test_list_from_arr(void);
 
