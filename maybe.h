@@ -3,7 +3,7 @@
  * Utilities to define and use a Maybe type.
  *
  * @note The Maybe struct members **must not** be accessed manually unless you know
- * exactly what you're doing. Use `from_just` *after* `is_just`/`is_nothing` instead.
+ * exactly what you're doing. Use `from_just` or `from_just_` *after* `is_just`/`is_nothing` instead.
  */
 
 #ifndef IT_MAYBE_H
@@ -24,7 +24,7 @@ typedef enum
 
 /**
  * @def Maybe(Typename)
- * @brief Convenience macro to get the name of the Maybe defined with a certain type name.
+ * @brief Convenience macro to get the type of the Maybe defined with a certain type name.
  * 
  * # Example
  * 
@@ -60,10 +60,6 @@ typedef enum
         /* Don't access this member manually */                                                                        \
         T val;                                                                                                         \
     } Maybe(Typename);                                                                                                 \
-    static inline T Typename##_from_maybe(Maybe(Typename) maybex, T defaultval)                                        \
-    {                                                                                                                  \
-        return is_just(maybex) ? maybex.val : defaultval;                                                              \
-    }                                                                                                                  \
     static inline T Typename##_from_just(Maybe(Typename) maybex)                                                       \
     {                                                                                                                  \
         if (is_just(maybex)) {                                                                                         \
@@ -130,8 +126,23 @@ typedef enum
  * @param Typename The "canonical" type name of a type used to define the Maybe type.
  * 
  * @return `Just` value of type corresponding to the given Maybe(Typename) if it's not `Nothing`.
+ * 
  * @note Aborts the program if given Maybe<T> struct was tagged with `Nothing`.
  */
 #define from_just(x, Typename) Typename##_from_just(x)
+
+/**
+ * @def from_just_(x)
+ * @brief "Unsafe" version of #from_just(x, Typename).
+ *
+ * @param x The `Maybe` type to extract the value from.
+ *
+ * @return `Just` value of type corresponding to the given `Maybe` struct.
+ * 
+ * @note This does not check whether the `Maybe` struct actually has a value and hence
+ * should only be used when the caller is sure that the Maybe contains a `Just` value. Otherwise
+ * the behavior is undefined.
+ */
+#define from_just_(x) (x).val
 
 #endif /* !IT_MAYBE_H */
