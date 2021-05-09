@@ -1,3 +1,6 @@
+#ifndef IT_TAKE_H
+#define IT_TAKE_H
+
 #include "../func_iter.h"
 
 /*
@@ -58,3 +61,5 @@ The `self` argument of the returned `Iterable` must be freed after use
         memcpy(takestruct, &_takestruct, sizeof(*takestruct));                                                         \
         return CONCAT(CONCAT(prep_, IterTake(ElmntTypename)), _itr)(takestruct);                                       \
     }
+
+#endif /* !IT_TAKE_H */
