@@ -13,8 +13,8 @@ to "take" out of the iterable and returns an iterable that consumes from the giv
 This is identical to the `take` function iterator typeclasses usually have.
 */
 
-#define CONCAT_(A, B) A ## B
-#define CONCAT(A, B) CONCAT_(A, B)
+#define CONCAT_(A, B) A##B
+#define CONCAT(A, B)  CONCAT_(A, B)
 
 #define IterTake(ElmntTypename) IterTake##ElmntTypename
 

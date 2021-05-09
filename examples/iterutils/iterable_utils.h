@@ -14,7 +14,7 @@ int sum_intit(Iterable(Int) it);
 /* Generic function to print values from any iterable yielding string */
 void print_strit(Iterable(Str) it);
 
-/* Make an iterable of the first n elements of given iterable */ 
+/* Make an iterable of the first n elements of given iterable */
 Iterable(U32) take_u32it(Iterable(U32) it, size_t n);
 
 #endif /* !IT_ITRBLE_UTILS_H */
