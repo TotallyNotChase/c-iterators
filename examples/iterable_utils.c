@@ -32,3 +32,5 @@ void print_strit(Iterable(Str) it)
     }
     puts("");
 }
+
+define_itertake_func(U32, take_u32it)
