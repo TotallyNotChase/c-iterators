@@ -27,6 +27,14 @@ This is identical to the `take` function iterator typeclasses usually have.
     } IterTake(ElmntTypename)
 
 // clang-format off
+/*
+Define the iterator implementation function for an IterTake struct
+Also define a function with the given `name` - which takes in an iterable and the number of elements to
+"take" from that iterable (`n`) - wraps said iterable in an `IterTake` struct and wraps that around its
+`Iterable` impl
+
+The `self` argument of the returned `Iterable` must be freed after use
+*/
 #define define_itertake_func(ElmntTypename, name)                                                                      \
     static Maybe(ElmntTypename) CONCAT(IterTake(ElmntTypename), _nxt)(IterTake(ElmntTypename) * self)                  \
     {                                                                                                                  \
