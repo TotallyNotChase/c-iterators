@@ -10,59 +10,62 @@
 #include "typeclass.h"
 
 /**
- * @def Iterator(ElmntTypename)
- * @brief Convenience macro to get the type of the Iterator (typeclass) with given element type name.
+ * @def Iterator(T)
+ * @brief Convenience macro to get the type of the Iterator (typeclass) with given element type.
  *
  * # Example
  *
  * @code
- * DefineIteratorOf(Int);
- * Iterator(Int) i; // Declares a variable of type Iterator(Int) (a typeclass)
+ * DefineIteratorOf(int);
+ * Iterator(int) i; // Declares a variable of type Iterator(int) (a typeclass)
  * @endcode
  *
- * @param ElmntTypename The "canonical" type name of a type, must be the same type name passed to
- * #DefineIteratorOf(ElmntTypename).
+ * @param T The type of value the `Iterator` instance will yield. Must be the same type name passed to
+ * #DefineIteratorOf(T).
+ *
+ * @note If `T` is a pointer, it needs to be typedef-ed into a type that does not contain the `*`. Only alphanumerics.
  */
-#define Iterator(ElmntTypename) ElmntTypename##Iterator
+#define Iterator(T) T##Iterator
 
 /**
- * @def Iterable(ElmntTypename)
- * @brief Convenience macro to get the type of the Iterable (typeclass instance) with given element type name.
+ * @def Iterable(T)
+ * @brief Convenience macro to get the type of the Iterable (typeclass instance) with given element type.
  *
  * # Example
  *
  * @code
- * DefineIteratorOf(Int);
- * Iterator(Int) i; // Declares a variable of type Iterable(Int) (the typeclass instance)
+ * DefineIteratorOf(int);
+ * Iterable(int) i; // Declares a variable of type Iterable(Int) (the typeclass instance)
  * @endcode
  *
- * @param ElmntTypename The "canonical" type name of a type, must be the same type name passed to
- * #DefineIteratorOf(ElmntTypename).
+ * @param T The type of value the `Iterable` will yield. Must be the same type name passed to #DefineIteratorOf(T).
+ *
+ * @note If `T` is a pointer, it needs to be typedef-ed into a type that does not contain the `*`. Only alphanumerics.
  */
-#define Iterable(ElmntTypename) ElmntTypename##Iterable
+#define Iterable(T) T##Iterable
 
 /**
- * @def DefineIteratorOf(ElmntTypename)
+ * @def DefineIteratorOf(T)
  * @brief Define an Iterator typeclass and its Iterable instance for given element type.
  *
  * # Example
  *
  * @code
- * DefineIteratorOf(Int); // Defines an Iterator(Int) typeclass as well as its instance
+ * DefineIteratorOf(int); // Defines an Iterator(int) typeclass as well as its instance
  * @endcode
  *
- * @param ElmntTypename The "canonical" type name of the type this iterable will yield. This is purely subjective and
- * upto the user to decide, however the type names for each type **should** be consistent.
+ * @param T The type of value the `Iterator` instance will yield. Must be alphanumeric.
  *
- * @note A #Maybe(Typename) for the given `ElmntTypename` **must** exist.
+ * @note If `T` is a pointer, it needs to be typedef-ed into a type that does not contain the `*`. Only alphanumerics.
+ * @note A #Maybe(T) for the given `T` **must** also exist.
  */
-#define DefineIteratorOf(ElmntTypename)                                                                                \
-    typedef typeclass(Maybe(ElmntTypename) (*const next)(void* self)) Iterator(ElmntTypename);                         \
-    typedef typeclass_instance(Iterator(ElmntTypename)) Iterable(ElmntTypename)
+#define DefineIteratorOf(T)                                                                                            \
+    typedef typeclass(Maybe(T) (*const next)(void* self)) Iterator(T);                                                 \
+    typedef typeclass_instance(Iterator(T)) Iterable(T)
 
 /**
- * @def impl_iterator(IterType, ElmntTypename, next_f, Name)
- * @brief Define a function to turn given `IterType` into an #Iterable(ElmntTypename).
+ * @def impl_iterator(IterType, ElmntType, next_f, Name)
+ * @brief Define a function to turn given `IterType` into an #Iterable(ElmntType).
  *
  * Implement the Iterator typeclass for a type. Essentially defining a wrapper function that returns the Iterable.
  *
@@ -77,46 +80,49 @@
  *
  * @code
  * // Example of implementing an infinite iterator representing the fibonacci sequence
- * 
+ *
  * #include <stdint.h>
- * 
+ *
  * typedef struct fibonacci
  * {
  *     uint32_t curr;
  *     uint32_t next;
  * } Fibonacci;
- * 
- * DefineMaybe(uint32_t, U32)
- * DefineIteratorOf(U32);
- * 
- * static Maybe(U32) fibnxt(Fibonacci* self)
+ *
+ * DefineMaybe(uint32_t)
+ * DefineIteratorOf(uint32_t);
+ *
+ * static Maybe(uint32_t) fibnxt(Fibonacci* self)
  * {
  *     uint32_t new_nxt = self->curr + self->next;
  *     self->curr       = self->next;
  *     self->next       = new_nxt;
- *     return Just(new_nxt, U32);
+ *     return Just(new_nxt, uint32_t);
  * }
- * 
- * // Define a function named `prep_fib_itr`, which takes in a `Fibonacci*` and returns an `Iterable(Int)`
+ *
+ * // Define a function named `prep_fib_itr`, which takes in a `Fibonacci*` and returns an `Iterable(int)`
  * // The returned iterable is an infinite fibonacci sequence
- * impl_iterator(Fibonacci*, U32, fibnxt, prep_fib_itr)
+ * impl_iterator(Fibonacci*, uint32_t, fibnxt, prep_fib_itr)
  * @endcode
  *
  * @param IterType The semantic type (C type) this impl is for, must be a pointer type.
- * @param ElmntTypename The "canonical" type name of the element the iterable will yield.
+ * @param ElmntType The type of value the `Iterator` instance will yield.
  * @param next_f Function pointer that serves as the `next` implementation for `IterType`. This function must have
- * the signature of `Maybe(ElmntTypename) (*)(IterType self)` - i.e, should take IterType and return a value of the
+ * the signature of `Maybe(ElmntType) (*)(IterType self)` - i.e, should take IterType and return a value of the
  * corresponding element type wrapped in a `Maybe` - `Nothing` value indicates end of iteration.
  * @param Name Name to define the function as.
  *
- * @note A #Maybe(Typename) for the given `ElmntTypename` **must** exist.
+ * @note If `ElmntType` is a pointer, it needs to be typedef-ed into a type that does not contain the `*`. Only
+ * alphanumerics.
+ * @note A #Maybe(T) for the given `ElmntType` **must** exist.
+ * @note This should not be delimited by a semicolon.
  */
-#define impl_iterator(IterType, ElmntTypename, next_f, Name)                                                           \
-    Iterable(ElmntTypename) Name(IterType x)                                                                           \
+#define impl_iterator(IterType, ElmntType, next_f, Name)                                                               \
+    Iterable(ElmntType) Name(IterType x)                                                                               \
     {                                                                                                                  \
-        Maybe(ElmntTypename) (*const next_)(IterType self) = (next_f);                                                 \
+        Maybe(ElmntType) (*const next_)(IterType self) = (next_f);                                                     \
         (void)next_;                                                                                                   \
-        return (Iterable(ElmntTypename)){.tc = {.next = (Maybe(ElmntTypename)(*const)(void*))next_f}, .self = x};      \
+        return (Iterable(ElmntType)){.tc = {.next = (Maybe(ElmntType)(*const)(void*))next_f}, .self = x};              \
     }
 
 #endif /* !IT_ITERATOR_H */

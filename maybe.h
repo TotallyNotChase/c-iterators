@@ -23,45 +23,45 @@ typedef enum
 } MaybeTag;
 
 /**
- * @def Maybe(Typename)
- * @brief Convenience macro to get the type of the Maybe defined with a certain type name.
+ * @def Maybe(T)
+ * @brief Convenience macro to get the type of the Maybe defined with a certain type.
  *
  * # Example
  *
  * @code
- * DefineMaybe(Int)
- * Maybe(Int) const x = {0}; // Uses the maybe type defined in the previous line
+ * DefineMaybe(int)
+ * Maybe(int) const x = {0}; // Uses the maybe type defined in the previous line
  * @endcode
  *
- * @param ElmntTypename The "canonical" type name of a type, must be the same type name passed to #DefineMaybe(T,
- * Typename).
+ * @param T The type of value the `Maybe` struct will contain. Must be the same type name passed to #DefineMaybe(T).
+ *
+ * @note If `T` is a pointer, it needs to be typedef-ed into a type that does not contain the `*`. Only alphanumerics.
  */
-#define Maybe(Typename) Maybe##Typename
+#define Maybe(T) Maybe##T
 
 /**
- * @def DefineMaybe(T, Typename)
+ * @def DefineMaybe(T)
  * @brief Define a Maybe<T> type.
  *
  * # Example
  *
  * @code
- * DefineMaybe(Int) // Defines a Maybe(Int) type as well as its corresponding functions
+ * DefineMaybe(int) // Defines a Maybe(int) type as well as its corresponding functions
  * @endcode
  *
- * @param T The concrete (semantic) type for the `Just` branch of this `Maybe`.
- * @param Typename The "canonical" type name of the type this iterator will yield, this is purely subjective and
- * upto the user to decide, however the type names for each type **must** be consistent.
+ * @param T The type of value this `Maybe` will hold. Must be alphanumeric.
  *
+ * @note If `T` is a pointer, it needs to be typedef-ed into a type that does not contain the `*`. Only alphanumerics.
  * @note This should not be delimited by a semicolon.
  */
-#define DefineMaybe(T, Typename)                                                                                       \
+#define DefineMaybe(T)                                                                                                 \
     typedef struct                                                                                                     \
     {                                                                                                                  \
         MaybeTag tag;                                                                                                  \
         /* Don't access this member manually */                                                                        \
         T val;                                                                                                         \
-    } Maybe(Typename);                                                                                                 \
-    static inline T Typename##_from_just(Maybe(Typename) maybex)                                                       \
+    } Maybe(T);                                                                                                        \
+    static inline T T##_from_just(Maybe(T) maybex)                                                                     \
     {                                                                                                                  \
         if (is_just(maybex)) {                                                                                         \
             return maybex.val;                                                                                         \
@@ -72,69 +72,73 @@ typedef enum
     }
 
 /**
- * @def Just(v, Typename)
- * @brief Wrap a `Just` value into a `Maybe(Typename)`.
+ * @def Just(v, T)
+ * @brief Wrap a `Just` value into a #Maybe(T).
  *
  * # Example
  *
  * @code
- * DefineMaybe(Int)
- * Maybe(Int) const x = Just(42, Int); // Initializes a Maybe(Int) with the value 42
+ * DefineMaybe(int)
+ * Maybe(int) const x = Just(42, int); // Initializes a Maybe(int) with the value 42
  * @endcode
  *
  * @param v The concrete value to wrap in `Just` (must be of the correct type).
- * @param Typename The "canonical" type name of a type used to define the Maybe type.
+ * @param T The type of value the `Maybe` will hold. Must be alphanumeric.
  *
- * @note The value is simply assigned to the Maybe<T> struct. No implicit copying is done.
+ * @note If `T` is a pointer, it needs to be typedef-ed into a type that does not contain the `*`. Only alphanumerics.
+ * @note The value is simply assigned to the #Maybe(T) struct. No implicit copying is done.
  */
-#define Just(v, Typename) ((Maybe(Typename)){.tag = MaybeTag_Just, .val = (v)})
+#define Just(v, T) ((Maybe(T)){.tag = MaybeTag_Just, .val = (v)})
 
 /**
- * @def Nothing(Typename)
- * @brief Wrap a `Nothing` value into a `Maybe(Typename)`.
+ * @def Nothing(T)
+ * @brief Wrap a `Nothing` value into a #Maybe(T).
  *
  * # Example
  *
  * @code
- * DefineMaybe(Int)
- * Maybe(Int) const x = Nothing(Int); // Initializes a Maybe(Int) with no value
+ * DefineMaybe(int)
+ * Maybe(int) const x = Nothing(int); // Initializes a Maybe(int) with no value
  * @endcode
  *
- * @param Typename The "canonical" type name of a type used to define the Maybe type
+ * @param T The type of value the `Maybe` will hold. Must be alphanumeric.
+ * 
+ * @note If `T` is a pointer, it needs to be typedef-ed into a type that does not contain the `*`. Only alphanumerics.
  */
-#define Nothing(Typename) ((Maybe(Typename)){0})
+#define Nothing(T) ((Maybe(T)){0})
 
 /**
  * @def is_nothing(x)
  * @brief Check if the given Maybe type is tagged with `Nothing`.
  *
- * @param x The Maybe<T> struct to check against.
+ * @param x The #Maybe(T) struct to check against.
  */
 #define is_nothing(x) ((x).tag == MaybeTag_Nothing)
 /**
  * @def is_just(x)
  * @brief Check if the given Maybe type is tagged with `Just`.
  *
- * @param x The Maybe<T> struct to check against.
+ * @param x The #Maybe(T) struct to check against.
  */
 #define is_just(x) ((x).tag == MaybeTag_Just)
 
 /**
- * @def from_just(x, Typename)
- * @brief Extract the `Just` value from given `Maybe<T>`.
+ * @def from_just(x, T)
+ * @brief Extract the `Just` value from given #Maybe(T).
  *
  * @param x The `Maybe` type to extract the value from.
- * @param Typename The "canonical" type name of a type used to define the Maybe type.
+ * @param T The type of value the `Maybe` will hold. Must be alphanumeric.
  *
- * @return `Just` value of type corresponding to the given Maybe(Typename) if it's not `Nothing`.
+ * @return `Just` value of type corresponding to the given #Maybe(T) if it's not `Nothing`.
  *
- * @note Aborts the program if given Maybe<T> struct was tagged with `Nothing`.
+ * @note If `T` is a pointer, it needs to be typedef-ed into a type that does not contain the `*`. Only alphanumerics.
+ * @note Aborts the program if given #Maybe(T) struct was tagged with `Nothing`.
  */
-#define from_just(x, Typename) Typename##_from_just(x)
+#define from_just(x, T) T##_from_just(x)
 
 /**
  * @def from_just_(x)
- * @brief "Unsafe" version of #from_just(x, Typename).
+ * @brief "Unsafe" version of #from_just(x, T).
  *
  * @param x The `Maybe` type to extract the value from.
  *
