@@ -14,6 +14,6 @@ void test_fibonacci(void);
 void test_list_from_arr(void);
 
 /* Generic function to create a reversed IntList from any iterable yielding int */
-IntList revlist_from_intit(Iterable(Int) it);
+IntList revlist_from_intit(Iterable(int) it);
 
 #endif /* !IT_EXAMPLES_H */

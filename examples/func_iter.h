@@ -9,13 +9,13 @@
 typedef char* string;
 
 // clang-format off
-DefineMaybe(int, Int)
-DefineMaybe(string, Str)
-DefineMaybe(uint32_t, U32)
+DefineMaybe(int)
+DefineMaybe(string)
+DefineMaybe(uint32_t)
 
-DefineIteratorOf(Int);
-DefineIteratorOf(Str);
-DefineIteratorOf(U32);
+DefineIteratorOf(int);
+DefineIteratorOf(string);
+DefineIteratorOf(uint32_t);
 // clang-format on
 
 #endif /* !FUNC_ITER_H */

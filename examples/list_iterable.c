@@ -40,14 +40,14 @@ IntList free_intlist(IntNode* head)
     return Nil;
 }
 
-static Maybe(Int) intlistnxt(ListIter(Int) * self)
+static Maybe(int) intlistnxt(ListIter(ConstIntList) * self)
 {
     IntNode const* node = self->curr;
     if (node == Nil) {
-        return Nothing(Int);
+        return Nothing(int);
     }
     self->curr = node->next;
-    return Just(node->val, Int);
+    return Just(node->val, int);
 }
 
-impl_iterator(ListIter(Int) *, Int, intlistnxt, prep_intlist_itr)
+impl_iterator(ListIter(ConstIntList) *, int, intlistnxt, prep_intlist_itr)

@@ -15,22 +15,22 @@
  */
 
 /* Generic function to sum values from any iterable yielding int */
-int sum_intit(Iterable(Int) it)
+int sum_intit(Iterable(int) it)
 {
     int sum = 0;
-    foreach (Int, res, it) {
+    foreach (int, res, it) {
         sum += from_just_(res);
     }
     return sum;
 }
 
 /* Generic function to print values from any iterable yielding string */
-void print_strit(Iterable(Str) it)
+void print_strit(Iterable(string) it)
 {
-    foreach (Str, res, it) {
+    foreach (string, res, it) {
         printf("%s ", from_just_(res));
     }
     puts("");
 }
 
-define_itertake_func(U32, take_u32it)
+define_itertake_func(uint32_t, take_u32it)

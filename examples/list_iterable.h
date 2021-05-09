@@ -15,18 +15,18 @@ typedef struct int_node
 
 typedef IntNode const* ConstIntList;
 
-#define ListIter(ElmntTypename) ElmntTypename##ListIter
+#define ListIter(ElmntType) ElmntType##ListIter
 
-#define DefineListIterOf(T, Typename)                                                                                  \
+#define DefineListIterOf(T)                                                                                            \
     typedef struct                                                                                                     \
     {                                                                                                                  \
         T curr;                                                                                                        \
-    } ListIter(Typename)
+    } ListIter(T)
 
-#define list_into_iter(head, ElmntTypename)                                                                            \
-    (ListIter(ElmntTypename)) { .curr = head }
+#define list_into_iter(head, ElmntType)                                                                                \
+    (ListIter(ElmntType)) { .curr = head }
 
-DefineListIterOf(IntNode const*, Int);
+DefineListIterOf(ConstIntList);
 
 /* Create and prepend an IntNode to given IntList and return the new list */
 IntList prepend_intnode(int val, IntList list);
@@ -35,6 +35,6 @@ void print_intlist(ConstIntList head);
 /* Free the given IntList */
 IntList free_intlist(IntList head);
 
-Iterable(Int) prep_intlist_itr(ListIter(Int) * x);
+Iterable(int) prep_intlist_itr(ListIter(ConstIntList) * x);
 
 #endif /* !IT_LIST_ITRBLE_H */

@@ -5,23 +5,23 @@
 
 #include <stdlib.h>
 
-#define ArrIter(ElmntTypename) ElmntTypename##ArrIter
+#define ArrIter(ElmntType) ElmntType##ArrIter
 
-#define DefineArrIterOf(T, Typename)                                                                                   \
+#define DefineArrIterOf(T)                                                                                             \
     typedef struct                                                                                                     \
     {                                                                                                                  \
         size_t i;                                                                                                      \
         size_t const size;                                                                                             \
         T const* const arr;                                                                                            \
-    } ArrIter(Typename)
+    } ArrIter(T)
 
-#define arr_into_iter(srcarr, sz, ElmntTypename)                                                                       \
-    (ArrIter(ElmntTypename)) { .i = 0, .size = sz, .arr = srcarr }
+#define arr_into_iter(srcarr, sz, T)                                                                                   \
+    (ArrIter(T)) { .i = 0, .size = sz, .arr = srcarr }
 
-DefineArrIterOf(int, Int);
-DefineArrIterOf(string, Str);
+DefineArrIterOf(int);
+DefineArrIterOf(string);
 
-Iterable(Int) prep_intarr_itr(ArrIter(Int) * x);
-Iterable(Str) prep_strarr_itr(ArrIter(Str) * x);
+Iterable(int) prep_intarr_itr(ArrIter(int) * x);
+Iterable(string) prep_strarr_itr(ArrIter(string) * x);
 
 #endif /* !IT_ARR_ITRBLE_H */

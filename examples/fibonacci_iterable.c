@@ -4,13 +4,13 @@
 
 #include <stdlib.h>
 
-static Maybe(U32) fibnxt(Fibonacci* self)
+static Maybe(uint32_t) fibnxt(Fibonacci* self)
 {
     uint32_t new_nxt = self->curr + self->next;
     self->curr       = self->next;
     self->next       = new_nxt;
-    return Just(new_nxt, U32);
+    return Just(new_nxt, uint32_t);
 }
 
 // clang-format off
-impl_iterator(Fibonacci*, U32, fibnxt, prep_fib_itr)
+impl_iterator(Fibonacci*, uint32_t, fibnxt, prep_fib_itr)

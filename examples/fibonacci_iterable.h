@@ -12,6 +12,6 @@ typedef struct fibonacci
 } Fibonacci;
 
 /* An iterable representing an infinite fibonacci sequence */
-Iterable(U32) prep_fib_itr(Fibonacci* self);
+Iterable(uint32_t) prep_fib_itr(Fibonacci* self);
 
 #endif /* !IT_FIB_H */
