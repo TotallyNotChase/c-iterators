@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['nothing_38',['Nothing',['../maybe_8h.html#a01a112a3f7daea3a3054e13096a07bfb',1,'maybe.h']]]
+  ['nothing_39',['Nothing',['../maybe_8h.html#a65cd69857cc806545d68c79464270a97',1,'maybe.h']]]
 ];

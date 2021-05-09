@@ -114,23 +114,23 @@ $(document).ready(function(){initNavTree('iterator_8h_source.html',''); initResi
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="maybe_8h.html">maybe.h</a>&quot;</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="typeclass_8h.html">typeclass.h</a>&quot;</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="iterator_8h.html#a248acab781e7204a0e7ce165ee1af0b0">   26</a></span>&#160;<span class="preprocessor">#define Iterator(ElmntTypename) ElmntTypename##Iterator</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="iterator_8h.html#abe6fb5f1ed6ce19fa24bb2a3a3cb3453">   42</a></span>&#160;<span class="preprocessor">#define Iterable(ElmntTypename) ElmntTypename##Iterable</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="iterator_8h.html#a7974b5a1092da7505c443e803fc98b9f">   59</a></span>&#160;<span class="preprocessor">#define DefineIteratorOf(ElmntTypename)                                                                                \</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">    typedef typeclass(Maybe(ElmntTypename) (*const next)(void* self)) Iterator(ElmntTypename);                         \</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">    typedef typeclass_instance(Iterator(ElmntTypename)) Iterable(ElmntTypename)</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00114"></a><span class="lineno"><a class="line" href="iterator_8h.html#a1564f68c23649f2ab81be9c2e6f8c523">  114</a></span>&#160;<span class="preprocessor">#define impl_iterator(IterType, ElmntTypename, next_f, Name)                                                           \</span></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="preprocessor">    Iterable(ElmntTypename) Name(IterType x)                                                                           \</span></div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="preprocessor">    {                                                                                                                  \</span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="preprocessor">        Maybe(ElmntTypename) (*const next_)(IterType self) = (next_f);                                                 \</span></div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="preprocessor">        (void)next_;                                                                                                   \</span></div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="preprocessor">        return (Iterable(ElmntTypename)){.tc = {.next = (Maybe(ElmntTypename)(*const)(void*))next_f}, .self = x};      \</span></div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="preprocessor">    }</span></div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* !IT_ITERATOR_H */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="iterator_8h.html#a6c3a22862dc6db425dd4389987c0dbaf">   28</a></span>&#160;<span class="preprocessor">#define Iterator(T) T##Iterator</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">   45</a></span>&#160;<span class="preprocessor">#define Iterable(T) T##Iterable</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="iterator_8h.html#a938f3e7187cb386e2bf4049753e2ff84">   62</a></span>&#160;<span class="preprocessor">#define DefineIteratorOf(T)                                                                                            \</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">    typedef typeclass(Maybe(T) (*const next)(void* self)) Iterator(T);                                                 \</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">    typedef typeclass_instance(Iterator(T)) Iterable(T)</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00120"></a><span class="lineno"><a class="line" href="iterator_8h.html#a5718c013596753bd1bcc46172dba30fd">  120</a></span>&#160;<span class="preprocessor">#define impl_iterator(IterType, ElmntType, next_f, Name)                                                               \</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="preprocessor">    Iterable(ElmntType) Name(IterType x)                                                                               \</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor">    {                                                                                                                  \</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="preprocessor">        Maybe(ElmntType) (*const next_)(IterType self) = (next_f);                                                     \</span></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="preprocessor">        (void)next_;                                                                                                   \</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="preprocessor">        return (Iterable(ElmntType)){.tc = {.next = (Maybe(ElmntType)(*const)(void*))next_f}, .self = x};              \</span></div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="preprocessor">    }</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* !IT_ITERATOR_H */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="amaybe_8h_html"><div class="ttname"><a href="maybe_8h.html">maybe.h</a></div><div class="ttdoc">Utilities to define and use a Maybe type.</div></div>
 <div class="ttc" id="atypeclass_8h_html"><div class="ttname"><a href="typeclass_8h.html">typeclass.h</a></div><div class="ttdoc">Utilities to define a typeclass and its instance.</div></div>
 </div><!-- fragment --></div><!-- contents -->

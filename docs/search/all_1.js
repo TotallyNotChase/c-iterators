@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['from_5fjust_2',['from_just',['../maybe_8h.html#a8d535eea3edba50bcfd0a0e8f4af34ba',1,'maybe.h']]],
-  ['from_5fjust_5f_3',['from_just_',['../maybe_8h.html#a16682b211c71e2ad917edc9bdd298154',1,'maybe.h']]]
+  ['defineiteratorof_1',['DefineIteratorOf',['../iterator_8h.html#a938f3e7187cb386e2bf4049753e2ff84',1,'iterator.h']]],
+  ['definemaybe_2',['DefineMaybe',['../maybe_8h.html#a0daf26d181160b7fb96d640ed20bb466',1,'maybe.h']]]
 ];

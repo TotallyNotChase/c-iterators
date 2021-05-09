@@ -127,29 +127,29 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:af32214933fa64e514c6ab6f5771c6117"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maybe_8h.html#af32214933fa64e514c6ab6f5771c6117">Maybe</a>(Typename)&#160;&#160;&#160;Maybe##Typename</td></tr>
-<tr class="memdesc:af32214933fa64e514c6ab6f5771c6117"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience macro to get the type of the Maybe defined with a certain type name.  <a href="maybe_8h.html#af32214933fa64e514c6ab6f5771c6117">More...</a><br /></td></tr>
-<tr class="separator:af32214933fa64e514c6ab6f5771c6117"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b11d3a1635211e3c40eb08f5f79ab4b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maybe_8h.html#a4b11d3a1635211e3c40eb08f5f79ab4b">DefineMaybe</a>(T,  Typename)</td></tr>
-<tr class="memdesc:a4b11d3a1635211e3c40eb08f5f79ab4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define a Maybe&lt;T&gt; type.  <a href="maybe_8h.html#a4b11d3a1635211e3c40eb08f5f79ab4b">More...</a><br /></td></tr>
-<tr class="separator:a4b11d3a1635211e3c40eb08f5f79ab4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a686a865e8513746c24cca2665137c46e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maybe_8h.html#a686a865e8513746c24cca2665137c46e">Just</a>(v,  Typename)&#160;&#160;&#160;((<a class="el" href="maybe_8h.html#af32214933fa64e514c6ab6f5771c6117">Maybe</a>(Typename)){.tag = <a class="el" href="maybe_8h.html#aef352f4183ce21f9ac15edd86a75b230a1e57a50afd710304d82f6269f40e18c2">MaybeTag_Just</a>, .val = (v)})</td></tr>
-<tr class="memdesc:a686a865e8513746c24cca2665137c46e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wrap a <code>Just</code> value into a <code><a class="el" href="maybe_8h.html#af32214933fa64e514c6ab6f5771c6117" title="Convenience macro to get the type of the Maybe defined with a certain type name.">Maybe(Typename)</a></code>.  <a href="maybe_8h.html#a686a865e8513746c24cca2665137c46e">More...</a><br /></td></tr>
-<tr class="separator:a686a865e8513746c24cca2665137c46e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a01a112a3f7daea3a3054e13096a07bfb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maybe_8h.html#a01a112a3f7daea3a3054e13096a07bfb">Nothing</a>(Typename)&#160;&#160;&#160;((<a class="el" href="maybe_8h.html#af32214933fa64e514c6ab6f5771c6117">Maybe</a>(Typename)){0})</td></tr>
-<tr class="memdesc:a01a112a3f7daea3a3054e13096a07bfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wrap a <code>Nothing</code> value into a <code><a class="el" href="maybe_8h.html#af32214933fa64e514c6ab6f5771c6117" title="Convenience macro to get the type of the Maybe defined with a certain type name.">Maybe(Typename)</a></code>.  <a href="maybe_8h.html#a01a112a3f7daea3a3054e13096a07bfb">More...</a><br /></td></tr>
-<tr class="separator:a01a112a3f7daea3a3054e13096a07bfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af47a0e4269e370939835ecc0cf6c7875"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a>(T)&#160;&#160;&#160;Maybe##T</td></tr>
+<tr class="memdesc:af47a0e4269e370939835ecc0cf6c7875"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience macro to get the type of the Maybe defined with a certain type.  <a href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">More...</a><br /></td></tr>
+<tr class="separator:af47a0e4269e370939835ecc0cf6c7875"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0daf26d181160b7fb96d640ed20bb466"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maybe_8h.html#a0daf26d181160b7fb96d640ed20bb466">DefineMaybe</a>(T)</td></tr>
+<tr class="memdesc:a0daf26d181160b7fb96d640ed20bb466"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define a Maybe&lt;T&gt; type.  <a href="maybe_8h.html#a0daf26d181160b7fb96d640ed20bb466">More...</a><br /></td></tr>
+<tr class="separator:a0daf26d181160b7fb96d640ed20bb466"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0832f95d5a7ff6845381aa8795fd2a3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maybe_8h.html#ae0832f95d5a7ff6845381aa8795fd2a3">Just</a>(v,  T)&#160;&#160;&#160;((<a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a>(T)){.tag = <a class="el" href="maybe_8h.html#aef352f4183ce21f9ac15edd86a75b230a1e57a50afd710304d82f6269f40e18c2">MaybeTag_Just</a>, .val = (v)})</td></tr>
+<tr class="memdesc:ae0832f95d5a7ff6845381aa8795fd2a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wrap a <code>Just</code> value into a <a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875" title="Convenience macro to get the type of the Maybe defined with a certain type.">Maybe(T)</a>.  <a href="maybe_8h.html#ae0832f95d5a7ff6845381aa8795fd2a3">More...</a><br /></td></tr>
+<tr class="separator:ae0832f95d5a7ff6845381aa8795fd2a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65cd69857cc806545d68c79464270a97"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maybe_8h.html#a65cd69857cc806545d68c79464270a97">Nothing</a>(T)&#160;&#160;&#160;((<a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a>(T)){0})</td></tr>
+<tr class="memdesc:a65cd69857cc806545d68c79464270a97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wrap a <code>Nothing</code> value into a <a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875" title="Convenience macro to get the type of the Maybe defined with a certain type.">Maybe(T)</a>.  <a href="maybe_8h.html#a65cd69857cc806545d68c79464270a97">More...</a><br /></td></tr>
+<tr class="separator:a65cd69857cc806545d68c79464270a97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b03ece9f7b00fcbbe8e0dde45277c47"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maybe_8h.html#a1b03ece9f7b00fcbbe8e0dde45277c47">is_nothing</a>(x)&#160;&#160;&#160;((x).tag == <a class="el" href="maybe_8h.html#aef352f4183ce21f9ac15edd86a75b230aae774bc4d692f226f6a9d88b7e1ce26f">MaybeTag_Nothing</a>)</td></tr>
 <tr class="memdesc:a1b03ece9f7b00fcbbe8e0dde45277c47"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the given Maybe type is tagged with <code>Nothing</code>.  <a href="maybe_8h.html#a1b03ece9f7b00fcbbe8e0dde45277c47">More...</a><br /></td></tr>
 <tr class="separator:a1b03ece9f7b00fcbbe8e0dde45277c47"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8ae2e9c065fbca1cd3a603ad0a71d8f2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maybe_8h.html#a8ae2e9c065fbca1cd3a603ad0a71d8f2">is_just</a>(x)&#160;&#160;&#160;((x).tag == <a class="el" href="maybe_8h.html#aef352f4183ce21f9ac15edd86a75b230a1e57a50afd710304d82f6269f40e18c2">MaybeTag_Just</a>)</td></tr>
 <tr class="memdesc:a8ae2e9c065fbca1cd3a603ad0a71d8f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the given Maybe type is tagged with <code>Just</code>.  <a href="maybe_8h.html#a8ae2e9c065fbca1cd3a603ad0a71d8f2">More...</a><br /></td></tr>
 <tr class="separator:a8ae2e9c065fbca1cd3a603ad0a71d8f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d535eea3edba50bcfd0a0e8f4af34ba"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maybe_8h.html#a8d535eea3edba50bcfd0a0e8f4af34ba">from_just</a>(x,  Typename)&#160;&#160;&#160;Typename##_from_just(x)</td></tr>
-<tr class="memdesc:a8d535eea3edba50bcfd0a0e8f4af34ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extract the <code>Just</code> value from given <code>Maybe&lt;T&gt;</code>.  <a href="maybe_8h.html#a8d535eea3edba50bcfd0a0e8f4af34ba">More...</a><br /></td></tr>
-<tr class="separator:a8d535eea3edba50bcfd0a0e8f4af34ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26feaafcb3e37674333f6673ec2bdb7d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maybe_8h.html#a26feaafcb3e37674333f6673ec2bdb7d">from_just</a>(x,  T)&#160;&#160;&#160;T##_from_just(x)</td></tr>
+<tr class="memdesc:a26feaafcb3e37674333f6673ec2bdb7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extract the <code>Just</code> value from given <a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875" title="Convenience macro to get the type of the Maybe defined with a certain type.">Maybe(T)</a>.  <a href="maybe_8h.html#a26feaafcb3e37674333f6673ec2bdb7d">More...</a><br /></td></tr>
+<tr class="separator:a26feaafcb3e37674333f6673ec2bdb7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a16682b211c71e2ad917edc9bdd298154"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="maybe_8h.html#a16682b211c71e2ad917edc9bdd298154">from_just_</a>(x)&#160;&#160;&#160;(x).val</td></tr>
-<tr class="memdesc:a16682b211c71e2ad917edc9bdd298154"><td class="mdescLeft">&#160;</td><td class="mdescRight">"Unsafe" version of <a class="el" href="maybe_8h.html#a8d535eea3edba50bcfd0a0e8f4af34ba" title="Extract the Just value from given Maybe&lt;T&gt;.">from_just(x, Typename)</a>.  <a href="maybe_8h.html#a16682b211c71e2ad917edc9bdd298154">More...</a><br /></td></tr>
+<tr class="memdesc:a16682b211c71e2ad917edc9bdd298154"><td class="mdescLeft">&#160;</td><td class="mdescRight">"Unsafe" version of <a class="el" href="maybe_8h.html#a26feaafcb3e37674333f6673ec2bdb7d" title="Extract the Just value from given Maybe(T).">from_just(x, T)</a>.  <a href="maybe_8h.html#a16682b211c71e2ad917edc9bdd298154">More...</a><br /></td></tr>
 <tr class="separator:a16682b211c71e2ad917edc9bdd298154"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
@@ -163,8 +163,8 @@ Enumerations</h2></td></tr>
 <div class="textblock"><p class="">Utilities to define and use a Maybe type. </p>
 <dl class="section note"><dt>Note</dt><dd>The Maybe struct members <b>must not</b> be accessed manually unless you know exactly what you're doing. Use <code>from_just</code> or <code>from_just_</code> <em>after</em> <code>is_just</code>/<code>is_nothing</code> instead. </dd></dl>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a4b11d3a1635211e3c40eb08f5f79ab4b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4b11d3a1635211e3c40eb08f5f79ab4b">&#9670;&nbsp;</a></span>DefineMaybe</h2>
+<a id="a0daf26d181160b7fb96d640ed20bb466"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0daf26d181160b7fb96d640ed20bb466">&#9670;&nbsp;</a></span>DefineMaybe</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -173,18 +173,8 @@ Enumerations</h2></td></tr>
           <td class="memname">#define DefineMaybe</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">T, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname">T</td><td>)</td>
           <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">Typename&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -193,8 +183,8 @@ Enumerations</h2></td></tr>
 <div class="line">        MaybeTag tag;                                                                                                  \</div>
 <div class="line">        <span class="comment">/* Don&#39;t access this member manually */</span>                                                                        \</div>
 <div class="line">        T val;                                                                                                         \</div>
-<div class="line">    } <a class="code" href="maybe_8h.html#af32214933fa64e514c6ab6f5771c6117">Maybe</a>(Typename);                                                                                                 \</div>
-<div class="line">    static <span class="keyword">inline</span> T Typename##_from_just(<a class="code" href="maybe_8h.html#af32214933fa64e514c6ab6f5771c6117">Maybe</a>(Typename) maybex)                                                       \</div>
+<div class="line">    } <a class="code" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a>(T);                                                                                                        \</div>
+<div class="line">    static <span class="keyword">inline</span> T T##_from_just(<a class="code" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a>(T) maybex)                                                                     \</div>
 <div class="line">    {                                                                                                                  \</div>
 <div class="line">        if (<a class="code" href="maybe_8h.html#a8ae2e9c065fbca1cd3a603ad0a71d8f2">is_just</a>(maybex)) {                                                                                         \</div>
 <div class="line">            return maybex.val;                                                                                         \</div>
@@ -203,26 +193,27 @@ Enumerations</h2></td></tr>
 <div class="line">            abort();                                                                                                   \</div>
 <div class="line">        }                                                                                                              \</div>
 <div class="line">    }</div>
-<div class="ttc" id="amaybe_8h_html_a8ae2e9c065fbca1cd3a603ad0a71d8f2"><div class="ttname"><a href="maybe_8h.html#a8ae2e9c065fbca1cd3a603ad0a71d8f2">is_just</a></div><div class="ttdeci">#define is_just(x)</div><div class="ttdoc">Check if the given Maybe type is tagged with Just.</div><div class="ttdef"><b>Definition:</b> maybe.h:120</div></div>
-<div class="ttc" id="amaybe_8h_html_af32214933fa64e514c6ab6f5771c6117"><div class="ttname"><a href="maybe_8h.html#af32214933fa64e514c6ab6f5771c6117">Maybe</a></div><div class="ttdeci">#define Maybe(Typename)</div><div class="ttdoc">Convenience macro to get the type of the Maybe defined with a certain type name.</div><div class="ttdef"><b>Definition:</b> maybe.h:39</div></div>
+<div class="ttc" id="amaybe_8h_html_a8ae2e9c065fbca1cd3a603ad0a71d8f2"><div class="ttname"><a href="maybe_8h.html#a8ae2e9c065fbca1cd3a603ad0a71d8f2">is_just</a></div><div class="ttdeci">#define is_just(x)</div><div class="ttdoc">Check if the given Maybe type is tagged with Just.</div><div class="ttdef"><b>Definition:</b> maybe.h:123</div></div>
+<div class="ttc" id="amaybe_8h_html_af47a0e4269e370939835ecc0cf6c7875"><div class="ttname"><a href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a></div><div class="ttdeci">#define Maybe(T)</div><div class="ttdoc">Convenience macro to get the type of the Maybe defined with a certain type.</div><div class="ttdef"><b>Definition:</b> maybe.h:40</div></div>
 </div><!-- fragment -->
 <p>Define a Maybe&lt;T&gt; type. </p>
 <h1>Example</h1>
-<div class="fragment"><div class="line"><a class="code" href="maybe_8h.html#a4b11d3a1635211e3c40eb08f5f79ab4b">DefineMaybe</a>(Int) <span class="comment">// Defines a Maybe(Int) type as well as its corresponding functions</span></div>
-<div class="ttc" id="amaybe_8h_html_a4b11d3a1635211e3c40eb08f5f79ab4b"><div class="ttname"><a href="maybe_8h.html#a4b11d3a1635211e3c40eb08f5f79ab4b">DefineMaybe</a></div><div class="ttdeci">#define DefineMaybe(T, Typename)</div><div class="ttdoc">Define a Maybe&lt;T&gt; type.</div><div class="ttdef"><b>Definition:</b> maybe.h:57</div></div>
+<div class="fragment"><div class="line"><a class="code" href="maybe_8h.html#a0daf26d181160b7fb96d640ed20bb466">DefineMaybe</a>(<span class="keywordtype">int</span>) <span class="comment">// Defines a Maybe(int) type as well as its corresponding functions</span></div>
+<div class="ttc" id="amaybe_8h_html_a0daf26d181160b7fb96d640ed20bb466"><div class="ttname"><a href="maybe_8h.html#a0daf26d181160b7fb96d640ed20bb466">DefineMaybe</a></div><div class="ttdeci">#define DefineMaybe(T)</div><div class="ttdoc">Define a Maybe&lt;T&gt; type.</div><div class="ttdef"><b>Definition:</b> maybe.h:57</div></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">T</td><td>The concrete (semantic) type for the <code>Just</code> branch of this <code>Maybe</code>. </td></tr>
-    <tr><td class="paramname">Typename</td><td>The "canonical" type name of the type this iterator will yield, this is purely subjective and upto the user to decide, however the type names for each type <b>must</b> be consistent.</td></tr>
+    <tr><td class="paramname">T</td><td>The type of value this <code>Maybe</code> will hold. Must be alphanumeric.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>This should not be delimited by a semicolon. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>If <code>T</code> is a pointer, it needs to be typedef-ed into a type that does not contain the <code>*</code>. Only alphanumerics. </dd>
+<dd>
+This should not be delimited by a semicolon. </dd></dl>
 
 </div>
 </div>
-<a id="a8d535eea3edba50bcfd0a0e8f4af34ba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8d535eea3edba50bcfd0a0e8f4af34ba">&#9670;&nbsp;</a></span>from_just</h2>
+<a id="a26feaafcb3e37674333f6673ec2bdb7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26feaafcb3e37674333f6673ec2bdb7d">&#9670;&nbsp;</a></span>from_just</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -237,26 +228,28 @@ Enumerations</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">Typename&#160;</td>
+          <td class="paramname">T&#160;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;Typename##_from_just(x)</td>
+          <td></td><td>&#160;&#160;&#160;T##_from_just(x)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Extract the <code>Just</code> value from given <code>Maybe&lt;T&gt;</code>. </p>
+<p>Extract the <code>Just</code> value from given <a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875" title="Convenience macro to get the type of the Maybe defined with a certain type.">Maybe(T)</a>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">x</td><td>The <code>Maybe</code> type to extract the value from. </td></tr>
-    <tr><td class="paramname">Typename</td><td>The "canonical" type name of a type used to define the Maybe type.</td></tr>
+    <tr><td class="paramname">T</td><td>The type of value the <code>Maybe</code> will hold. Must be alphanumeric.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>Just</code> value of type corresponding to the given <a class="el" href="maybe_8h.html#af32214933fa64e514c6ab6f5771c6117" title="Convenience macro to get the type of the Maybe defined with a certain type name.">Maybe(Typename)</a> if it's not <code>Nothing</code>.</dd></dl>
-<dl class="section note"><dt>Note</dt><dd>Aborts the program if given Maybe&lt;T&gt; struct was tagged with <code>Nothing</code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>Just</code> value of type corresponding to the given <a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875" title="Convenience macro to get the type of the Maybe defined with a certain type.">Maybe(T)</a> if it's not <code>Nothing</code>.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>If <code>T</code> is a pointer, it needs to be typedef-ed into a type that does not contain the <code>*</code>. Only alphanumerics. </dd>
+<dd>
+Aborts the program if given <a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875" title="Convenience macro to get the type of the Maybe defined with a certain type.">Maybe(T)</a> struct was tagged with <code>Nothing</code>. </dd></dl>
 
 </div>
 </div>
@@ -276,7 +269,7 @@ Enumerations</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>"Unsafe" version of <a class="el" href="maybe_8h.html#a8d535eea3edba50bcfd0a0e8f4af34ba" title="Extract the Just value from given Maybe&lt;T&gt;.">from_just(x, Typename)</a>. </p>
+<p>"Unsafe" version of <a class="el" href="maybe_8h.html#a26feaafcb3e37674333f6673ec2bdb7d" title="Extract the Just value from given Maybe(T).">from_just(x, T)</a>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">x</td><td>The <code>Maybe</code> type to extract the value from.</td></tr>
@@ -307,7 +300,7 @@ Enumerations</h2></td></tr>
 <p>Check if the given Maybe type is tagged with <code>Just</code>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">x</td><td>The Maybe&lt;T&gt; struct to check against. </td></tr>
+    <tr><td class="paramname">x</td><td>The <a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875" title="Convenience macro to get the type of the Maybe defined with a certain type.">Maybe(T)</a> struct to check against. </td></tr>
   </table>
   </dd>
 </dl>
@@ -333,15 +326,15 @@ Enumerations</h2></td></tr>
 <p>Check if the given Maybe type is tagged with <code>Nothing</code>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">x</td><td>The Maybe&lt;T&gt; struct to check against. </td></tr>
+    <tr><td class="paramname">x</td><td>The <a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875" title="Convenience macro to get the type of the Maybe defined with a certain type.">Maybe(T)</a> struct to check against. </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="a686a865e8513746c24cca2665137c46e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a686a865e8513746c24cca2665137c46e">&#9670;&nbsp;</a></span>Just</h2>
+<a id="ae0832f95d5a7ff6845381aa8795fd2a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0832f95d5a7ff6845381aa8795fd2a3">&#9670;&nbsp;</a></span>Just</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -356,34 +349,36 @@ Enumerations</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">Typename&#160;</td>
+          <td class="paramname">T&#160;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;((<a class="el" href="maybe_8h.html#af32214933fa64e514c6ab6f5771c6117">Maybe</a>(Typename)){.tag = <a class="el" href="maybe_8h.html#aef352f4183ce21f9ac15edd86a75b230a1e57a50afd710304d82f6269f40e18c2">MaybeTag_Just</a>, .val = (v)})</td>
+          <td></td><td>&#160;&#160;&#160;((<a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a>(T)){.tag = <a class="el" href="maybe_8h.html#aef352f4183ce21f9ac15edd86a75b230a1e57a50afd710304d82f6269f40e18c2">MaybeTag_Just</a>, .val = (v)})</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Wrap a <code>Just</code> value into a <code><a class="el" href="maybe_8h.html#af32214933fa64e514c6ab6f5771c6117" title="Convenience macro to get the type of the Maybe defined with a certain type name.">Maybe(Typename)</a></code>. </p>
+<p>Wrap a <code>Just</code> value into a <a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875" title="Convenience macro to get the type of the Maybe defined with a certain type.">Maybe(T)</a>. </p>
 <h1>Example</h1>
-<div class="fragment"><div class="line"><a class="code" href="maybe_8h.html#a4b11d3a1635211e3c40eb08f5f79ab4b">DefineMaybe</a>(Int)</div>
-<div class="line"><a class="code" href="maybe_8h.html#af32214933fa64e514c6ab6f5771c6117">Maybe</a>(Int) <span class="keyword">const</span> x = <a class="code" href="maybe_8h.html#a686a865e8513746c24cca2665137c46e">Just</a>(42, Int); <span class="comment">// Initializes a Maybe(Int) with the value 42</span></div>
-<div class="ttc" id="amaybe_8h_html_a686a865e8513746c24cca2665137c46e"><div class="ttname"><a href="maybe_8h.html#a686a865e8513746c24cca2665137c46e">Just</a></div><div class="ttdeci">#define Just(v, Typename)</div><div class="ttdoc">Wrap a Just value into a Maybe(Typename).</div><div class="ttdef"><b>Definition:</b> maybe.h:90</div></div>
+<div class="fragment"><div class="line"><a class="code" href="maybe_8h.html#a0daf26d181160b7fb96d640ed20bb466">DefineMaybe</a>(<span class="keywordtype">int</span>)</div>
+<div class="line"><a class="code" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a>(<span class="keywordtype">int</span>) <span class="keyword">const</span> x = <a class="code" href="maybe_8h.html#ae0832f95d5a7ff6845381aa8795fd2a3">Just</a>(42, <span class="keywordtype">int</span>); <span class="comment">// Initializes a Maybe(int) with the value 42</span></div>
+<div class="ttc" id="amaybe_8h_html_ae0832f95d5a7ff6845381aa8795fd2a3"><div class="ttname"><a href="maybe_8h.html#ae0832f95d5a7ff6845381aa8795fd2a3">Just</a></div><div class="ttdeci">#define Just(v, T)</div><div class="ttdoc">Wrap a Just value into a Maybe(T).</div><div class="ttdef"><b>Definition:</b> maybe.h:91</div></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">v</td><td>The concrete value to wrap in <code>Just</code> (must be of the correct type). </td></tr>
-    <tr><td class="paramname">Typename</td><td>The "canonical" type name of a type used to define the Maybe type.</td></tr>
+    <tr><td class="paramname">T</td><td>The type of value the <code>Maybe</code> will hold. Must be alphanumeric.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>The value is simply assigned to the Maybe&lt;T&gt; struct. No implicit copying is done. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>If <code>T</code> is a pointer, it needs to be typedef-ed into a type that does not contain the <code>*</code>. Only alphanumerics. </dd>
+<dd>
+The value is simply assigned to the <a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875" title="Convenience macro to get the type of the Maybe defined with a certain type.">Maybe(T)</a> struct. No implicit copying is done. </dd></dl>
 
 </div>
 </div>
-<a id="af32214933fa64e514c6ab6f5771c6117"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af32214933fa64e514c6ab6f5771c6117">&#9670;&nbsp;</a></span>Maybe</h2>
+<a id="af47a0e4269e370939835ecc0cf6c7875"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af47a0e4269e370939835ecc0cf6c7875">&#9670;&nbsp;</a></span>Maybe</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -392,27 +387,28 @@ Enumerations</h2></td></tr>
           <td class="memname">#define Maybe</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">Typename</td><td>)</td>
-          <td>&#160;&#160;&#160;Maybe##Typename</td>
+          <td class="paramname">T</td><td>)</td>
+          <td>&#160;&#160;&#160;Maybe##T</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Convenience macro to get the type of the Maybe defined with a certain type name. </p>
+<p>Convenience macro to get the type of the Maybe defined with a certain type. </p>
 <h1>Example</h1>
-<div class="fragment"><div class="line"><a class="code" href="maybe_8h.html#a4b11d3a1635211e3c40eb08f5f79ab4b">DefineMaybe</a>(Int)</div>
-<div class="line"><a class="code" href="maybe_8h.html#af32214933fa64e514c6ab6f5771c6117">Maybe</a>(Int) <span class="keyword">const</span> x = {0}; <span class="comment">// Uses the maybe type defined in the previous line</span></div>
+<div class="fragment"><div class="line"><a class="code" href="maybe_8h.html#a0daf26d181160b7fb96d640ed20bb466">DefineMaybe</a>(<span class="keywordtype">int</span>)</div>
+<div class="line"><a class="code" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a>(<span class="keywordtype">int</span>) <span class="keyword">const</span> x = {0}; <span class="comment">// Uses the maybe type defined in the previous line</span></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">ElmntTypename</td><td>The "canonical" type name of a type, must be the same type name passed to <a class="el" href="maybe_8h.html#a4b11d3a1635211e3c40eb08f5f79ab4b" title="Define a Maybe&lt;T&gt; type.">DefineMaybe</a>(T, Typename). </td></tr>
+    <tr><td class="paramname">T</td><td>The type of value the <code>Maybe</code> struct will contain. Must be the same type name passed to <a class="el" href="maybe_8h.html#a0daf26d181160b7fb96d640ed20bb466" title="Define a Maybe&lt;T&gt; type.">DefineMaybe(T)</a>.</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section note"><dt>Note</dt><dd>If <code>T</code> is a pointer, it needs to be typedef-ed into a type that does not contain the <code>*</code>. Only alphanumerics. </dd></dl>
 
 </div>
 </div>
-<a id="a01a112a3f7daea3a3054e13096a07bfb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a01a112a3f7daea3a3054e13096a07bfb">&#9670;&nbsp;</a></span>Nothing</h2>
+<a id="a65cd69857cc806545d68c79464270a97"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a65cd69857cc806545d68c79464270a97">&#9670;&nbsp;</a></span>Nothing</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -421,23 +417,24 @@ Enumerations</h2></td></tr>
           <td class="memname">#define Nothing</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">Typename</td><td>)</td>
-          <td>&#160;&#160;&#160;((<a class="el" href="maybe_8h.html#af32214933fa64e514c6ab6f5771c6117">Maybe</a>(Typename)){0})</td>
+          <td class="paramname">T</td><td>)</td>
+          <td>&#160;&#160;&#160;((<a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a>(T)){0})</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Wrap a <code>Nothing</code> value into a <code><a class="el" href="maybe_8h.html#af32214933fa64e514c6ab6f5771c6117" title="Convenience macro to get the type of the Maybe defined with a certain type name.">Maybe(Typename)</a></code>. </p>
+<p>Wrap a <code>Nothing</code> value into a <a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875" title="Convenience macro to get the type of the Maybe defined with a certain type.">Maybe(T)</a>. </p>
 <h1>Example</h1>
-<div class="fragment"><div class="line"><a class="code" href="maybe_8h.html#a4b11d3a1635211e3c40eb08f5f79ab4b">DefineMaybe</a>(Int)</div>
-<div class="line"><a class="code" href="maybe_8h.html#af32214933fa64e514c6ab6f5771c6117">Maybe</a>(Int) <span class="keyword">const</span> x = <a class="code" href="maybe_8h.html#a01a112a3f7daea3a3054e13096a07bfb">Nothing</a>(Int); <span class="comment">// Initializes a Maybe(Int) with no value</span></div>
-<div class="ttc" id="amaybe_8h_html_a01a112a3f7daea3a3054e13096a07bfb"><div class="ttname"><a href="maybe_8h.html#a01a112a3f7daea3a3054e13096a07bfb">Nothing</a></div><div class="ttdeci">#define Nothing(Typename)</div><div class="ttdoc">Wrap a Nothing value into a Maybe(Typename).</div><div class="ttdef"><b>Definition:</b> maybe.h:105</div></div>
+<div class="fragment"><div class="line"><a class="code" href="maybe_8h.html#a0daf26d181160b7fb96d640ed20bb466">DefineMaybe</a>(<span class="keywordtype">int</span>)</div>
+<div class="line"><a class="code" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a>(<span class="keywordtype">int</span>) <span class="keyword">const</span> x = <a class="code" href="maybe_8h.html#a65cd69857cc806545d68c79464270a97">Nothing</a>(<span class="keywordtype">int</span>); <span class="comment">// Initializes a Maybe(int) with no value</span></div>
+<div class="ttc" id="amaybe_8h_html_a65cd69857cc806545d68c79464270a97"><div class="ttname"><a href="maybe_8h.html#a65cd69857cc806545d68c79464270a97">Nothing</a></div><div class="ttdeci">#define Nothing(T)</div><div class="ttdoc">Wrap a Nothing value into a Maybe(T).</div><div class="ttdef"><b>Definition:</b> maybe.h:108</div></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">Typename</td><td>The "canonical" type name of a type used to define the Maybe type </td></tr>
+    <tr><td class="paramname">T</td><td>The type of value the <code>Maybe</code> will hold. Must be alphanumeric.</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section note"><dt>Note</dt><dd>If <code>T</code> is a pointer, it needs to be typedef-ed into a type that does not contain the <code>*</code>. Only alphanumerics. </dd></dl>
 
 </div>
 </div>
