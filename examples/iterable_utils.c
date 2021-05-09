@@ -1,3 +1,5 @@
+#include "iterable_utils.h"
+
 #include "func_iter.h"
 
 #include <stdio.h>
@@ -16,24 +18,17 @@
 int sum_intit(Iterable(Int) it)
 {
     int sum = 0;
-    while (1) {
-        Maybe(Int) res = it.tc.next(it.self);
-        if (is_nothing(res)) {
-            return sum;
-        }
+    foreach (Int, res, it) {
         sum += from_just_(res);
     }
+    return sum;
 }
 
 /* Generic function to print values from any iterable yielding string */
 void print_strit(Iterable(Str) it)
 {
-    while (1) {
-        Maybe(Str) res = it.tc.next(it.self);
-        if (is_nothing(res)) {
-            puts("");
-            return;
-        }
+    foreach (Str, res, it) {
         printf("%s ", from_just_(res));
     }
+    puts("");
 }
