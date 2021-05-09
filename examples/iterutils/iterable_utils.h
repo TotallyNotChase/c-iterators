@@ -1,7 +1,7 @@
 #ifndef IT_ITRBLE_UTILS_H
 #define IT_ITRBLE_UTILS_H
 
-#include "func_iter.h"
+#include "../func_iter.h"
 #include "take.h"
 
 #define foreach(T, x, it) for (Maybe(T) x = (it).tc.next((it).self); !is_nothing(x); x = (it).tc.next((it).self))

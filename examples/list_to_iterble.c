@@ -1,6 +1,6 @@
 #include "examples.h"
 #include "func_iter.h"
-#include "iterable_utils.h"
+#include "iterutils/iterable_utils.h"
 #include "list_iterable.h"
 
 #define Cons prepend_intnode /* Convenience macro to prepend_intnode */

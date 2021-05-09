@@ -3,17 +3,18 @@
 
 # Add the main executable
 add_executable(iterators_example
+  "iterutils/take.h"
+  "iterutils/iterable_utils.h"
   "fibonacci_iterable.h"
   "array_iterable.h"
   "list_iterable.h"
   "examples.h"
   "func_iter.h"
-  "iterable_utils.h"
   "fibonacci_iterable.c"
   "array_iterable.c"
-  "list_iterable.c"
-  "iterable_utils.c"
+  "iterutils/iterable_utils.c"
   "fibbonacci.c"
+  "list_iterable.c"
   "arr_to_iterble.c"
   "list_to_iterble.c"
   "list_from_arr.c"

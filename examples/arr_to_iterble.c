@@ -1,6 +1,6 @@
 #include "array_iterable.h"
 #include "examples.h"
-#include "iterable_utils.h"
+#include "iterutils/iterable_utils.h"
 
 void test_array(void)
 {

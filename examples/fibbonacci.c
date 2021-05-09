@@ -1,6 +1,6 @@
 #include "examples.h"
 #include "fibonacci_iterable.h"
-#include "iterable_utils.h"
+#include "iterutils/iterable_utils.h"
 
 #include <inttypes.h>
 #include <stdlib.h>

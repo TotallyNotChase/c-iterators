@@ -1,6 +1,6 @@
 #include "iterable_utils.h"
 
-#include "func_iter.h"
+#include "../func_iter.h"
 
 #include <stdio.h>
 #include <string.h>
