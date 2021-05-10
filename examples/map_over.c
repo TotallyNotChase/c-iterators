@@ -43,6 +43,8 @@ void test_mapping(void)
     /* Print the iterable */
     foreach (string, x, mappedit1) {
         printf("%s ", x);
+        /* x is returned from `inttostr` - it needs to be freed */
+        free(x);
     }
     puts("");
 }
