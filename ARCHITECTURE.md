@@ -65,11 +65,27 @@ This also contains a subdirectory - `iterutils`, which contains utilities to wor
   </td>
   <td>
 
-  Macros to define an `IterTake` struct of a certain type.
+  Macros to define an `IterTake` struct of a certain element type.
 
   This struct stores a source iterable, and keeps track of how many elements to extract from it. This is used to implement a `take`-like function.
 
-  Also defines a macro to implement `Iterator` for an `IterTake` struct, as well as a function that takes in an `Iterable` and the number of elements to extract from that iterable (`n`), and returns the corresponding `IterTake` struct wrapped in its `Iterable` impl. **This `Iterable`'s `self` member must be freed after usage**.
+  Defines a macro to implement `Iterator` for an `IterTake` struct, as well as a macro (`take_from`) to "take" `n` elements from a given iterable, lazily.
+  
+  </td>
+</tr>
+<tr>
+  <td>
+
+  `map.h`
+ 
+  </td>
+  <td>
+
+  Macros to define an `IterMap` struct of a certain element and return type.
+
+  This struct stores a source iterable, and a function to map over the iterable.
+
+  Defines a macro to implement `Iterator` for an `IterMap` struct, as well as a macro (`map_over`) to map a function (`fn`) over a given iterable, lazily.
   
   </td>
 </tr>
@@ -268,7 +284,19 @@ The usage of these iterutils and the primary header files are demonstrated by th
   </td>
   <td>
 
-  Example function that prints the first 10 elements from an `Iterable` representing the infinite fibonacci sequence.
+  Example function that prints the elements from an `Iterable` representing the infinite fibonacci sequence.
+  
+  </td>
+</tr>
+<tr>
+  <td>
+
+  `map_over.c`
+ 
+  </td>
+  <td>
+
+  Example function that maps functions over an `Iterable`.
   
   </td>
 </tr>
