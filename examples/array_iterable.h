@@ -16,12 +16,12 @@
     } ArrIter(T)
 
 #define arr_into_iter(srcarr, sz, T)                                                                                   \
-    (ArrIter(T)) { .i = 0, .size = sz, .arr = srcarr }
+    prep_##T ##arr_itr(&(ArrIter(T)) { .i = 0, .size = sz, .arr = srcarr })
 
 DefineArrIterOf(int);
 DefineArrIterOf(string);
 
 Iterable(int) prep_intarr_itr(ArrIter(int) * x);
-Iterable(string) prep_strarr_itr(ArrIter(string) * x);
+Iterable(string) prep_stringarr_itr(ArrIter(string) * x);
 
 #endif /* !IT_ARR_ITRBLE_H */

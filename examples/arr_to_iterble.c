@@ -6,18 +6,14 @@ void test_array(void)
 {
     /* For int array */
     int arr[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-    /* Turn the array into an ArrIter */
-    ArrIter(int) arriter = arr_into_iter(arr, sizeof(arr) / sizeof(*arr), int);
-    /* Use the ArrIter's Iterator impl */
-    Iterable(int) arrit = prep_intarr_itr(&arriter);
+    /* Turn the array into an Iterable */
+    Iterable(int) arrit = arr_into_iter(arr, sizeof(arr) / sizeof(*arr), int);
     int const sumarr    = sum_intit(arrit);
     printf("Sum of array values: %d\n", sumarr);
 
     /* For string array */
     string strarr[] = {"fear", "surprise", "ruthless-efficiency"};
-    /* Turn the array into an ArrIter */
-    ArrIter(string) strarriter = arr_into_iter(strarr, sizeof(strarr) / sizeof(*strarr), string);
-    /* Use the ArrIter's Iterator impl */
-    Iterable(string) strarrit = prep_strarr_itr(&strarriter);
+    /* Turn the array into an Iterable */
+    Iterable(string) strarrit = arr_into_iter(strarr, sizeof(strarr) / sizeof(*strarr), string);
     print_strit(strarrit);
 }

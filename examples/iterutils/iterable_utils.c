@@ -18,8 +18,8 @@
 int sum_intit(Iterable(int) it)
 {
     int sum = 0;
-    foreach (int, res, it) {
-        sum += from_just_(res);
+    foreach (int, x, it) {
+        sum += x;
     }
     return sum;
 }
@@ -27,10 +27,10 @@ int sum_intit(Iterable(int) it)
 /* Generic function to print values from any iterable yielding string */
 void print_strit(Iterable(string) it)
 {
-    foreach (string, res, it) {
-        printf("%s ", from_just_(res));
+    foreach (string, s, it) {
+        printf("%s ", s);
     }
     puts("");
 }
 
-define_itertake_func(uint32_t, take_u32it)
+define_itertake_func(uint32_t)

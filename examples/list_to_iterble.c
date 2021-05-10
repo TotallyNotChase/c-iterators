@@ -22,10 +22,8 @@ void test_list(void)
 {
     IntList list = Cons(9, Cons(1, Cons(6, Cons(5, Nil))));
 
-    /* Turn the list into a ListIter */
-    ListIter(ConstIntList) listiter = list_into_iter(list, ConstIntList);
-    /* Use the ListIter's Iterator impl */
-    Iterable(int) listit = prep_intlist_itr(&listiter);
+    /* Turn the list into an iterable */
+    Iterable(int) listit = list_into_iter(list, ConstIntList);
     int const sumlist    = sum_intit(listit);
     printf("Sum of list values: %d\n", sumlist);
 
