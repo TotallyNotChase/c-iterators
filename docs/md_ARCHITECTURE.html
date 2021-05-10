@@ -149,9 +149,19 @@ $(document).ready(function(){initNavTree('md_ARCHITECTURE.html',''); initResizab
 <p class="intertd"><code>take.h</code></p>
 <p class="endtd"></p>
 </td><td><p class="starttd"></p>
-<p class="intertd">Macros to define an <code>IterTake</code> struct of a certain type.</p>
+<p class="intertd">Macros to define an <code>IterTake</code> struct of a certain element type.</p>
 <p class="intertd">This struct stores a source iterable, and keeps track of how many elements to extract from it. This is used to implement a <code>take</code>-like function.</p>
-<p class="intertd">Also defines a macro to implement <code>Iterator</code> for an <code>IterTake</code> struct, as well as a function that takes in an <code>Iterable</code> and the number of elements to extract from that iterable (<code>n</code>), and returns the corresponding <code>IterTake</code> struct wrapped in its <code>Iterable</code> impl. <b>This <code>Iterable</code>'s <code>self</code> member must be freed after usage</b>.</p>
+<p class="intertd">Defines a macro to implement <code>Iterator</code> for an <code>IterTake</code> struct, as well as a macro (<code>take_from</code>) to "take" <code>n</code> elements from a given iterable, lazily.</p>
+<p class="endtd"></p>
+</td></tr>
+<tr>
+<td><p class="starttd"></p>
+<p class="intertd"><code>map.h</code></p>
+<p class="endtd"></p>
+</td><td><p class="starttd"></p>
+<p class="intertd">Macros to define an <code>IterMap</code> struct of a certain element and return type.</p>
+<p class="intertd">This struct stores a source iterable, and a function to map over the iterable.</p>
+<p class="intertd">Defines a macro to implement <code>Iterator</code> for an <code>IterMap</code> struct, as well as a macro (<code>map_over</code>) to map a function (<code>fn</code>) over a given iterable, lazily.</p>
 <p class="endtd"></p>
 </td></tr>
 <tr>
@@ -283,7 +293,15 @@ $(document).ready(function(){initNavTree('md_ARCHITECTURE.html',''); initResizab
 <p class="intertd"><code>fibonacci.c</code></p>
 <p class="endtd"></p>
 </td><td><p class="starttd"></p>
-<p class="intertd">Example function that prints the first 10 elements from an <code>Iterable</code> representing the infinite fibonacci sequence.</p>
+<p class="intertd">Example function that prints the elements from an <code>Iterable</code> representing the infinite fibonacci sequence.</p>
+<p class="endtd"></p>
+</td></tr>
+<tr>
+<td><p class="starttd"></p>
+<p class="intertd"><code>map_over.c</code></p>
+<p class="endtd"></p>
+</td><td><p class="starttd"></p>
+<p class="intertd">Example function that maps functions over an <code>Iterable</code>.</p>
 <p class="endtd"></p>
 </td></tr>
 </table>

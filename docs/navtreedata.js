@@ -26,6 +26,7 @@ var NAVTREE =
 [
   [ "generic_iterators", "index.html", [
     [ "Architecture", "md_ARCHITECTURE.html", null ],
+    [ "README", "md_README.html", null ],
     [ "Data Structures", "annotated.html", [
       [ "Data Structures", "annotated.html", "annotated_dup" ],
       [ "Data Structure Index", "classes.html", null ]
