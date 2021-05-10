@@ -2,6 +2,7 @@
 #define IT_ITRBLE_UTILS_H
 
 #include "../func_iter.h"
+
 #include "take.h"
 
 #define UNIQVAR(x) CONCAT(CONCAT(x, _4x2_), __LINE__) /* "Unique" variable name */
@@ -9,8 +10,8 @@
 /* Iterate through given `it` iterable that contains elements of type `T` - store each element in `x` */
 #define foreach(T, x, it)                                                                                              \
     Maybe(T) UNIQVAR(res) = (it).tc.next((it).self);                                                                   \
-    T x                   = from_just_(UNIQVAR(res));                                                                  \
-    for (; !is_nothing(UNIQVAR(res)); UNIQVAR(res) = (it).tc.next((it).self), x = from_just_(UNIQVAR(res)))
+    for (T x          = from_just_(UNIQVAR(res)); !is_nothing(UNIQVAR(res));                                           \
+         UNIQVAR(res) = (it).tc.next((it).self), x = from_just_(UNIQVAR(res)))
 
 DefineIterTake(uint32_t);
 
