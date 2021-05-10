@@ -33,4 +33,7 @@ void print_strit(Iterable(string) it)
     puts("");
 }
 
+// clang-format off
 define_itertake_func(uint32_t)
+define_itermap_func(int, int)
+define_itermap_func(int, string)

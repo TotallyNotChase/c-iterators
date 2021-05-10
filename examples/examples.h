@@ -12,6 +12,8 @@ void test_list(void);
 void test_fibonacci(void);
 /* Turn an array into an iterator and use it to build a list */
 void test_list_from_arr(void);
+/* Test mapping functions over iterator instance */
+void test_mapping(void);
 
 /* Generic function to create a reversed IntList from any iterable yielding int */
 IntList revlist_from_intit(Iterable(int) it);

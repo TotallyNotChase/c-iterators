@@ -7,5 +7,6 @@ int main(void)
     test_list();
     test_list_from_arr();
     test_fibonacci();
+    test_mapping();
     return 0;
 }
