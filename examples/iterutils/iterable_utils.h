@@ -9,8 +9,8 @@
 
 /* Iterate through given `it` iterable that contains elements of type `T` - store each element in `x` */
 #define foreach(T, x, it)                                                                                              \
-    Maybe(T) UNIQVAR(res) = (it).tc->next((it).self);                                                                   \
-    for (T x          = from_just_(UNIQVAR(res)); !is_nothing(UNIQVAR(res));                                           \
+    Maybe(T) UNIQVAR(res) = (it).tc->next((it).self);                                                                  \
+    for (T x          = from_just_(UNIQVAR(res)); is_just(UNIQVAR(res));                                               \
          UNIQVAR(res) = (it).tc->next((it).self), x = from_just_(UNIQVAR(res)))
 
 DefineIterTake(uint32_t);
