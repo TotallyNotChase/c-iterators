@@ -17,15 +17,15 @@ typedef IntNode const* ConstIntList;
 
 #define ListIter(T) T##ListIter
 
-#define prep_listiter_of(T) prep_##T ##_itr
-
-#define list_into_iter(head, T) prep_listiter_of(T)(&(ListIter(T)){.curr = head})
-
 #define DefineListIterOf(T)                                                                                            \
     typedef struct                                                                                                     \
     {                                                                                                                  \
         T curr;                                                                                                        \
     } ListIter(T)
+
+#define prep_listiter_of(T) prep_##T##_itr
+
+#define list_into_iter(head, T) prep_listiter_of(T)(&(ListIter(T)){.curr = head})
 
 DefineListIterOf(ConstIntList);
 

@@ -15,10 +15,9 @@
         T const* const arr;                                                                                            \
     } ArrIter(T)
 
-#define prep_arriter_of(T) prep_##T ##arr_itr
+#define prep_arriter_of(T) prep_##T##arr_itr
 
-#define arr_into_iter(srcarr, sz, T)                                                                                   \
-    prep_arriter_of(T)(&(ArrIter(T)) { .i = 0, .size = sz, .arr = srcarr })
+#define arr_into_iter(srcarr, sz, T) prep_arriter_of(T)(&(ArrIter(T)){.i = 0, .size = sz, .arr = srcarr})
 
 DefineArrIterOf(int);
 DefineArrIterOf(string);
