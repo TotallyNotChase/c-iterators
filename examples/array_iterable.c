@@ -17,6 +17,6 @@ static Maybe(string) strarrnxt(ArrIter(string) * self)
 }
 
 // clang-format off
-impl_iterator(ArrIter(int)*, int, intarrnxt, prep_intarr_itr)
+impl_iterator(ArrIter(int)*, int, intarrnxt, prep_arriter_of(int))
 
-impl_iterator(ArrIter(string)*, string, strarrnxt, prep_stringarr_itr)
+impl_iterator(ArrIter(string)*, string, strarrnxt, prep_arriter_of(string))
