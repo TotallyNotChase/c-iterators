@@ -8,14 +8,10 @@
 IntList revlist_from_intit(Iterable(int) it)
 {
     IntList list = Nil;
-    while (1) {
-        Maybe(int) res = it.tc.next(it.self);
-        if (is_nothing(res)) {
-            return list;
-        }
-        int val = from_just_(res);
-        list    = Cons(val, list);
+    foreach (int, val, it) {
+        list = Cons(val, list);
     }
+    return list;
 }
 
 void test_list(void)
