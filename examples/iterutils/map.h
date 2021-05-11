@@ -29,7 +29,7 @@ wraps said iterable and function in an `IterMap` struct and wraps that around it
     static Maybe(FnRetType) CONCAT(IterMap(ElmntType, FnRetType), _nxt)(IterMap(ElmntType, FnRetType) * self)          \
     {                                                                                                                  \
         Iterable(ElmntType) const srcit = self->src;                                                                   \
-        Maybe(ElmntType) res            = srcit.tc.next(srcit.self);                                                   \
+        Maybe(ElmntType) res            = srcit.tc->next(srcit.self);                                                  \
         if (is_nothing(res)) {                                                                                         \
             return Nothing(FnRetType);                                                                                 \
         }                                                                                                              \

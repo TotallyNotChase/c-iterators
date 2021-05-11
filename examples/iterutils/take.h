@@ -42,7 +42,7 @@ The function is named `prep_itertake_of(ElmntType)`
     {                                                                                                                  \
         if (self->i < self->limit) {                                                                                   \
             Iterable(ElmntType) srcit = self->src;                                                                     \
-            Maybe(ElmntType) x        = srcit.tc.next(srcit.self);                                                     \
+            Maybe(ElmntType) x        = srcit.tc->next(srcit.self);                                                    \
             if (is_nothing(x)) {                                                                                       \
                 return Nothing(ElmntType);                                                                             \
             }                                                                                                          \
@@ -51,7 +51,6 @@ The function is named `prep_itertake_of(ElmntType)`
         }                                                                                                              \
         return Nothing(ElmntType);                                                                                     \
     }                                                                                                                  \
-    impl_iterator(IterTake(ElmntType)*, ElmntType, CONCAT(IterTake(ElmntType), _nxt),                                  \
-                  prep_itertake_of(ElmntType))
+    impl_iterator(IterTake(ElmntType)*, ElmntType, CONCAT(IterTake(ElmntType), _nxt), prep_itertake_of(ElmntType))
 
 #endif /* !IT_TAKE_H */

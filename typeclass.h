@@ -44,7 +44,7 @@
     struct                                                                                                             \
     {                                                                                                                  \
         void* const self;                                                                                              \
-        Typeclass const tc;                                                                                            \
+        Typeclass const* const tc;                                                                                     \
     }
 
 #endif /* !IT_TYPECLASS_H */

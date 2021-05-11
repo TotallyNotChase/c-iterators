@@ -122,7 +122,8 @@
     {                                                                                                                  \
         Maybe(ElmntType) (*const next_)(IterType self) = (next_f);                                                     \
         (void)next_;                                                                                                   \
-        return (Iterable(ElmntType)){.tc = {.next = (Maybe(ElmntType)(*const)(void*))next_f}, .self = x};              \
+        static Iterator(ElmntType) const tc = {.next = (Maybe(ElmntType)(*const)(void*))next_f};                       \
+        return (Iterable(ElmntType)){.tc = &tc, .self = x};                                                            \
     }
 
 #endif /* !IT_ITERATOR_H */
