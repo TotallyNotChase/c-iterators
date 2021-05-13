@@ -296,7 +296,7 @@ The usage of these iterutils and the primary header files are demonstrated by th
   </td>
   <td>
 
-  Example function that maps functions over an `Iterable`.
+  Example usage of the `map` utility, that maps functions over an `Iterable`.
   
   </td>
 </tr>
