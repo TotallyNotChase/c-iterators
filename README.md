@@ -719,7 +719,7 @@ If we had an `Iterator(Show)` - we could turn each element into the strings repr
 
 The pattern for defining and implementing such typeclasses in a type safe way, is the same as the pattern used to define and implement `Iterator`. The typeclass and typeclass_instance struct, and an `impl_iterator` macro that takes in some necessary info about the type for which the typeclass is being implemented, as well as the function implementations, type checks the function impls as a no-op, and returns the typeclass instance.
 
-You can find examples for this usage, as well as more info in the [Typeclass Pattern](./Typeclass-Pattern.md) document.
+You can find examples for this usage, as well as more info in the [Typeclass Pattern](./Typeclass%20Pattern.md) document.
 
 # Motivation
 I needed some way to implement generic interfaces for a C library I'm working on. The library functions just needed a type that could *do* a certain thing, without caring about which exact type it could be backed by. It'd be the library function's responsibility to make the type do the action *if* **and** *when* needed.
