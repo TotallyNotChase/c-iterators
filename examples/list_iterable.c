@@ -50,4 +50,4 @@ static Maybe(int) intlistnxt(ListIter(ConstIntList) * self)
     return Just(node->val, int);
 }
 
-impl_iterator(ListIter(ConstIntList) *, int, intlistnxt, prep_listiter_of(ConstIntList))
+impl_iterator(ListIter(ConstIntList) *, int, prep_listiter_of(ConstIntList), intlistnxt)

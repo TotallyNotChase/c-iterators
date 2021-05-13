@@ -64,7 +64,7 @@
     typedef typeclass_instance(Iterator(T)) Iterable(T)
 
 /**
- * @def impl_iterator(IterType, ElmntType, next_f, Name)
+ * @def impl_iterator(IterType, ElmntType, Name, next_f)
  * @brief Define a function to turn given `IterType` into an #Iterable(ElmntType).
  *
  * Implement the Iterator typeclass for a type. Essentially defining a wrapper function that returns the Iterable.
@@ -102,15 +102,15 @@
  *
  * // Define a function named `prep_fib_itr`, which takes in a `Fibonacci*` and returns an `Iterable(int)`
  * // The returned iterable is an infinite fibonacci sequence
- * impl_iterator(Fibonacci*, uint32_t, fibnxt, prep_fib_itr)
+ * impl_iterator(Fibonacci*, uint32_t, prep_fib_itr, fibnxt)
  * @endcode
  *
  * @param IterType The semantic type (C type) this impl is for, must be a pointer type.
  * @param ElmntType The type of value the `Iterator` instance will yield.
+ * @param Name Name to define the function as.
  * @param next_f Function pointer that serves as the `next` implementation for `IterType`. This function must have
  * the signature of `Maybe(ElmntType) (*)(IterType self)` - i.e, should take IterType and return a value of the
  * corresponding element type wrapped in a `Maybe` - `Nothing` value indicates end of iteration.
- * @param Name Name to define the function as.
  *
  * @note If `ElmntType` is a pointer, it needs to be typedef-ed into a type that does not contain the `*`. Only
  * alphanumerics.

@@ -35,7 +35,7 @@ wraps said iterable and function in an `IterMap` struct and wraps that around it
         }                                                                                                              \
         return Just(self->mapfn(from_just_(res)), FnRetType);                                                          \
     }                                                                                                                  \
-    impl_iterator(IterMap(ElmntType, FnRetType)*, FnRetType, CONCAT(IterMap(ElmntType, FnRetType), _nxt),              \
-                  prep_itermap_of(ElmntType, FnRetType))
+    impl_iterator(IterMap(ElmntType, FnRetType)*, FnRetType, prep_itermap_of(ElmntType, FnRetType),                    \
+                  CONCAT(IterMap(ElmntType, FnRetType), _nxt))
 
 #endif /* !IT_MAP_H */

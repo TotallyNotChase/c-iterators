@@ -13,4 +13,4 @@ static Maybe(uint32_t) fibnxt(Fibonacci* self)
 }
 
 // clang-format off
-impl_iterator(Fibonacci*, uint32_t, fibnxt, prep_fib_itr)
+impl_iterator(Fibonacci*, uint32_t, prep_fib_itr, fibnxt)

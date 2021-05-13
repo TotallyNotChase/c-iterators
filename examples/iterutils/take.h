@@ -47,6 +47,6 @@ The function is named `prep_itertake_of(ElmntType)`
         }                                                                                                              \
         return Nothing(ElmntType);                                                                                     \
     }                                                                                                                  \
-    impl_iterator(IterTake(ElmntType)*, ElmntType, CONCAT(IterTake(ElmntType), _nxt), prep_itertake_of(ElmntType))
+    impl_iterator(IterTake(ElmntType)*, ElmntType, prep_itertake_of(ElmntType), CONCAT(IterTake(ElmntType), _nxt))
 
 #endif /* !IT_TAKE_H */
