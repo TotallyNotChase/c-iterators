@@ -5,7 +5,7 @@ The only files you need to implement the `Iterator` typeclass, for your own type
 
 More info about the file structure can be found in the [Architecture document](./ARCHITECTURE.md).
 
-You can find the generated docs [here](PUT DOCS LINK HERE!!!).
+You can find the generated docs [here](https://TotallyNotChase.github.io/c-iterators).
 
 # Highlights
 * Pure C99 support, no non standard extensions used
@@ -14,10 +14,10 @@ You can find the generated docs [here](PUT DOCS LINK HERE!!!).
   Though you may have to actually turn on the warnings, preferably **all warnings**.
 * Lazy-ness (the iterables are all lazily consumed, iterator utilites can also be chained lazily to evaluate all at once on demand)
 * Extensible (`Iterable` uses dynamic dispatch, allowing library functions to use it in a public API)
-* Functions working on `Iterables` can return `Iterables` - allowing them to be chained together lazily. This means you can have a `map` that returns an `Iterable`, pass it through a `filter` that also returns an `Iterable` - and both the map and filter will be evaluated in one singular iteration, on demand. Or you could have `take` from an `Iterable` and then `map` on it, there won't be 2 iterations to do this - just one, during iteration. (see [iterutils](./examples/iterutils) and [Advanced Usage](#lazy-abstractions))
+* Functions working on `Iterables` can return `Iterables` - allowing them to be chained together lazily. This means you can have a `map` that returns an `Iterable`, pass it through a `filter` that also returns an `Iterable` - and both the map and filter will be evaluated in one singular iteration, on demand. Or you could `take` from an `Iterable` and then `map` on it, there won't be 2 iterations to do this, just one. (see [iterutils](./examples/iterutils) and [Advanced Usage](#lazy-abstractions))
 
 # Building
-Although you don't really need to build anything per se, since the primary files are just headers that you can include in your project, you may still use the provided `CmakeLists.txt` (CMake 3.15 or higher) to build an executable running all the examples. The built executable should be present in the `examples/` directory inside the build directory.
+Although you don't really need to build anything per se, since the primary files (`maybe.h`, `typeclass.h`, and `iterator.h`) are just headers that you can include in your project, you may still use the provided `CmakeLists.txt` (CMake 3.15 or higher) to build an executable running all the examples. The built executable should be present in the `examples/` directory inside the build directory.
 
 ## UNIX
 ```sh
@@ -48,7 +48,7 @@ In general, there are some contraints to implementing `Iterator` for a type-
 * The element that will be yielded from the iterator instance of this type, must have an alphanumeric type name. If the element is a pointer, `typedef` it into some alphanumeric type name.
 * A `Maybe(T)` for the corresponding `T` (type that the `Iterator` will yield) must exist.
 
-Of course, you'll also need to have the `Iterator(T)` and `Maybe(T)` for a certain `T` (element the `Iterable` will yield) defined before you can implement `Iterator(T)` for anything. Remember to define those using [`DefineIteratorOf`](PUT DOCS LINK HERE!!!) and [`DefineMaybe`](PUT DOCS LINK HERE!!!) respectively.
+Of course, you'll also need to have the `Iterator(T)` and `Maybe(T)` for a certain `T` (element the `Iterable` will yield) defined before you can implement `Iterator(T)` for anything. Remember to define those using [`DefineIteratorOf`](https://TotallyNotChase.github.io/c-iterators/iterator_8h.html#a938f3e7187cb386e2bf4049753e2ff84) and [`DefineMaybe`](https://TotallyNotChase.github.io/c-iterators/maybe_8h.html#a0daf26d181160b7fb96d640ed20bb466) respectively.
 
 The examples define the common `Maybe` and `Iterator` types in [func_iter.h](./examples/func_iter.h), this file is then included by most other files.
 
@@ -141,7 +141,7 @@ This allows you to build a linked list from any `Iterable`, and since `Iterable`
 Note: `Cons` is just an alias to `prepend_intnode`, which is a function that prepends values to a singly linked list of ints. `Nil` is an alias to `NULL`.
 
 ## Expected behavior of `next`
-If you're implementing `Iterator` for your own data structure, the next function implementation you provide must follow some rules (outside of the context of the type system). These are as following-
+When you're implementing `Iterator` for your desired type, the next function implementation you provide must follow some rules (outside of the context of the type system). These are as following-
 * The function must return `Nothing` at the end of iteration, all returns before this must be `Just`.
 * Once `Nothing` has been returned (i.e iteration has ended) - any extra calls to the `next` function must keep returning `Nothing`.
 
@@ -191,7 +191,7 @@ The macro will define the `ArrIter` struct based on the given array element type
 DefineArrIterOf(int);
 ```
 
-Now, we need to implement `Iterator` for `ArrIter(T)`. To do that, we use the [`impl_iterator`](PUT DOCS LINK HERE!!!) macro provided by `iterator.h`. But before that, we need the `next` function that can work on `ArrIter`-
+Now, we need to implement `Iterator` for `ArrIter(T)`. To do that, we use the [`impl_iterator`](https://TotallyNotChase.github.io/c-iterators/iterator_8h.html#a01e620430099d2eb6192db193e88cff0) macro provided by `iterator.h`. But before that, we need the `next` function that can work on `ArrIter`-
 
 ```c
 static Maybe(int) intarrnxt(ArrIter(int) * self)
@@ -273,7 +273,7 @@ This is much the same construct as an `ArrIter`. We have a `ListIter` for a part
 ```c
 DefineListIterOf(ConstIntList);
 ```
-Now, we will implement `Iterator` for `ListIter(T)`. Just like last time, we use [`impl_iterator`](PUT DOCS LINK HERE!!!). Here's the `next` function we'll use for our `ListIter(ConstIntList)` impl-
+Now, we will implement `Iterator` for `ListIter(T)`. Just like last time, we use [`impl_iterator`](https://TotallyNotChase.github.io/c-iterators/iterator_8h.html#a01e620430099d2eb6192db193e88cff0). Here's the `next` function we'll use for our `ListIter(ConstIntList)` impl-
 ```c
 static Maybe(int) intlistnxt(ListIter(ConstIntList) * self)
 {
@@ -308,15 +308,13 @@ Finally, we can have a nice helper macro to convert a list to an iterable-
 * [Using an iterator to represent the infinite fibonacci sequence](./examples/fibbonacci.c)
 * [Mapping over an iterable](./examples/map_over.c)
 
-That's it! The `arr_into_iter` macro takes care of practically everything for us. It takes in the array, its size, and its element type - and simply returns a corresponding `Iterable`, ready to be iterated over!
-
 # Things to keep in mind
 * Mutation is inherent to iterators. During every iteration, the state of the structure backing up the iterable is altered. Once an iterator has been fully consumed, it can no longer be iterated over - it'll just keep returning `Nothing`. You may already be used to this behavior if you're using a non-pure language with built in iterators though.
 * If you're making a custom iterable utility that is backed up by another iterable (see [`map`](./examples/iterutils/map.h), [`take`](./examples/iterutils/take.h)) - the source iterable is **also consumed** when you iterate over the wrapper. This is demonstrated, and taken advantage of, in the [fibonacci example](./examples/fibbonacci.c).
-* Be very careful about lifetimes when you're using the very convenient macros showcased in the examples! All the macros that create and return an `Iterable` **take the address** of a [*compound literals*](https://en.cppreference.com/w/c/language/compound_literal). Compound literals are local to the scope and hence the address is valid for the [lifetime of that scope](https://stackoverflow.com/questions/34880638/compound-literal-lifetime-and-if-blocks). Don't use the `Iterable` outside that scope. As a rule of thumb, **always** declare and initialize the `Iterable`s in the same line (using the macros).
+* Be very careful about lifetimes when you're using the very convenient macros showcased in the examples! All the macros that create and return an `Iterable` **take the address** of a [*compound literal*](https://en.cppreference.com/w/c/language/compound_literal). Compound literals are local to the scope and hence the address is valid for the [lifetime of that scope](https://stackoverflow.com/questions/34880638/compound-literal-lifetime-and-if-blocks). Don't use the `Iterable` outside that scope. As a rule of thumb, **always** declare and initialize the `Iterable`s in the same line (using the macros).
 * If you **need to return** an `Iterable` from a function - you should make sure its `self` member's lifetime doesn't end upon returning. Since `self` is a pointer, the data it is pointing to may have any storage duration. If you're responsible for filling this `self` member - make sure you pay attention to its lifetime.
   
-  As mentioned previously, the utility macros, used in the examples to build `Iterable`s, use compound literals - whose lifetimes end once the enclosing scope ends. `Iterable`s built in this way are **not suitable** to be returned (or used in general) outside of their enclosing scope.
+  As mentioned previously, the utility macros, used in the examples to build `Iterable`s, use compound literals - whose lifetimes end once the enclosing scope ends. `Iterable`s built in this way are **not suitable** to be returned (or used) outside of their enclosing scope.
 * The `tc` member of the typeclass contains a pointer to a struct with `static` storage duration - so this pointer is totally reusable in any scope.
 
 # Semantics
@@ -462,10 +460,10 @@ It takes in-
   Must be alphanumeric just like everywhere else.
 
   A `Maybe(ElmntType)` must also exist.
+* `Name` to give to the function being defined.
 * `next_f`, the next function implementation for this `IterType`.
 
   Must be of type `Maybe(ElmntType) (*)(IterType)`. It should take in a value of `IterType`, and return a `Maybe(ElmntType)`.
-* `Name` to give to the function being defined.
 
 Generally, you need to include the declaration of this function in a header file yourself. However, you can also mark this function as `static` if you so desire; all you have to do, is prepend `static` to the `impl_iterator` call- `static impl_iterator(...)`.
 
@@ -490,7 +488,7 @@ Many of these abstractions follow the same basic pattern. Have a custom struct t
 This allows `take` to simply wrap the given iterable inside a struct with some context and turn that struct into its iterable implementation. No iteration needs to happen in this process, it's a completely lazy process.
 
 ### The `take` utility
-Let's look at how the `take`-like utility is implemented. You can find the implementation in [iterutils](./examples/iterutils/take.h)
+Let's look at how the `take`-like utility is implemented. You can find the implementation in [iterutils](./examples/iterutils/take.h).
 
 The struct we'll use to implement this utility looks like-
 ```c
@@ -534,7 +532,7 @@ And that's it! Now an `IterTake` can be converted into an `Iterable`. But how ab
 ```c
 #define take_from(it, n, T) prep_IterTake(T)_itr(&(IterTake(T)){.i = 0, .limit = n, .src = it})
 ```
-That's it! Now `take_from` can be used to take `n` elements of type `T` from an iterable, `it`.
+`take_from` can be used to take `n` elements of type `T` from an iterable, `it`.
 
 You'll notice that in the previous snippets, the pre processor token concatenation for the function names isn't going to quite work - that was just for simplification, in reality `IterTake(T)_nxt` is written as `CONCAT(IterTake(T), _nxt)` where `CONCAT` is-
 ```c
@@ -717,7 +715,7 @@ typedef typeclass_instance(Show);
 ```
 This is the [`Show`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Text-Show.html#t:Show) typeclass. It represents the ability of a type to be converted into a string (that may then be printed).
 
-If we had an `Iterator(Show)` - we could turn each element into the strings representing them, doesn't really matter what type the actual data is, as long as it implements `Show`. In the same way, you could have a `Num` typeclass for arithmetic operations.
+If we had an `Iterator(Show)` - we could turn each element into the strings representing them, doesn't really matter what type the actual data is, as long as it implements `Show`. In the same way, you could have a [`Num`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#t:Num) typeclass for arithmetic operations.
 
 The pattern for defining and implementing such typeclasses in a type safe way, is the same as the pattern used to define and implement `Iterator`. The typeclass and typeclass_instance struct, and an `impl_iterator` macro that takes in some necessary info about the type for which the typeclass is being implemented, as well as the function implementations, type checks the function impls as a no-op, and returns the typeclass instance.
 
