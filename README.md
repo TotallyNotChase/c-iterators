@@ -1,5 +1,5 @@
 # c-iterators
-A demonstration of implementing, and using, a "type safe", extensible, and lazy iterator interface in pure C99. The iterable is generic on the input side, but not output side - functions taking an `Iterable` don't need to know the concrete data structure backing up the `Iterable`, but the type of value the `Iterator` yields must be concrete and exact (no `void*`).
+A demonstration of implementing, and using, a "type safe", extensible, and lazy iterator interface in pure C99. The iterable is generic on the input side, but not output side - functions taking an `Iterable` don't need to know the concrete data structure backing up the `Iterable`, but the type of value the `Iterator` yields must be concrete and exact, no `void*`. (Well, you can still make it `void*` if you want - but I wouldn't suggest it.)
 
 The only files you need to implement the `Iterator` typeclass, for your own types, are- `typeclass.h`, `maybe.h`, and `iterator.h`. The usages of these files, as well as extra utilities operating on iterables are shown in `examples/`. `examples/iterutils` also demonstrates the implementation of `take` and `map` utilites.
 
@@ -206,7 +206,7 @@ To implement `Iterator` for a type `ItrbleType`, that yields elements of type `T
 Now that we have the `next` implementation for this struct, we can implement the typeclass.
 
 ```c
-impl_iterator(ArrIter(int)*, int, intarrnxt, prep_intarr_itr)
+impl_iterator(ArrIter(int)*, int, prep_intarr_itr, intarrnxt)
 ```
 
 This defines a function named `prep_intarr_itr` (feel free to name it whatever you want), that takes in a `ArrIter(int)*` and returns an `Iterable`. Any function can now take in this `Iterable` and iterate through it using the same interface without caring about the internals.
@@ -226,7 +226,7 @@ This will take in an array (`src`), its size (`sz`), and its element type name (
 
 And use this name during implementing-
 ```c
-impl_iterator(ArrIter(int)*, int, intarrnxt, prep_arriter_of(int))
+impl_iterator(ArrIter(int)*, int, prep_arriter_of(int), intarrnxt)
 ```
 
 And also when referring to it-
@@ -289,7 +289,7 @@ Note: `Nil` is an alias to `NULL`.
 
 Now that we have the `next` implementation for this struct, we can implement the typeclass-
 ```c
-impl_iterator(ListIter(ConstIntList) *, int, intlistnxt, prep_listiter_of(ConstIntList))
+impl_iterator(ListIter(ConstIntList) *, int, prep_listiter_of(ConstIntList), intlistnxt)
 ```
 Where `prep_listiter_of` is a similar construct to the previously encountered `prep_arriter_of`, defined as a macro-
 ```c
@@ -449,7 +449,7 @@ Two structs, of names `Iterator(int)` (i.e `intIterator`) and `Iterable(int)` (i
 
 Now, we need a function to implement `Iterator` for our own type. That's where the `impl_iterator` macro comes in. This is its signature-
 ```c
-#define impl_iterator(IterType, ElmntType, next_f, Name) ...
+#define impl_iterator(IterType, ElmntType, Name, next_f) ...
 ```
 It defines a function, which turns the custom type (for which the impl is for) into an `Iterable`.
 
@@ -469,7 +469,7 @@ It takes in-
 
 Generally, you need to include the declaration of this function in a header file yourself. However, you can also mark this function as `static` if you so desire; all you have to do, is prepend `static` to the `impl_iterator` call- `static impl_iterator(...)`.
 
-In the [array_iterable.c](./examples/array_iterable.c) example. The `impl_iterator(ArrIter(int)*, int, intarrnxt, prep_arriter_of(int))` translates to-
+In the [array_iterable.c](./examples/array_iterable.c) example. The `impl_iterator(ArrIter(int)*, int, prep_arriter_of(int), intarrnxt)` translates to-
 ```c
 Iterable(int) prep_intarr_itr(ArrIter(int)* x)
 {
@@ -527,7 +527,7 @@ static Maybe(T) IterTake(T)_nxt(IterTake(T) * self)
 ```
 It simply iterates through the source iterable but stops if it reaches the limit specified in the `IterTake` struct. Now, `impl_iterator` can be used to implement `Iterator` for the `IterTake(T)`-
 ```c
-impl_iterator(IterTake(T)*, T, IterTake(T)_nxt, prep_IterTake(T)_itr)
+impl_iterator(IterTake(T)*, T, prep_IterTake(T)_itr, IterTake(T)_nxt)
 ```
 
 And that's it! Now an `IterTake` can be converted into an `Iterable`. But how about we also make an abstraction to turn a given `Iterable` into another `Iterable` with the `IterTake` applied directly?
@@ -567,7 +567,7 @@ The function is named `prep_itertake_of(ElmntType)`
         }                                                                                                              \
         return Nothing(ElmntType);                                                                                     \
     }                                                                                                                  \
-    impl_iterator(IterTake(ElmntType)*, ElmntType, CONCAT(IterTake(ElmntType), _nxt), prep_itertake_of(ElmntType))
+    impl_iterator(IterTake(ElmntType)*, ElmntType, prep_itertake_of(ElmntType), CONCAT(IterTake(ElmntType), _nxt))
 ```
 
 You need to call this macro with a concrete type (a type for which an `Iterator`, and `Iterable`, already exist) inside a C source file. In the examples, this macro is called inside [iterable_utils.c](./examples/iterutils/iterable_utils.c) - for defining `IterTake` for a couple of types. The declrations of the `prep_` function is then included in the [iterable_utils.h](./examples/iterutils/iterable_utils.h) header file.
@@ -627,7 +627,7 @@ Now, we can use `impl_iterator`-
 /* Name of the function that wraps an IterMap(ElmntType, FnRetType) for given ElmntType and FnRetType into an iterable */
 #define prep_itermap_of(ElmntType, FnRetType) CONCAT(CONCAT(prep_, IterMap(ElmntType, FnRetType)), _itr)
 
-impl_iterator(IterMap(ElmntType, FnRetType)*, FnRetType, CONCAT(IterMap(ElmntType, FnRetType), _nxt), prep_itermap_of(ElmntType, FnRetType))
+impl_iterator(IterMap(ElmntType, FnRetType)*, FnRetType, prep_itermap_of(ElmntType, FnRetType), CONCAT(IterMap(ElmntType, FnRetType), _nxt))
 ```
 
 Combine all of that together, and you get a similar macro as last time-
@@ -647,8 +647,8 @@ wraps said iterable and function in an `IterMap` struct and wraps that around it
         }                                                                                                              \
         return Just(self->mapfn(from_just_(res)), FnRetType);                                                          \
     }                                                                                                                  \
-    impl_iterator(IterMap(ElmntType, FnRetType)*, FnRetType, CONCAT(IterMap(ElmntType, FnRetType), _nxt),              \
-                  prep_itermap_of(ElmntType, FnRetType))
+    impl_iterator(IterMap(ElmntType, FnRetType)*, FnRetType, prep_itermap_of(ElmntType, FnRetType),                    \
+                  CONCAT(IterMap(ElmntType, FnRetType), _nxt))
 ```
 
 The key difference is that this works on `ElmntType` and `FnRetType`, as opposed to just `ElmntType`. You can call this macro to define the functions in a source file, and include the declarations in a header file. In the examples, this is done in [iterable_utils.c](./examples/iterutils/iterable_utils.c) and [iterable_utils.h](./examples/iterutils/iterable_utils.h) respectively.
