@@ -41,13 +41,9 @@ The function is named `prep_itertake_of(ElmntType)`
     static Maybe(ElmntType) CONCAT(IterTake(ElmntType), _nxt)(IterTake(ElmntType) * self)                              \
     {                                                                                                                  \
         if (self->i < self->limit) {                                                                                   \
+            ++(self->i);                                                                                               \
             Iterable(ElmntType) srcit = self->src;                                                                     \
-            Maybe(ElmntType) x        = srcit.tc->next(srcit.self);                                                    \
-            if (is_nothing(x)) {                                                                                       \
-                return Nothing(ElmntType);                                                                             \
-            }                                                                                                          \
-            self->i++;                                                                                                 \
-            return Just(from_just_(x), ElmntType);                                                                     \
+            return srcit.tc->next(srcit.self);                                                                         \
         }                                                                                                              \
         return Nothing(ElmntType);                                                                                     \
     }                                                                                                                  \
