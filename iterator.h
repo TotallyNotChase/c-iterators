@@ -117,12 +117,12 @@
  * @note A #Maybe(T) for the given `ElmntType` **must** exist.
  * @note This should not be delimited by a semicolon.
  */
-#define impl_iterator(IterType, ElmntType, next_f, Name)                                                               \
+#define impl_iterator(IterType, ElmntType, Name, next_f)                                                               \
     Iterable(ElmntType) Name(IterType x)                                                                               \
     {                                                                                                                  \
         Maybe(ElmntType) (*const next_)(IterType self) = (next_f);                                                     \
         (void)next_;                                                                                                   \
-        static Iterator(ElmntType) const tc = {.next = (Maybe(ElmntType)(*const)(void*))next_f};                       \
+        static Iterator(ElmntType) const tc = {.next = (Maybe(ElmntType)(*const)(void*))(next_f)};                     \
         return (Iterable(ElmntType)){.tc = &tc, .self = x};                                                            \
     }
 
