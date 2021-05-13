@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>generic_iterators: README</title>
+<title>generic_iterators: c-iterators</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -104,10 +104,501 @@ $(document).ready(function(){initNavTree('md_README.html',''); initResizable(); 
 
 <div><div class="header">
   <div class="headertitle">
-<div class="title">README </div>  </div>
+<div class="title">c-iterators </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"></div></div><!-- contents -->
+<div class="textblock"><p class="">A demonstration of implementing, and using, a "type safe", extensible, and lazy iterator interface in pure C99. The iterable is generic on the input side, but not output side - functions taking an <code>Iterable</code> don't need to know the concrete data structure backing up the <code>Iterable</code>, but the type of value the <code>Iterator</code> yields must be concrete and exact, no <code>void*</code>. (Well, you can still make it <code>void*</code> if you want - but I wouldn't suggest it.)</p>
+<p class="">The only files you need to implement the <code>Iterator</code> typeclass, for your own types, are- <code><a class="el" href="typeclass_8h.html" title="Utilities to define a typeclass and its instance.">typeclass.h</a></code>, <code><a class="el" href="maybe_8h.html" title="Utilities to define and use a Maybe type.">maybe.h</a></code>, and <code><a class="el" href="iterator_8h.html" title="Utilities to define and implement an Iterable.">iterator.h</a></code>. The usages of these files, as well as extra utilities operating on iterables are shown in <code>examples/</code>. <code>examples/iterutils</code> also demonstrates the implementation of <code>take</code> and <code>map</code> utilites.</p>
+<p class="">More info about the file structure can be found in the C:/Users/Chase/Desktop/C Projects/Functional-Iterators/ARCHITECTURE.md "Architecture document".</p>
+<p class="">You can find the generated docs [here](PUT DOCS LINK HERE!!!).</p>
+<h1>Highlights</h1>
+<ul>
+<li>Pure C99 support, no non standard extensions used</li>
+<li><p class="startli">Type safety (through the usage of abstracted macros that monomorphize based on the type given)</p>
+<p class="startli">Though you may have to actually turn on the warnings, preferably <b>all warnings</b>.</p>
+</li>
+<li>Lazy-ness (the iterables are all lazily consumed, iterator utilites can also be chained lazily to evaluate all at once on demand)</li>
+<li>Extensible (<code>Iterable</code> uses dynamic dispatch, allowing library functions to use it in a public API)</li>
+<li>Functions working on <code>Iterables</code> can return <code>Iterables</code> - allowing them to be chained together lazily. This means you can have a <code>map</code> that returns an <code>Iterable</code>, pass it through a <code>filter</code> that also returns an <code>Iterable</code> - and both the map and filter will be evaluated in one singular iteration, on demand. Or you could have <code>take</code> from an <code>Iterable</code> and then <code>map</code> on it, there won't be 2 iterations to do this - just one, during iteration. (see <a href="./examples/iterutils">iterutils</a> and <a href="#lazy-abstractions">Advanced Usage</a>)</li>
+</ul>
+<h1>Building</h1>
+<p class="">Although you don't really need to build anything per se, since the primary files are just headers that you can include in your project, you may still use the provided <code>CmakeLists.txt</code> (CMake 3.15 or higher) to build an executable running all the examples. The built executable should be present in the <code>examples/</code> directory inside the build directory.</p>
+<h2>UNIX</h2>
+<div class="fragment"><div class="line">mkdir build</div>
+<div class="line">cd build</div>
+<div class="line">cmake -G &quot;Unix Makefiles&quot; ..</div>
+</div><!-- fragment --><p> This will create the required <code>make</code> config inside <code>build/</code>. Now you can run <code>make</code> to build the executable.</p>
+<h2>Windows</h2>
+<h3>Visual Studio (2017 or higher)</h3>
+<p class="">You must have CMake integration for Visual Studio installed.</p>
+<p class="">Open this project in Visual Studio (2017 or higher) and hit <code>Build -&gt; Build All</code> from the toolbar. This will build the executable and put it into a directory named <code>out/</code> (by default). You can also directly run the built executable by choosing the "Startup Item" near the debug configuration.</p>
+<h3>MinGW/Cygwin</h3>
+<p class="">Same as the unix way.</p>
+<h1>A word on terminology</h1>
+<p class="">I like to use the word <code>Iterator</code> to refer to the typeclass, or the interface, or trait - whatever you wanna call it. <code>Iterable</code>, on the other hand, I use to refer to the <code>Iterator</code> instance, the concrete type that functions can take in, the type that holds the <code>self</code> member. This terminology is just for clarity - I don't really mind if you use the 2 words interchangably.</p>
+<h1>Usage</h1>
+<p class="">In general, there are some contraints to implementing <code>Iterator</code> for a type-</p><ul>
+<li>The type must be a pointer</li>
+<li><p class="startli">The type must be able to hold iteration information about itself - specifically, how much of itself has been iterated already and what's the next element.</p>
+<p class="startli">This is because the <code>next</code> function of the typeclass needs to just take in this type and figure out what to return.</p>
+</li>
+<li>The element that will be yielded from the iterator instance of this type, must have an alphanumeric type name. If the element is a pointer, <code>typedef</code> it into some alphanumeric type name.</li>
+<li>A <code><a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875" title="Convenience macro to get the type of the Maybe defined with a certain type.">Maybe(T)</a></code> for the corresponding <code>T</code> (type that the <code>Iterator</code> will yield) must exist.</li>
+</ul>
+<p class="">Of course, you'll also need to have the <code><a class="el" href="iterator_8h.html#a6c3a22862dc6db425dd4389987c0dbaf" title="Convenience macro to get the type of the Iterator (typeclass) with given element type.">Iterator(T)</a></code> and <code><a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875" title="Convenience macro to get the type of the Maybe defined with a certain type.">Maybe(T)</a></code> for a certain <code>T</code> (element the <code>Iterable</code> will yield) defined before you can implement <code><a class="el" href="iterator_8h.html#a6c3a22862dc6db425dd4389987c0dbaf" title="Convenience macro to get the type of the Iterator (typeclass) with given element type.">Iterator(T)</a></code> for anything. Remember to define those using [<code>DefineIteratorOf</code>](PUT DOCS LINK HERE!!!) and [<code>DefineMaybe</code>](PUT DOCS LINK HERE!!!) respectively.</p>
+<p class="">The examples define the common <code>Maybe</code> and <code>Iterator</code> types in <a href="./examples/func_iter.h">func_iter.h</a>, this file is then included by most other files.</p>
+<h2>Iterating through an <code>Iterable</code></h2>
+<p class="">To iterate through an <code>Iterable</code>, you call the <code>Iterable</code>'s <code>next</code> function and pass it the <code>self</code> member of the iterator.</p>
+<p class="">This function's return value is of type <a href="https://wiki.haskell.org/Maybe"><code>Maybe</code></a>. In case you're unfamiliar- a <code>Maybe</code> type represents the <em>presence</em> <b>or</b> <em>absence</em> of a value. As a C programmer, think of how a pointer can either point to a valid object, or be <code>NULL</code> - indicating the absence of any valid object to point to.</p>
+<p class="">When the iteration ends, a <code>Nothing</code> value is returned. Otherwise, a <code>Just</code> value is returned. Use the <code>is_nothing</code> or <code>is_just</code> macros to check whether or not a certain <code>Maybe</code> struct contains a value. If <code>is_nothing</code> returns false, or <code>is_just</code> returns true - you can use <code>from_just</code> or <code>from_just_</code> to extract the actual value from the <code>Maybe</code> struct.</p>
+<h3>Quick note: Difference between <code>from_just</code> and <code>from_just_</code></h3>
+<p class=""><code>from_just_</code> is simply the "unsafe" version of <code>from_just</code>. <code>from_just_</code> assumes the passed maybe actually has a <code>Just</code> value and simply returns it, if the passed maybe did not have a value (i.e was <code>Nothing</code>), the behavior is undefined (the value <em>can be</em> indeterminate, but if the <code>Maybe</code> struct was built using the provided <code>Nothing</code> macro, the value will actually be zero initialized). <code>from_just</code> on the other hand, will abort the program with an error if the passed maybe did not have a value (i.e was <code>Nothing</code>). It is <b>totally safe</b> to use <code>from_just_</code> after you've checked <code>is_nothing</code> or <code>is_just</code> accordingly, though.</p>
+<p class="">When you call <code>next</code> on an <code>Iterable</code>, you <b>consume</b> the iterator. This is a mutating process - the next time you call <code>next</code>, it'll return the next element - until it is fully consumed. Once that happens, calling <code>next</code> on it will keep returning <code>Nothing</code> values.</p>
+<p class=""><b>Note</b>: This behavior is actually dependent on the <code>next</code> function implementation that the user provides when making their own data stucture an <code>Iterable</code>. An erroneous <code>next</code> function will not have defined behavior.</p>
+<p class="">So, you can iterate through the entire iterable (therefore consuming it) by doing- </p><div class="fragment"><div class="line"><a class="code" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a>(<span class="keywordtype">int</span>) it = ...; <span class="comment">/* Acquire the iterable */</span></div>
+<div class="line"><span class="keywordflow">for</span> (<a class="code" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a>(<span class="keywordtype">int</span>) res = it.tc-&gt;next(it.self); <a class="code" href="maybe_8h.html#a8ae2e9c065fbca1cd3a603ad0a71d8f2">is_just</a>(res); res = it.tc-&gt;next(it.self)) {</div>
+<div class="line">    <span class="keywordtype">int</span> x = <a class="code" href="maybe_8h.html#a16682b211c71e2ad917edc9bdd298154">from_just_</a>(res);</div>
+<div class="line">    <span class="comment">/* do stuff with x */</span></div>
+<div class="line">}</div>
+<div class="line"><span class="comment">/* Iterable returned `Nothing`, iteration finished - iterable has been fully consumed */</span></div>
+<div class="ttc" id="aiterator_8h_html_a78f1cf949c0e970b2105124f691f5c2a"><div class="ttname"><a href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a></div><div class="ttdeci">#define Iterable(T)</div><div class="ttdoc">Convenience macro to get the type of the Iterable (typeclass instance) with given element type.</div><div class="ttdef"><b>Definition:</b> iterator.h:45</div></div>
+<div class="ttc" id="amaybe_8h_html_a16682b211c71e2ad917edc9bdd298154"><div class="ttname"><a href="maybe_8h.html#a16682b211c71e2ad917edc9bdd298154">from_just_</a></div><div class="ttdeci">#define from_just_(x)</div><div class="ttdoc">&quot;Unsafe&quot; version of from_just(x, T).</div><div class="ttdef"><b>Definition:</b> maybe.h:151</div></div>
+<div class="ttc" id="amaybe_8h_html_a8ae2e9c065fbca1cd3a603ad0a71d8f2"><div class="ttname"><a href="maybe_8h.html#a8ae2e9c065fbca1cd3a603ad0a71d8f2">is_just</a></div><div class="ttdeci">#define is_just(x)</div><div class="ttdoc">Check if the given Maybe type is tagged with Just.</div><div class="ttdef"><b>Definition:</b> maybe.h:123</div></div>
+<div class="ttc" id="amaybe_8h_html_af47a0e4269e370939835ecc0cf6c7875"><div class="ttname"><a href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a></div><div class="ttdeci">#define Maybe(T)</div><div class="ttdoc">Convenience macro to get the type of the Maybe defined with a certain type.</div><div class="ttdef"><b>Definition:</b> maybe.h:40</div></div>
+</div><!-- fragment --><p> Seems like a repeating pattern for any given type (here the type is <code>int</code>), right? You can implement a macro instead- </p><div class="fragment"><div class="line"><span class="preprocessor">#define UNIQVAR(x) CONCAT(CONCAT(x, _4x2_), __LINE__) </span><span class="comment">/* &quot;Unique&quot; variable name */</span><span class="preprocessor"></span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">/* Iterate through given `it` iterable that contains elements of type `T` - store each element in `x` */</span></div>
+<div class="line"><span class="preprocessor">#define foreach(T, x, it)                                                                                              \</span></div>
+<div class="line"><span class="preprocessor">    Maybe(T) UNIQVAR(res) = (it).tc-&gt;next((it).self);                                                                  \</span></div>
+<div class="line"><span class="preprocessor">    for (T x          = from_just_(UNIQVAR(res)); is_just(UNIQVAR(res));                                               \</span></div>
+<div class="line"><span class="preprocessor">         UNIQVAR(res) = (it).tc-&gt;next((it).self), x = from_just_(UNIQVAR(res)))</span></div>
+</div><!-- fragment --><p> (You can find this macro in <a href="./examples/iterutils/iterable_utils.h">iterable_utils.h</a>)</p>
+<p class="">Using this macro instead of the manual loop, the above snippet could look like- </p><div class="fragment"><div class="line"><a class="code" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a>(<span class="keywordtype">int</span>) it = ...; <span class="comment">/* Acquire the iterable */</span></div>
+<div class="line"><span class="keywordflow">foreach</span> (<span class="keywordtype">int</span>, x, it) {</div>
+<div class="line">    <span class="comment">/* do stuff with x */</span></div>
+<div class="line">}</div>
+</div><!-- fragment --><p> Much cleaner!</p>
+<h2>Some basic functions that work on an <code>Iterable</code></h2>
+<p class="">You can find these in <a href="./examples/iterutils/iterable_utils.c">iterable_utils.c</a></p>
+<h3><code>sum_intit</code> - Sum all values in an <code><a class="el" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a" title="Convenience macro to get the type of the Iterable (typeclass instance) with given element type.">Iterable(int)</a></code></h3>
+<div class="fragment"><div class="line"><span class="keywordtype">int</span> sum_intit(<a class="code" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a>(<span class="keywordtype">int</span>) it)</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordtype">int</span> sum = 0;</div>
+<div class="line">    <span class="keywordflow">foreach</span> (<span class="keywordtype">int</span>, x, it) {</div>
+<div class="line">        sum += x;</div>
+<div class="line">    }</div>
+<div class="line">    <span class="keywordflow">return</span> sum;</div>
+<div class="line">}</div>
+</div><!-- fragment --><h3><code>print_strit</code> - Print all values in an <code><a class="el" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a" title="Convenience macro to get the type of the Iterable (typeclass instance) with given element type.">Iterable(string)</a></code></h3>
+<div class="fragment"><div class="line"><span class="comment">/* Note: `string` is just `typedef`-ed `char*` */</span></div>
+<div class="line"><span class="keywordtype">void</span> print_strit(<a class="code" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a>(<span class="keywordtype">string</span>) it)</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordflow">foreach</span> (<span class="keywordtype">string</span>, s, it) {</div>
+<div class="line">        printf(<span class="stringliteral">&quot;%s &quot;</span>, s);</div>
+<div class="line">    }</div>
+<div class="line">    puts(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line">}</div>
+</div><!-- fragment --><h3><code>revlist_from_intit</code> - Build a singly linked list from an iterable (list is built in reverse order)</h3>
+<p class="">This one is much more useful and practical, but slightly less basic.</p>
+<div class="fragment"><div class="line">IntList revlist_from_intit(<a class="code" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a>(<span class="keywordtype">int</span>) it)</div>
+<div class="line">{</div>
+<div class="line">    IntList list = Nil;</div>
+<div class="line">    <span class="keywordflow">foreach</span> (<span class="keywordtype">int</span>, val, it) {</div>
+<div class="line">        list = Cons(val, list);</div>
+<div class="line">    }</div>
+<div class="line">    <span class="keywordflow">return</span> list;</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> This allows you to build a linked list from any <code>Iterable</code>, and since <code>Iterable</code> is lazy - and can be implemented for any type, you not only have a generic function to build a list but you also essentially skip an extra iteration.</p>
+<p class="">Note: <code>Cons</code> is just an alias to <code>prepend_intnode</code>, which is a function that prepends values to a singly linked list of ints. <code>Nil</code> is an alias to <code>NULL</code>.</p>
+<h2>Expected behavior of <code>next</code></h2>
+<p class="">If you're implementing <code>Iterator</code> for your own data structure, the next function implementation you provide must follow some rules (outside of the context of the type system). These are as following-</p><ul>
+<li>The function must return <code>Nothing</code> at the end of iteration, all returns before this must be <code>Just</code>.</li>
+<li>Once <code>Nothing</code> has been returned (i.e iteration has ended) - any extra calls to the <code>next</code> function must keep returning <code>Nothing</code>.</li>
+</ul>
+<h2>Implementing <code>Iterator</code></h2>
+<h3>For Arrays</h3>
+<p class="">We'll start with implementing <code>Iterator</code> for good ol' arrays. You can find the code for the implementation part in <a href="./examples/array_iterable.h">array_iterable.h</a> and <a href="./examples/array_iterable.c">array_iterable.c</a>.</p>
+<p class="">We need to keep track of the index and the size of the array to implement <code>Iterator</code> for it. So we need a <code>struct</code> like- </p><div class="fragment"><div class="line"><span class="keyword">struct </span>arriter</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordtype">size_t</span> i;</div>
+<div class="line">    <span class="keywordtype">size_t</span> <span class="keyword">const</span> size;</div>
+<div class="line">    T <span class="keyword">const</span>* <span class="keyword">const</span> arr;</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> A struct that keeps track of the <code>i</code> (the current index), the <code>size</code> (the length of the array), and the array itself. It forbids modifications to <code>size</code> and <code>arr</code>.</p>
+<p class="">Notice the <code>T</code>, this isn't an actual type. The snippet just demonstrates that each <code>arriter</code> will need to hold its own type of array. Of course, you could cheat and use <code>void*</code> - but let's keep it type safe here.</p>
+<p class="">We'll call this struct concept <code>ArrIter</code>. This concept is similar to rust's <code>IntoIter</code>.</p>
+<p class="">An <code>ArrIter</code> where <code>T = int</code> (i.e array of ints) would look like- </p><div class="fragment"><div class="line"><span class="keyword">struct </span>intarriter</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordtype">size_t</span> i;</div>
+<div class="line">    <span class="keywordtype">size_t</span> <span class="keyword">const</span> size;</div>
+<div class="line">    <span class="keywordtype">int</span> <span class="keyword">const</span>* <span class="keyword">const</span> arr;</div>
+<div class="line">}</div>
+</div><!-- fragment --><p class="">You can generalize this into a macro- </p><div class="fragment"><div class="line"><span class="preprocessor">#define ArrIter(ElmntType) ElmntType##ArrIter</span></div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">#define DefineArrIterOf(T)                                                                                             \</span></div>
+<div class="line"><span class="preprocessor">    typedef struct                                                                                                     \</span></div>
+<div class="line"><span class="preprocessor">    {                                                                                                                  \</span></div>
+<div class="line"><span class="preprocessor">        size_t i;                                                                                                      \</span></div>
+<div class="line"><span class="preprocessor">        size_t const size;                                                                                             \</span></div>
+<div class="line"><span class="preprocessor">        T const* const arr;                                                                                            \</span></div>
+<div class="line"><span class="preprocessor">    } ArrIter(T)</span></div>
+</div><!-- fragment --><p> The macro will define the <code>ArrIter</code> struct based on the given array element type. It'll also use that type name to name the struct itself. You can later refer to this struct using <code>ArrIter(T)</code>. Let's define one for <code>int</code>- </p><div class="fragment"><div class="line">DefineArrIterOf(<span class="keywordtype">int</span>);</div>
+</div><!-- fragment --><p class="">Now, we need to implement <code>Iterator</code> for <code>ArrIter(T)</code>. To do that, we use the [<code>impl_iterator</code>](PUT DOCS LINK HERE!!!) macro provided by <code><a class="el" href="iterator_8h.html" title="Utilities to define and implement an Iterable.">iterator.h</a></code>. But before that, we need the <code>next</code> function that can work on <code>ArrIter</code>-</p>
+<div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a>(<span class="keywordtype">int</span>) intarrnxt(ArrIter(<span class="keywordtype">int</span>) * <span class="keyword">self</span>)</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordtype">int</span> <span class="keyword">const</span>* <span class="keyword">const</span> arr = <span class="keyword">self</span>-&gt;arr;</div>
+<div class="line">    <span class="keywordflow">return</span> <span class="keyword">self</span>-&gt;i &lt; <span class="keyword">self</span>-&gt;size ? <a class="code" href="maybe_8h.html#ae0832f95d5a7ff6845381aa8795fd2a3">Just</a>(arr[self-&gt;i++], <span class="keywordtype">int</span>) : <a class="code" href="maybe_8h.html#a65cd69857cc806545d68c79464270a97">Nothing</a>(int);</div>
+<div class="line">}</div>
+<div class="ttc" id="amaybe_8h_html_a65cd69857cc806545d68c79464270a97"><div class="ttname"><a href="maybe_8h.html#a65cd69857cc806545d68c79464270a97">Nothing</a></div><div class="ttdeci">#define Nothing(T)</div><div class="ttdoc">Wrap a Nothing value into a Maybe(T).</div><div class="ttdef"><b>Definition:</b> maybe.h:108</div></div>
+<div class="ttc" id="amaybe_8h_html_ae0832f95d5a7ff6845381aa8795fd2a3"><div class="ttname"><a href="maybe_8h.html#ae0832f95d5a7ff6845381aa8795fd2a3">Just</a></div><div class="ttdeci">#define Just(v, T)</div><div class="ttdoc">Wrap a Just value into a Maybe(T).</div><div class="ttdef"><b>Definition:</b> maybe.h:91</div></div>
+</div><!-- fragment --><p class="">To implement <code>Iterator</code> for a type <code>ItrbleType</code>, that yields elements of type <code>T</code> - you need a <code>next</code> function of the signature- <code><a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875" title="Convenience macro to get the type of the Maybe defined with a certain type.">Maybe(T)</a> (*)(ItrbleType self)</code>. Here, <code>ItrbleType</code> is <code>ArrIter(int)*</code> and <code>T</code> is <code>int</code>.</p>
+<p class="">Now that we have the <code>next</code> implementation for this struct, we can implement the typeclass.</p>
+<div class="fragment"><div class="line"><a class="code" href="iterator_8h.html#a01e620430099d2eb6192db193e88cff0">impl_iterator</a>(ArrIter(<span class="keywordtype">int</span>)*, <span class="keywordtype">int</span>, prep_intarr_itr, intarrnxt)</div>
+<div class="ttc" id="aiterator_8h_html_a01e620430099d2eb6192db193e88cff0"><div class="ttname"><a href="iterator_8h.html#a01e620430099d2eb6192db193e88cff0">impl_iterator</a></div><div class="ttdeci">#define impl_iterator(IterType, ElmntType, Name, next_f)</div><div class="ttdoc">Define a function to turn given IterType into an Iterable(ElmntType).</div><div class="ttdef"><b>Definition:</b> iterator.h:120</div></div>
+</div><!-- fragment --><p class="">This defines a function named <code>prep_intarr_itr</code> (feel free to name it whatever you want), that takes in a <code>ArrIter(int)*</code> and returns an <code>Iterable</code>. Any function can now take in this <code>Iterable</code> and iterate through it using the same interface without caring about the internals.</p>
+<p class="">You now need to include the declaration of <code>prep_intarr_itr</code> in a corresponding header file, so it's exposed to the outside world. You can also make this handy macro-</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#define arr_into_iter(srcarr, sz, T)                                                                                   \</span></div>
+<div class="line"><span class="preprocessor">    prep_##T ##arr_itr(&amp;(ArrIter(T)) { .i = 0, .size = sz, .arr = srcarr })</span></div>
+</div><!-- fragment --><p class="">This will take in an array (<code>src</code>), its size (<code>sz</code>), and its element type name (<code>T</code>) - and call the prep function, automatically creating and passing in the <code>ArrIter</code> struct. Note that this <b>heavily</b> relies on consistent naming of the function previously defined by <code>impl_iterator</code>. This assumes that such functions will be named <code>prep_:T:arr_iter</code>, so for <code>T = int</code>, the function should be named <code>prep_intarr_itr</code>. You can maintain this convention strictly by having another macro to name the function during definition-</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#define prep_arriter_of(T) prep_##T ##arr_itr</span></div>
+</div><!-- fragment --><p class="">And use this name during implementing- </p><div class="fragment"><div class="line"><a class="code" href="iterator_8h.html#a01e620430099d2eb6192db193e88cff0">impl_iterator</a>(ArrIter(<span class="keywordtype">int</span>)*, <span class="keywordtype">int</span>, prep_arriter_of(<span class="keywordtype">int</span>), intarrnxt)</div>
+</div><!-- fragment --><p class="">And also when referring to it- </p><div class="fragment"><div class="line"><span class="preprocessor">#define arr_into_iter(srcarr, sz, T)                                                                                   \</span></div>
+<div class="line"><span class="preprocessor">    prep_arriter_of(T)(&amp;(ArrIter(T)) { .i = 0, .size = sz, .arr = srcarr })</span></div>
+</div><!-- fragment --><p class="">Consistency is key to safety! </p><h3>For Linked Lists</h3>
+<p class="">Now, we'll implement <code>Iterator</code> for a singly linked list. You can find the code for the implementation part in <a href="./examples/list_iterable.h">list_iterable.h</a> and <a href="./examples/list_iterable.c">list_iterable.c</a>.</p>
+<p class="">Just so we're on the same page, the linked list impl looks like- </p><div class="fragment"><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct </span>int_node</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordtype">int</span> val;</div>
+<div class="line">    <span class="keyword">struct </span>int_node* next;</div>
+<div class="line">} IntNode, *IntList;</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">typedef</span> IntNode <span class="keyword">const</span>* ConstIntList;</div>
+</div><!-- fragment --><p> It has the following functions to work with it- </p><div class="fragment"><div class="line"><span class="comment">/* Create and prepend an IntNode to given IntList and return the new list */</span></div>
+<div class="line">IntList prepend_intnode(<span class="keywordtype">int</span> val, IntList list);</div>
+<div class="line"><span class="comment">/* Print the given int list */</span></div>
+<div class="line"><span class="keywordtype">void</span> print_intlist(ConstIntList head);</div>
+<div class="line"><span class="comment">/* Free the given IntList */</span></div>
+<div class="line">IntList free_intlist(IntList head);</div>
+</div><!-- fragment --><p class="">Just like we did for array, we will need a struct to keep track of the state of iteration for the list. We'll call this <code>ListIter</code>- </p><div class="fragment"><div class="line"><span class="preprocessor">#define ListIter(T) T##ListIter</span></div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">#define DefineListIterOf(T)                                                                                            \</span></div>
+<div class="line"><span class="preprocessor">    typedef struct                                                                                                     \</span></div>
+<div class="line"><span class="preprocessor">    {                                                                                                                  \</span></div>
+<div class="line"><span class="preprocessor">        T curr;                                                                                                        \</span></div>
+<div class="line"><span class="preprocessor">    } ListIter(T)</span></div>
+</div><!-- fragment --><p> This is much the same construct as an <code>ArrIter</code>. We have a <code>ListIter</code> for a particular type of list. The <code>T</code> here refers to the type of the list struct itself. Let's define a <code>ListIter</code> for our linked list built using <code>IntNode</code>s. We'll use a <code>IntNode const*</code> - to make sure the iterable has no way to modify the actual contents of the node. Since <code>T</code> has to be alphanumeric - we typedef-ed it into <code>ConstIntList</code>- </p><div class="fragment"><div class="line">DefineListIterOf(ConstIntList);</div>
+</div><!-- fragment --><p> Now, we will implement <code>Iterator</code> for <code>ListIter(T)</code>. Just like last time, we use [<code>impl_iterator</code>](PUT DOCS LINK HERE!!!). Here's the <code>next</code> function we'll use for our <code>ListIter(ConstIntList)</code> impl- </p><div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a>(<span class="keywordtype">int</span>) intlistnxt(ListIter(ConstIntList) * <span class="keyword">self</span>)</div>
+<div class="line">{</div>
+<div class="line">    IntNode <span class="keyword">const</span>* node = <span class="keyword">self</span>-&gt;curr;</div>
+<div class="line">    <span class="keywordflow">if</span> (node == Nil) {</div>
+<div class="line">        <span class="keywordflow">return</span> <a class="code" href="maybe_8h.html#a65cd69857cc806545d68c79464270a97">Nothing</a>(<span class="keywordtype">int</span>);</div>
+<div class="line">    }</div>
+<div class="line">    <span class="keyword">self</span>-&gt;curr = node-&gt;next;</div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code" href="maybe_8h.html#ae0832f95d5a7ff6845381aa8795fd2a3">Just</a>(node-&gt;val, <span class="keywordtype">int</span>);</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> Note: <code>Nil</code> is an alias to <code>NULL</code>.</p>
+<p class="">Now that we have the <code>next</code> implementation for this struct, we can implement the typeclass- </p><div class="fragment"><div class="line"><a class="code" href="iterator_8h.html#a01e620430099d2eb6192db193e88cff0">impl_iterator</a>(ListIter(ConstIntList) *, <span class="keywordtype">int</span>, prep_listiter_of(ConstIntList), intlistnxt)</div>
+</div><!-- fragment --><p> Where <code>prep_listiter_of</code> is a similar construct to the previously encountered <code>prep_arriter_of</code>, defined as a macro- </p><div class="fragment"><div class="line"><span class="preprocessor">#define prep_listiter_of(T) prep_##T ##_itr</span></div>
+</div><!-- fragment --><p class="">Finally, we can have a nice helper macro to convert a list to an iterable- </p><div class="fragment"><div class="line"><span class="preprocessor">#define list_into_iter(head, T) prep_listiter_of(T)(&amp;(ListIter(T)){.curr = head})</span></div>
+</div><!-- fragment --><h2>Examples</h2>
+<ul>
+<li><a href="./examples/arr_to_iterble.c">Using an array's iterator instance</a></li>
+<li><a href="./examples/list_to_iterble.c">Using a list's iterator instance</a></li>
+<li><a href="./examples/list_from_arr.c">Using an iterable to build a list</a></li>
+<li><a href="./examples/fibbonacci.c">Using an iterator to represent the infinite fibonacci sequence</a></li>
+<li><a href="./examples/map_over.c">Mapping over an iterable</a></li>
+</ul>
+<p class="">That's it! The <code>arr_into_iter</code> macro takes care of practically everything for us. It takes in the array, its size, and its element type - and simply returns a corresponding <code>Iterable</code>, ready to be iterated over!</p>
+<h1>Things to keep in mind</h1>
+<ul>
+<li>Mutation is inherent to iterators. During every iteration, the state of the structure backing up the iterable is altered. Once an iterator has been fully consumed, it can no longer be iterated over - it'll just keep returning <code>Nothing</code>. You may already be used to this behavior if you're using a non-pure language with built in iterators though.</li>
+<li>If you're making a custom iterable utility that is backed up by another iterable (see <a href="./examples/iterutils/map.h"><code>map</code></a>, <a href="./examples/iterutils/take.h"><code>take</code></a>) - the source iterable is <b>also consumed</b> when you iterate over the wrapper. This is demonstrated, and taken advantage of, in the <a href="./examples/fibbonacci.c">fibonacci example</a>.</li>
+<li>Be very careful about lifetimes when you're using the very convenient macros showcased in the examples! All the macros that create and return an <code>Iterable</code> <b>take the address</b> of a <a href="https://en.cppreference.com/w/c/language/compound_literal"><em>compound literals</em></a>. Compound literals are local to the scope and hence the address is valid for the <a href="https://stackoverflow.com/questions/34880638/compound-literal-lifetime-and-if-blocks">lifetime of that scope</a>. Don't use the <code>Iterable</code> outside that scope. As a rule of thumb, <b>always</b> declare and initialize the <code>Iterable</code>s in the same line (using the macros).</li>
+<li><p class="startli">If you <b>need to return</b> an <code>Iterable</code> from a function - you should make sure its <code>self</code> member's lifetime doesn't end upon returning. Since <code>self</code> is a pointer, the data it is pointing to may have any storage duration. If you're responsible for filling this <code>self</code> member - make sure you pay attention to its lifetime.</p>
+<p class="startli">As mentioned previously, the utility macros, used in the examples to build <code>Iterable</code>s, use compound literals - whose lifetimes end once the enclosing scope ends. <code>Iterable</code>s built in this way are <b>not suitable</b> to be returned (or used in general) outside of their enclosing scope.</p>
+</li>
+<li>The <code>tc</code> member of the typeclass contains a pointer to a struct with <code>static</code> storage duration - so this pointer is totally reusable in any scope.</li>
+</ul>
+<h1>Semantics</h1>
+<h2><code><a class="el" href="maybe_8h.html" title="Utilities to define and use a Maybe type.">maybe.h</a></code></h2>
+<p class="">The <code>Maybe</code> struct is quite simple. This is what it <em>generally</em> looks like (without a concrete type)- </p><div class="fragment"><div class="line"><span class="keyword">typedef</span> <span class="keyword">enum</span></div>
+<div class="line">{</div>
+<div class="line">    <a class="code" href="maybe_8h.html#aef352f4183ce21f9ac15edd86a75b230aae774bc4d692f226f6a9d88b7e1ce26f">MaybeTag_Nothing</a> = 0, </div>
+<div class="line">    <a class="code" href="maybe_8h.html#aef352f4183ce21f9ac15edd86a75b230a1e57a50afd710304d82f6269f40e18c2">MaybeTag_Just</a>         </div>
+<div class="line">} <a class="code" href="maybe_8h.html#aef352f4183ce21f9ac15edd86a75b230">MaybeTag</a>;</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">struct </span>maybe_t</div>
+<div class="line">{</div>
+<div class="line">    <a class="code" href="structMaybeTag.html">MaybeTag</a> tag;</div>
+<div class="line">    <span class="comment">/* Don&#39;t access this member manually */</span></div>
+<div class="line">    T val;</div>
+<div class="line">};  </div>
+<div class="ttc" id="amaybe_8h_html_aef352f4183ce21f9ac15edd86a75b230"><div class="ttname"><a href="maybe_8h.html#aef352f4183ce21f9ac15edd86a75b230">MaybeTag</a></div><div class="ttdeci">MaybeTag</div><div class="ttdef"><b>Definition:</b> maybe.h:20</div></div>
+<div class="ttc" id="amaybe_8h_html_aef352f4183ce21f9ac15edd86a75b230a1e57a50afd710304d82f6269f40e18c2"><div class="ttname"><a href="maybe_8h.html#aef352f4183ce21f9ac15edd86a75b230a1e57a50afd710304d82f6269f40e18c2">MaybeTag_Just</a></div><div class="ttdeci">@ MaybeTag_Just</div><div class="ttdoc">Just tag - indicates presence of a value.</div><div class="ttdef"><b>Definition:</b> maybe.h:22</div></div>
+<div class="ttc" id="amaybe_8h_html_aef352f4183ce21f9ac15edd86a75b230aae774bc4d692f226f6a9d88b7e1ce26f"><div class="ttname"><a href="maybe_8h.html#aef352f4183ce21f9ac15edd86a75b230aae774bc4d692f226f6a9d88b7e1ce26f">MaybeTag_Nothing</a></div><div class="ttdeci">@ MaybeTag_Nothing</div><div class="ttdoc">Nothing tag - indicates absence of a value.</div><div class="ttdef"><b>Definition:</b> maybe.h:21</div></div>
+<div class="ttc" id="astructMaybeTag_html"><div class="ttname"><a href="structMaybeTag.html">MaybeTag</a></div><div class="ttdoc">The enum used for tagging the Maybe type.</div></div>
+</div><!-- fragment --><p> It's a tagged "union", nothing special. The <code>Just</code> tag is used to indicate the presence of a value in <code>val</code>, and <code>Nothing</code> is used to indicate the absence of a value in <code>val</code>.</p>
+<p class="">The <code>DefineMaybe</code> macro is used to define an actual concrete <code>Maybe</code> struct for the given type, the type is also used to name the <code>Maybe</code> struct. </p><div class="fragment"><div class="line"><span class="preprocessor">#define Maybe(T) Maybe##T</span></div>
+</div><!-- fragment --><p> The name of the <code>Maybe</code> struct containing a value of type <code>T</code> is just <code>Maybe</code> and the type name concatenated together. <em>This is why</em> <code>T</code> <b>must be alphanumeric</b>.</p>
+<p class="">There's one more thing <code>DefineMaybe</code> does, it defines a <code>static inline</code> function- </p><div class="fragment"><div class="line"><span class="keyword">static</span> <span class="keyword">inline</span> T T_from_just(<a class="code" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a>(T) maybex)</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordflow">if</span> (<a class="code" href="maybe_8h.html#a8ae2e9c065fbca1cd3a603ad0a71d8f2">is_just</a>(maybex)) {</div>
+<div class="line">        <span class="keywordflow">return</span> maybex.val;</div>
+<div class="line">    } <span class="keywordflow">else</span> {</div>
+<div class="line">        fputs(<span class="stringliteral">&quot;Attempted to extract Just value from Nothing&quot;</span>, stderr);</div>
+<div class="line">        abort();</div>
+<div class="line">    }</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> This is the function the <code>from_just</code> macro calls. The function ensures type safety - but most importantly, it ensures that referring to <code>maybex</code> doesn't execute it multiple times. In case the user passes an expression with side effects (that returns a <code><a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875" title="Convenience macro to get the type of the Maybe defined with a certain type.">Maybe(T)</a></code>) to <code>from_just</code>.</p>
+<p class="">So, a call like <code><a class="el" href="maybe_8h.html#a0daf26d181160b7fb96d640ed20bb466" title="Define a Maybe&lt;T&gt; type.">DefineMaybe(int)</a></code> translates to- </p><div class="fragment"><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span></div>
+<div class="line">{</div>
+<div class="line">    <a class="code" href="structMaybeTag.html">MaybeTag</a> tag;</div>
+<div class="line">    <span class="comment">/* Don&#39;t access this member manually */</span></div>
+<div class="line">    <span class="keywordtype">int</span> val;</div>
+<div class="line">} Maybeint;</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">int</span> int_from_just(Maybeint maybex)</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordflow">if</span> (<a class="code" href="maybe_8h.html#a8ae2e9c065fbca1cd3a603ad0a71d8f2">is_just</a>(maybex)) {</div>
+<div class="line">        <span class="keywordflow">return</span> maybex.val;</div>
+<div class="line">    } <span class="keywordflow">else</span> {</div>
+<div class="line">        fputs(<span class="stringliteral">&quot;Attempted to extract Just value from Nothing&quot;</span>, stderr);</div>
+<div class="line">        abort();</div>
+<div class="line">    }</div>
+<div class="line">}</div>
+</div><!-- fragment --><p class="">Alongside the utilities to define and refer to a <code>Maybe</code> of a certain type - there's also type constructors and value extractors, as well as macros to check if the <code>Maybe</code> is a <code>Just</code> or <code>Nothing</code>.</p>
+<ul>
+<li><p class="startli"><code>Just</code> takes in a value, and the type of said value (alphanumeric, same one used during <code>Maybe</code> definition) and constructs a <code><a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875" title="Convenience macro to get the type of the Maybe defined with a certain type.">Maybe(T)</a></code>. This is "type safe", <code>v</code> must actually be of type <code>T</code>, otherwise there will be, at worst a warning, and at best an explicit error.</p>
+<p class="startli"><code><a class="el" href="maybe_8h.html#ae0832f95d5a7ff6845381aa8795fd2a3" title="Wrap a Just value into a Maybe(T).">Just(1, int)</a></code> translates to <code>((<a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875" title="Convenience macro to get the type of the Maybe defined with a certain type.">Maybe(int)</a>){.tag = MaybeTag_Just, .val = (1)})</code>. Just the compound literal to build the struct. Type safety comes from the fact that the <code>val</code> member for <code><a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875" title="Convenience macro to get the type of the Maybe defined with a certain type.">Maybe(int)</a></code> is of type <code>int</code>.</p>
+</li>
+<li><p class="startli"><code>Nothing</code> takes in a type (alphanumeric, same one used during <code>Maybe</code> definition) and constructs a <code><a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875" title="Convenience macro to get the type of the Maybe defined with a certain type.">Maybe(T)</a></code> tagged with <code>Nothing</code>.</p>
+<p class="startli"><code><a class="el" href="maybe_8h.html#a65cd69857cc806545d68c79464270a97" title="Wrap a Nothing value into a Maybe(T).">Nothing(int)</a></code> translates to <code>((<a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875" title="Convenience macro to get the type of the Maybe defined with a certain type.">Maybe(int)</a>){0})</code>. I decided to zero initialize the struct since I've set the <code>Nothing</code> tag to <code>0</code> explicitly. However, it'd be totally valid to only set the tag to <code>Nothing</code> and leave the <code>val</code> member indeterminate. Since you shouldn't access <code>val</code> if tag is <code>Nothing</code> anyway.</p>
+</li>
+<li><p class="startli"><code>from_just</code> and <code>from_just_</code> have previously been mentioned briefly.</p>
+<p class="startli"><code>from_just</code> takes in a <code>Maybe</code> struct, and the <code>T</code> (type the <code>Maybe</code> contains) and calls the <code>T##_from_just</code> function above. The function checks if the <code>Maybe</code> is indeed <code>Just</code>, and returns the value. If it is <code>Nothing</code>, however, the program aborts.</p>
+<p class="startli"><code>from_just_</code> directly accesses and returns the <code>val</code> member of the given <code>Maybe</code> struct, it does not take in the <code>T</code> parameter, since it doesn't need to. Only use this after you've made sure the <code>Maybe</code> struct is a <code>Just</code>. Otherwise the behavior is undefined. Though in practical terms, if the <code>Maybe</code> struct was built using the <code>Nothing</code> macro, <code>val</code> would just be zero initialized. This should not be relied on however.</p>
+</li>
+<li><code>is_just</code> and <code>is_nothing</code> are self explanatory, they compare the <code>tag</code> to <code>MaybeTag_Just</code> and <code>MaybeTag_Nothing</code> respectively.</li>
+</ul>
+<h2><code><a class="el" href="typeclass_8h.html" title="Utilities to define a typeclass and its instance.">typeclass.h</a></code></h2>
+<p class="">This file provides utility macros to define a typeclass and its instance.</p>
+<p class="">A typeclass is just a struct containing a bunch of function pointers.</p>
+<p class="">A typeclass instance contains a pointer to the typeclass struct in its <code>tc</code> member. It also contains the <code>self</code> member of type <code>void*</code>. This is the concrete type that will be used by functions.</p>
+<ul>
+<li>The <code>typeclass</code> macro takes in a semicolon separated list of function pointer members and puts them into a struct. It doesn't name the struct, that's upto the caller.</li>
+</ul>
+<div class="fragment"><div class="line"><span class="keyword">typedef</span> <a class="code" href="typeclass_8h.html#ab36f9f0d3603452a867a683078618034">typeclass</a>(</div>
+<div class="line">    <span class="keywordtype">size_t</span> (*<span class="keyword">const</span> from_enum)(<span class="keywordtype">void</span>* <span class="keyword">self</span>);</div>
+<div class="line">    <span class="keywordtype">void</span>* (*<span class="keyword">const</span> to_enum)(<span class="keywordtype">size_t</span> x)</div>
+<div class="line">) Enum;</div>
+<div class="ttc" id="atypeclass_8h_html_ab36f9f0d3603452a867a683078618034"><div class="ttname"><a href="typeclass_8h.html#ab36f9f0d3603452a867a683078618034">typeclass</a></div><div class="ttdeci">#define typeclass(funcs)</div><div class="ttdoc">Define a typeclass with the given functions.</div><div class="ttdef"><b>Definition:</b> typeclass.h:23</div></div>
+</div><!-- fragment --><p> translates to </p><div class="fragment"><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span></div>
+<div class="line">{</div>
+<div class="line">    size_t (*<span class="keyword">const</span> from_enum)(<span class="keywordtype">void</span>* <span class="keyword">self</span>);</div>
+<div class="line">    <span class="keywordtype">void</span>* (*<span class="keyword">const</span> to_enum)(<span class="keywordtype">size_t</span> x);</div>
+<div class="line">} Enum;</div>
+</div><!-- fragment --><ul>
+<li>The <code>typeclass_instance</code> macro takes in the type name of the previously defined typeclass and defines the typeclass instance struct. It also doesn't name the struct. <div class="fragment"><div class="line"><span class="keyword">typedef</span> typeclass_instnace(Enum) Enumerable;</div>
+</div><!-- fragment --> translates to <div class="fragment"><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span></div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordtype">void</span>* <span class="keyword">const</span> <span class="keyword">self</span>;</div>
+<div class="line">    Enum <span class="keyword">const</span>* <span class="keyword">const</span> tc;</div>
+<div class="line">} Enumerable;</div>
+</div><!-- fragment --></li>
+</ul>
+<h2><code><a class="el" href="iterator_8h.html" title="Utilities to define and implement an Iterable.">iterator.h</a></code></h2>
+<p class="">This uses the typeclass utilities mentioned previously to define the <code>Iterator</code> typeclass and its instance, <code>Iterable</code>. The naming of each of these defined structs is dependent on the type of the element the iterator yields. </p><div class="fragment"><div class="line"><span class="preprocessor">#define Iterator(T) T##Iterator</span></div>
+<div class="line"><span class="preprocessor">#define Iterable(T) T##Iterable</span></div>
+</div><!-- fragment --><p class="">The <code>DefineIteratorOf</code> macro takes in the typename of the element the <code>Iterator</code> will yield, and uses that to define the iterator and iterable with appropriate names. This is why the type names must be alphanumeric. </p><div class="fragment"><div class="line"><a class="code" href="iterator_8h.html#a938f3e7187cb386e2bf4049753e2ff84">DefineIteratorOf</a>(<span class="keywordtype">int</span>);</div>
+<div class="ttc" id="aiterator_8h_html_a938f3e7187cb386e2bf4049753e2ff84"><div class="ttname"><a href="iterator_8h.html#a938f3e7187cb386e2bf4049753e2ff84">DefineIteratorOf</a></div><div class="ttdeci">#define DefineIteratorOf(T)</div><div class="ttdoc">Define an Iterator typeclass and its Iterable instance for given element type.</div><div class="ttdef"><b>Definition:</b> iterator.h:62</div></div>
+</div><!-- fragment --><p> translates to </p><div class="fragment"><div class="line"><span class="keyword">typedef</span> <a class="code" href="typeclass_8h.html#ab36f9f0d3603452a867a683078618034">typeclass</a>(<a class="code" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a>(<span class="keywordtype">int</span>) (*<span class="keyword">const</span> next)(<span class="keywordtype">void</span>* <span class="keyword">self</span>)) intIterator;</div>
+<div class="line"><span class="keyword">typedef</span> <a class="code" href="typeclass_8h.html#af018200b2431a3ab6c296cc8940ecbe3">typeclass_instance</a>(<a class="code" href="iterator_8h.html#a6c3a22862dc6db425dd4389987c0dbaf">Iterator</a>(<span class="keywordtype">int</span>)) intIterable;</div>
+<div class="ttc" id="aiterator_8h_html_a6c3a22862dc6db425dd4389987c0dbaf"><div class="ttname"><a href="iterator_8h.html#a6c3a22862dc6db425dd4389987c0dbaf">Iterator</a></div><div class="ttdeci">#define Iterator(T)</div><div class="ttdoc">Convenience macro to get the type of the Iterator (typeclass) with given element type.</div><div class="ttdef"><b>Definition:</b> iterator.h:28</div></div>
+<div class="ttc" id="atypeclass_8h_html_af018200b2431a3ab6c296cc8940ecbe3"><div class="ttname"><a href="typeclass_8h.html#af018200b2431a3ab6c296cc8940ecbe3">typeclass_instance</a></div><div class="ttdeci">#define typeclass_instance(Typeclass)</div><div class="ttdoc">Define a typeclass instance for the given typeclass.</div><div class="ttdef"><b>Definition:</b> typeclass.h:43</div></div>
+</div><!-- fragment --><p> Two structs, of names <code><a class="el" href="iterator_8h.html#a6c3a22862dc6db425dd4389987c0dbaf" title="Convenience macro to get the type of the Iterator (typeclass) with given element type.">Iterator(int)</a></code> (i.e <code>intIterator</code>) and <code><a class="el" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a" title="Convenience macro to get the type of the Iterable (typeclass instance) with given element type.">Iterable(int)</a></code> (i.e <code>intIterable</code>), respectively.</p>
+<p class="">Now, we need a function to implement <code>Iterator</code> for our own type. That's where the <code>impl_iterator</code> macro comes in. This is its signature- </p><div class="fragment"><div class="line"><span class="preprocessor">#define impl_iterator(IterType, ElmntType, Name, next_f) ...</span></div>
+</div><!-- fragment --><p> It defines a function, which turns the custom type (for which the impl is for) into an <code>Iterable</code>.</p>
+<p class="">It takes in-</p><ul>
+<li><code>IterType</code>, the custom type <code>Iterator</code> is being implemented for</li>
+<li><p class="startli"><code>ElmntType</code>, the type this <code>Iterator</code> will yield.</p>
+<p class="startli">An <code><a class="el" href="iterator_8h.html#a6c3a22862dc6db425dd4389987c0dbaf" title="Convenience macro to get the type of the Iterator (typeclass) with given element type.">Iterator(ElmntType)</a></code> (and <code><a class="el" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a" title="Convenience macro to get the type of the Iterable (typeclass instance) with given element type.">Iterable(ElmntType)</a></code>) should already exist, obviously.</p>
+<p class="startli">Must be alphanumeric just like everywhere else.</p>
+<p class="startli">A <code><a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875" title="Convenience macro to get the type of the Maybe defined with a certain type.">Maybe(ElmntType)</a></code> must also exist.</p>
+</li>
+<li><p class="startli"><code>next_f</code>, the next function implementation for this <code>IterType</code>.</p>
+<p class="startli">Must be of type <code><a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875" title="Convenience macro to get the type of the Maybe defined with a certain type.">Maybe(ElmntType)</a> (*)(IterType)</code>. It should take in a value of <code>IterType</code>, and return a <code><a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875" title="Convenience macro to get the type of the Maybe defined with a certain type.">Maybe(ElmntType)</a></code>.</p>
+</li>
+<li><code>Name</code> to give to the function being defined.</li>
+</ul>
+<p class="">Generally, you need to include the declaration of this function in a header file yourself. However, you can also mark this function as <code>static</code> if you so desire; all you have to do, is prepend <code>static</code> to the <code>impl_iterator</code> call- <code>static <a class="el" href="iterator_8h.html#a01e620430099d2eb6192db193e88cff0" title="Define a function to turn given IterType into an Iterable(ElmntType).">impl_iterator(...)</a></code>.</p>
+<p class="">In the <a href="./examples/array_iterable.c">array_iterable.c</a> example. The <code>impl_iterator(ArrIter(int)*, int, prep_arriter_of(int), intarrnxt)</code> translates to- </p><div class="fragment"><div class="line"><a class="code" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a>(<span class="keywordtype">int</span>) prep_intarr_itr(ArrIter(<span class="keywordtype">int</span>)* x)</div>
+<div class="line">{</div>
+<div class="line">    <a class="code" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a>(<span class="keywordtype">int</span>) (*<span class="keyword">const</span> next_)(ArrIter(<span class="keywordtype">int</span>)* <span class="keyword">self</span>) = (intarrnxt);</div>
+<div class="line">    (void)next_;</div>
+<div class="line">    <span class="keyword">static</span> <a class="code" href="iterator_8h.html#a6c3a22862dc6db425dd4389987c0dbaf">Iterator</a>(<span class="keywordtype">int</span>) <span class="keyword">const</span> tc = {.next = (<a class="code" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a>(<span class="keywordtype">int</span>) (*const)(<span class="keywordtype">void</span>*))intarrnxt};</div>
+<div class="line">    <span class="keywordflow">return</span> (<a class="code" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a>(<span class="keywordtype">int</span>)){.tc = &amp;tc, .self = x};</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> Note the first 2 lines - those make sure the passed <code>next</code> function impl has the exact correct type (no <code>void*</code> shenanigans). The 2 lines will not generate any extra code when compiled with a decent compiler - they are just there to present warnings/errors when the type of the passed function is implicitly wrong.</p>
+<h1>Advanced Usage</h1>
+<h2>Lazy Abstractions</h2>
+<p class="">This lazy iterator interface demonstrated, lets you achieve strong abstractions that are also lazy. 2 such abstractions, <code>take</code> and <code>map</code> are demonstrated in <a href="./examples/fibbonacci.c">fibonacci.c</a> and <a href="./examples/map_over.c">map_over.c</a> respectively.</p>
+<p class="">Many of these abstractions follow the same basic pattern. Have a custom struct that wraps a given iterable - have some extra context in that struct to operate on the elements of said iterable, and a <code>next</code> function implementation that simply iterates through the src iterable and does some necessary action based on the stored context. No extra iteration is done, the extra functionality is simply applied on top of the source iterable's <code>next</code> function on demand.</p>
+<p class="">This allows <code>take</code> to simply wrap the given iterable inside a struct with some context and turn that struct into its iterable implementation. No iteration needs to happen in this process, it's a completely lazy process.</p>
+<h3>The <code>take</code> utility</h3>
+<p class="">Let's look at how the <code>take</code>-like utility is implemented. You can find the implementation in <a href="./examples/iterutils/take.h">iterutils</a></p>
+<p class="">The struct we'll use to implement this utility looks like- </p><div class="fragment"><div class="line"><span class="keyword">struct</span></div>
+<div class="line">{ </div>
+<div class="line">    <span class="keywordtype">size_t</span> i;</div>
+<div class="line">    <span class="keywordtype">size_t</span> <span class="keyword">const</span> limit;</div>
+<div class="line">    <a class="code" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a>(T) <span class="keyword">const</span> src;</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> It stores the source iterable (<code>src</code>), the iteration step (<code>i</code>), and the limit to stop the iteration at (<code>limit</code>). We'll call this struct <code>IterTake</code>, just like <code>Iterator</code> and <code>Iterable</code>, the exact name will depend on the element type. </p><div class="fragment"><div class="line"><span class="preprocessor">#define IterTake(ElmntType) IterTake##ElmntType</span></div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">#define DefineIterTake(ElmntType)                                                                                      \</span></div>
+<div class="line"><span class="preprocessor">    typedef struct                                                                                                     \</span></div>
+<div class="line"><span class="preprocessor">    {                                                                                                                  \</span></div>
+<div class="line"><span class="preprocessor">        size_t i;                                                                                                      \</span></div>
+<div class="line"><span class="preprocessor">        size_t const limit;                                                                                            \</span></div>
+<div class="line"><span class="preprocessor">        Iterable(ElmntType) const src;                                                                                 \</span></div>
+<div class="line"><span class="preprocessor">    } IterTake(ElmntType)</span></div>
+</div><!-- fragment --><p> Now we need the <code>next</code> function impl to implement <code>Iterator</code> for this <code>IterTake</code> struct. That function should look like- </p><div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a>(T) IterTake(T)_nxt(IterTake(T) * <span class="keyword">self</span>)</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordflow">if</span> (self-&gt;i &lt; self-&gt;limit) {</div>
+<div class="line">        ++(<span class="keyword">self</span>-&gt;i);</div>
+<div class="line">        <a class="code" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a>(T) srcit = <span class="keyword">self</span>-&gt;src;                                                                     </div>
+<div class="line">        <span class="keywordflow">return</span> srcit.tc-&gt;next(srcit.self);</div>
+<div class="line">    }</div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code" href="maybe_8h.html#a65cd69857cc806545d68c79464270a97">Nothing</a>(T);</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> It simply iterates through the source iterable but stops if it reaches the limit specified in the <code>IterTake</code> struct. Now, <code>impl_iterator</code> can be used to implement <code>Iterator</code> for the <code>IterTake(T)</code>- </p><div class="fragment"><div class="line"><a class="code" href="iterator_8h.html#a01e620430099d2eb6192db193e88cff0">impl_iterator</a>(IterTake(T)*, T, prep_IterTake(T)_itr, IterTake(T)_nxt)</div>
+</div><!-- fragment --><p class="">And that's it! Now an <code>IterTake</code> can be converted into an <code>Iterable</code>. But how about we also make an abstraction to turn a given <code>Iterable</code> into another <code>Iterable</code> with the <code>IterTake</code> applied directly? </p><div class="fragment"><div class="line"><span class="preprocessor">#define take_from(it, n, T) prep_IterTake(T)_itr(&amp;(IterTake(T)){.i = 0, .limit = n, .src = it})</span></div>
+</div><!-- fragment --><p> That's it! Now <code>take_from</code> can be used to take <code>n</code> elements of type <code>T</code> from an iterable, <code>it</code>.</p>
+<p class="">You'll notice that in the previous snippets, the pre processor token concatenation for the function names isn't going to quite work - that was just for simplification, in reality <code>IterTake(T)_nxt</code> is written as <code>CONCAT(IterTake(T), _nxt)</code> where <code>CONCAT</code> is- </p><div class="fragment"><div class="line"><span class="preprocessor">#define CONCAT_(A, B) A##B</span></div>
+<div class="line"><span class="preprocessor">#define CONCAT(A, B)  CONCAT_(A, B)</span></div>
+</div><!-- fragment --><p class="">While we're at it, let's also make a macro to name the <code>prep_</code> function consistently, just like we did for arrays and lists- </p><div class="fragment"><div class="line"><span class="comment">/* Name of the function that wraps an IterTake(ElmntType) for given ElmntType into an iterable  */</span></div>
+<div class="line"><span class="preprocessor">#define prep_itertake_of(ElmntType) CONCAT(CONCAT(prep_, IterTake(ElmntType)), _itr)</span></div>
+</div><!-- fragment --><p class="">We can use that in the <code>take_from</code> macro instead, as well as in the function name in the <code>impl_iterator</code> macro.</p>
+<p class="">Combining all of that, gives you- </p><div class="fragment"><div class="line"><span class="comment">/*</span></div>
+<div class="line"><span class="comment">Define the iterator implementation function for an IterTake struct</span></div>
+<div class="line"><span class="comment"></span> </div>
+<div class="line"><span class="comment">The function is named `prep_itertake_of(ElmntType)`</span></div>
+<div class="line"><span class="comment">*/</span></div>
+<div class="line"><span class="preprocessor">#define define_itertake_func(ElmntType)                                                                                \</span></div>
+<div class="line"><span class="preprocessor">    static Maybe(ElmntType) CONCAT(IterTake(ElmntType), _nxt)(IterTake(ElmntType) * self)                              \</span></div>
+<div class="line"><span class="preprocessor">    {                                                                                                                  \</span></div>
+<div class="line"><span class="preprocessor">        if (self-&gt;i &lt; self-&gt;limit) {                                                                                   \</span></div>
+<div class="line"><span class="preprocessor">            ++(self-&gt;i);                                                                                               \</span></div>
+<div class="line"><span class="preprocessor">            Iterable(ElmntType) srcit = self-&gt;src;                                                                     \</span></div>
+<div class="line"><span class="preprocessor">            return srcit.tc-&gt;next(srcit.self);                                                                         \</span></div>
+<div class="line"><span class="preprocessor">        }                                                                                                              \</span></div>
+<div class="line"><span class="preprocessor">        return Nothing(ElmntType);                                                                                     \</span></div>
+<div class="line"><span class="preprocessor">    }                                                                                                                  \</span></div>
+<div class="line"><span class="preprocessor">    impl_iterator(IterTake(ElmntType)*, ElmntType, prep_itertake_of(ElmntType), CONCAT(IterTake(ElmntType), _nxt))</span></div>
+</div><!-- fragment --><p class="">You need to call this macro with a concrete type (a type for which an <code>Iterator</code>, and <code>Iterable</code>, already exist) inside a C source file. In the examples, this macro is called inside <a href="./examples/iterutils/iterable_utils.c">iterable_utils.c</a> - for defining <code>IterTake</code> for a couple of types. The declrations of the <code>prep_</code> function is then included in the <a href="./examples/iterutils/iterable_utils.h">iterable_utils.h</a> header file.</p>
+<p class="">That's the implementation, let's use it now! </p><div class="fragment"><div class="line"><a class="code" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a>(uint32_t) it   = get_fibitr();                <span class="comment">/* Create an infinite fibonacci sequence iterable */</span></div>
+<div class="line"><a class="code" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a>(uint32_t) it10 = take_from(it, 10, uint32_t); <span class="comment">/* Iterable of the first 10 items in the sequence */</span></div>
+<div class="line"><span class="comment">/* Print the first 10 items */</span></div>
+<div class="line"><span class="keywordflow">foreach</span> (uint32_t, n, it10) {</div>
+<div class="line">    printf(<span class="stringliteral">&quot;%&quot;</span> PRIu32 <span class="stringliteral">&quot; &quot;</span>, n);</div>
+<div class="line">}</div>
+<div class="line">puts(<span class="stringliteral">&quot;&quot;</span>);</div>
+</div><!-- fragment --><p> You can find this code in <a href="./examples/fibbonacci.c">fibonacci.c</a>. <code>get_fibitr</code> simply returns an infinite <code><a class="el" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a" title="Convenience macro to get the type of the Iterable (typeclass instance) with given element type.">Iterable(uint32_t)</a></code> representing the fibonacci sequence. <code>take</code> shines in its ability to operate on infinite iterators. In the above snippet, we take the first 10 elements of <code>it</code> (the fibonacci sequence) and store the built iterable in <code>it10</code>.</p>
+<p class="">Since this is a lazy process - <code>it10</code> is actually just backed by <code>it</code>. When you consume from <code>it10</code>, <code>it</code> is also being consumed from.</p>
+<p class="">This means that you can call <code>take_from</code> on <code>it</code> again and try to get 10 more items, and this time you'll get <em>the next 10 items</em>. Cool!</p>
+<p class="">If the <code>Iterable</code> is implemented correctly (i.e the <code>next</code> function behaves as expected), Using <code>take_from</code> on an already consumed <code>Iterable</code> does not have any traps - it simply gives you back an already consumed <code>Iterable</code>.</p>
+<p class=""><em>Even</em> if you use <code>take_from</code> with a <code>n</code> value <b>greater</b> than <em>the length</em> of the source <code>Iterable</code>, the returned <code>Iterable</code> will simply be fully consumed before reaching <code>n</code> - no surprises.</p>
+<h3>The <code>map</code> utility</h3>
+<p class="">The <code>map</code> implementation will follow a very similar pattern. We need a struct to hold the mapping function, a <code>next</code> function impl to use that mapping function while iterating over the source iterable, and the <code>Iterator</code> implementation for this struct.</p>
+<p class="">However, we now need to think about the mapping function's type. It's argument should be the same type as that of the source iterable's elements - but what about its return type? The return type can be anything. So each one of these special map structs, need to be parametrize on not only the element type, but also the return type of the mapping function. </p><div class="fragment"><div class="line"><span class="preprocessor">#define IterMap(ElmntType, FnRetType) IterMap##ElmntType##FnRetType</span></div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">#define DefineIterMap(ElmntType, FnRetType)                                                                            \</span></div>
+<div class="line"><span class="preprocessor">    typedef struct                                                                                                     \</span></div>
+<div class="line"><span class="preprocessor">    {                                                                                                                  \</span></div>
+<div class="line"><span class="preprocessor">        FnRetType (*const mapfn)(ElmntType x);                                                                         \</span></div>
+<div class="line"><span class="preprocessor">        Iterable(ElmntType) const src;                                                                                 \</span></div>
+<div class="line"><span class="preprocessor">    } IterMap(ElmntType, FnRetType)</span></div>
+</div><!-- fragment --><p> As usual, type safety is a priority.</p>
+<p class="">The <code>next</code> function impl should look like- </p><div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a>(FnRetType) CONCAT(IterMap(ElmntType, FnRetType), _nxt)(IterMap(ElmntType, FnRetType) * <span class="keyword">self</span>)</div>
+<div class="line">{</div>
+<div class="line">    <a class="code" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a>(ElmntType) <span class="keyword">const</span> srcit = <span class="keyword">self</span>-&gt;src;</div>
+<div class="line">    <a class="code" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a>(ElmntType) res            = srcit.tc-&gt;next(srcit.self);</div>
+<div class="line">    <span class="keywordflow">if</span> (<a class="code" href="maybe_8h.html#a1b03ece9f7b00fcbbe8e0dde45277c47">is_nothing</a>(res)) {</div>
+<div class="line">        <span class="keywordflow">return</span> <a class="code" href="maybe_8h.html#a65cd69857cc806545d68c79464270a97">Nothing</a>(FnRetType);</div>
+<div class="line">    }</div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code" href="maybe_8h.html#ae0832f95d5a7ff6845381aa8795fd2a3">Just</a>(self-&gt;mapfn(<a class="code" href="maybe_8h.html#a16682b211c71e2ad917edc9bdd298154">from_just_</a>(res)), FnRetType);</div>
+<div class="line">}</div>
+<div class="ttc" id="amaybe_8h_html_a1b03ece9f7b00fcbbe8e0dde45277c47"><div class="ttname"><a href="maybe_8h.html#a1b03ece9f7b00fcbbe8e0dde45277c47">is_nothing</a></div><div class="ttdeci">#define is_nothing(x)</div><div class="ttdoc">Check if the given Maybe type is tagged with Nothing.</div><div class="ttdef"><b>Definition:</b> maybe.h:116</div></div>
+</div><!-- fragment --><p> It simply consumes the source iterable, applies the mapping function on each element and returns the result.</p>
+<p class="">Now, we can use <code>impl_iterator</code>- </p><div class="fragment"><div class="line"><span class="comment">/* Name of the function that wraps an IterMap(ElmntType, FnRetType) for given ElmntType and FnRetType into an iterable */</span></div>
+<div class="line"><span class="preprocessor">#define prep_itermap_of(ElmntType, FnRetType) CONCAT(CONCAT(prep_, IterMap(ElmntType, FnRetType)), _itr)</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code" href="iterator_8h.html#a01e620430099d2eb6192db193e88cff0">impl_iterator</a>(IterMap(ElmntType, FnRetType)*, FnRetType, prep_itermap_of(ElmntType, FnRetType), CONCAT(IterMap(ElmntType, FnRetType), _nxt))</div>
+</div><!-- fragment --><p class="">Combine all of that together, and you get a similar macro as last time- </p><div class="fragment"><div class="line"><span class="comment">/*</span></div>
+<div class="line"><span class="comment">Define the iterator implementation function for an IterMap struct</span></div>
+<div class="line"><span class="comment">Also define a function with the given `Name` - which takes in an iterable and a function to map over said iterable,</span></div>
+<div class="line"><span class="comment">wraps said iterable and function in an `IterMap` struct and wraps that around its `Iterable` impl</span></div>
+<div class="line"><span class="comment">*/</span></div>
+<div class="line"><span class="preprocessor">#define define_itermap_func(ElmntType, FnRetType)                                                                      \</span></div>
+<div class="line"><span class="preprocessor">    static Maybe(FnRetType) CONCAT(IterMap(ElmntType, FnRetType), _nxt)(IterMap(ElmntType, FnRetType) * self)          \</span></div>
+<div class="line"><span class="preprocessor">    {                                                                                                                  \</span></div>
+<div class="line"><span class="preprocessor">        Iterable(ElmntType) const srcit = self-&gt;src;                                                                   \</span></div>
+<div class="line"><span class="preprocessor">        Maybe(ElmntType) res            = srcit.tc-&gt;next(srcit.self);                                                  \</span></div>
+<div class="line"><span class="preprocessor">        if (is_nothing(res)) {                                                                                         \</span></div>
+<div class="line"><span class="preprocessor">            return Nothing(FnRetType);                                                                                 \</span></div>
+<div class="line"><span class="preprocessor">        }                                                                                                              \</span></div>
+<div class="line"><span class="preprocessor">        return Just(self-&gt;mapfn(from_just_(res)), FnRetType);                                                          \</span></div>
+<div class="line"><span class="preprocessor">    }                                                                                                                  \</span></div>
+<div class="line"><span class="preprocessor">    impl_iterator(IterMap(ElmntType, FnRetType)*, FnRetType, prep_itermap_of(ElmntType, FnRetType),                    \</span></div>
+<div class="line"><span class="preprocessor">                  CONCAT(IterMap(ElmntType, FnRetType), _nxt))</span></div>
+</div><!-- fragment --><p class="">The key difference is that this works on <code>ElmntType</code> and <code>FnRetType</code>, as opposed to just <code>ElmntType</code>. You can call this macro to define the functions in a source file, and include the declarations in a header file. In the examples, this is done in <a href="./examples/iterutils/iterable_utils.c">iterable_utils.c</a> and <a href="./examples/iterutils/iterable_utils.h">iterable_utils.h</a> respectively.</p>
+<p class="">We should also have a convenient macro in the same style as <code>take_from</code>- </p><div class="fragment"><div class="line"><span class="comment">/* Map the function `fn` of type `FnRetType (*)(ElmntType)` over `it` to make a new iterable */</span></div>
+<div class="line"><span class="preprocessor">#define map_over(it, fn, ElmntType, FnRetType)                                                                         \</span></div>
+<div class="line"><span class="preprocessor">    prep_itermap_of(ElmntType, FnRetType)(&amp;(IterMap(ElmntType, FnRetType)){.mapfn = fn, .src = it})</span></div>
+</div><!-- fragment --><p class="">And that's all there is to implementing, let's use it! </p><div class="fragment"><div class="line"><span class="keywordtype">int</span> arr[] = {1, 2, 3};</div>
+<div class="line"><span class="comment">/* Turn the array into an Iterable */</span></div>
+<div class="line"><a class="code" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a>(<span class="keywordtype">int</span>) arrit = arr_into_iter(arr, <span class="keyword">sizeof</span>(arr) / <span class="keyword">sizeof</span>(*arr), <span class="keywordtype">int</span>);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">/* Map an increment function over the iterable */</span></div>
+<div class="line"><a class="code" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a>(<span class="keywordtype">int</span>) mappedit = map_over(arrit, incr, <span class="keywordtype">int</span>, <span class="keywordtype">int</span>);</div>
+<div class="line"><span class="comment">/* Print the iterable */</span></div>
+<div class="line"><span class="keywordflow">foreach</span> (<span class="keywordtype">int</span>, x, mappedit) {</div>
+<div class="line">    printf(<span class="stringliteral">&quot;%d &quot;</span>, x);</div>
+<div class="line">}</div>
+<div class="line">puts(<span class="stringliteral">&quot;&quot;</span>);</div>
+</div><!-- fragment --><p> where <code>incr</code> is- </p><div class="fragment"><div class="line"><span class="keyword">static</span> <span class="keywordtype">int</span> incr(<span class="keywordtype">int</span> x) { <span class="keywordflow">return</span> x + 1; }</div>
+</div><!-- fragment --><p class="">You can find this code in <a href="./examples/map_over.c">map_over.c</a>. The above snippet maps the <code>incr</code> function over the <code><a class="el" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a" title="Convenience macro to get the type of the Iterable (typeclass instance) with given element type.">Iterable(int)</a></code>. Once again, this is a lazy process - no iteration is done by <code>map_over</code>. The iteration, as well as the mapping function application, is only done in the <code>foreach</code>.</p>
+<h3>A quick glance at implementing <code>filter</code></h3>
+<p class="">Implementing <code>filter</code> would also be just as simple as the previous examples. Though no concrete implementation is included in this repo, the pattern is really the exact same. Here's what the <code>next</code> function impl would be- </p><div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a>(ElmntType) CONCAT(IterFilter(ElmntType), _nxt)(IterFilter(ElmntType) * <span class="keyword">self</span>)</div>
+<div class="line">{</div>
+<div class="line">    <a class="code" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a>(ElmntType) <span class="keyword">const</span> srcit = <span class="keyword">self</span>-&gt;src;</div>
+<div class="line">    <span class="keywordflow">while</span> (1) {</div>
+<div class="line">        <a class="code" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a>(ElmntType) res = srcit.tc-&gt;next(srcit.self);</div>
+<div class="line">        <span class="keywordflow">if</span> (<a class="code" href="maybe_8h.html#a1b03ece9f7b00fcbbe8e0dde45277c47">is_nothing</a>(res) || self-&gt;filterfn(<a class="code" href="maybe_8h.html#a16682b211c71e2ad917edc9bdd298154">from_just_</a>(res))) {</div>
+<div class="line">            <span class="keywordflow">return</span> res;</div>
+<div class="line">        }</div>
+<div class="line">    }</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> where <code>IterFilter(T)</code> would be- </p><div class="fragment"><div class="line"><span class="keyword">struct</span></div>
+<div class="line">{</div>
+<div class="line">    bool (*<span class="keyword">const</span> filterfn)(T x);</div>
+<div class="line">    <a class="code" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a>(T) <span class="keyword">const</span> src;</div>
+<div class="line">}</div>
+</div><!-- fragment --><h2>Iterable of Generic Elements</h2>
+<p class="">In the beginning of this README, while introducing this <code>Iterator</code> interface, I talked about how an <code>Iterator</code> is only generic on the <em>input</em> side, not on the <em>output</em> side. The element the <code>Iterator</code> yields must be a concrete type - which separates <code><a class="el" href="iterator_8h.html#a6c3a22862dc6db425dd4389987c0dbaf" title="Convenience macro to get the type of the Iterator (typeclass) with given element type.">Iterator(int)</a></code> and <code><a class="el" href="iterator_8h.html#a6c3a22862dc6db425dd4389987c0dbaf" title="Convenience macro to get the type of the Iterator (typeclass) with given element type.">Iterator(string)</a></code>, and forbids you from using them interchangably.</p>
+<p class="">But what if you wanted generic elements without giving up type safety? Well, you'd need some sort of constraint - I <b>should</b> be able to sum both an <code><a class="el" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a" title="Convenience macro to get the type of the Iterable (typeclass instance) with given element type.">Iterable(int)</a></code> and an <code><a class="el" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a" title="Convenience macro to get the type of the Iterable (typeclass instance) with given element type.">Iterable(float)</a></code>. Ignoring the bounds issues, it <em>is</em> agreeable that there are multiple types that <em>can</em> perform a <b>general action</b>.</p>
+<p class="">Emphasis on "general action". Typeclasses (or interfaces) allow you to have a generic constraint based around the ability to do some action(s). What if, we had an <code>Iterator</code> that yielded typeclass instances?</p>
+<div class="fragment"><div class="line"><span class="keyword">typedef</span> <a class="code" href="typeclass_8h.html#ab36f9f0d3603452a867a683078618034">typeclass</a>(<span class="keywordtype">char</span>* (*<span class="keyword">const</span> show)(<span class="keywordtype">void</span>* <span class="keyword">self</span>)) Show;</div>
+<div class="line"><span class="keyword">typedef</span> <a class="code" href="typeclass_8h.html#af018200b2431a3ab6c296cc8940ecbe3">typeclass_instance</a>(Show);</div>
+</div><!-- fragment --><p> This is the <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Text-Show.html#t:Show"><code>Show</code></a> typeclass. It represents the ability of a type to be converted into a string (that may then be printed).</p>
+<p class="">If we had an <code><a class="el" href="iterator_8h.html#a6c3a22862dc6db425dd4389987c0dbaf" title="Convenience macro to get the type of the Iterator (typeclass) with given element type.">Iterator(Show)</a></code> - we could turn each element into the strings representing them, doesn't really matter what type the actual data is, as long as it implements <code>Show</code>. In the same way, you could have a <code>Num</code> typeclass for arithmetic operations.</p>
+<p class="">The pattern for defining and implementing such typeclasses in a type safe way, is the same as the pattern used to define and implement <code>Iterator</code>. The typeclass and typeclass_instance struct, and an <code>impl_iterator</code> macro that takes in some necessary info about the type for which the typeclass is being implemented, as well as the function implementations, type checks the function impls as a no-op, and returns the typeclass instance.</p>
+<p class="">You can find examples for this usage, as well as more info in the Typeclass Pattern document.</p>
+<h1>Motivation</h1>
+<p class="">I needed some way to implement generic interfaces for a C library I'm working on. The library functions just needed a type that could <em>do</em> a certain thing, without caring about which exact type it could be backed by. It'd be the library function's responsibility to make the type do the action <em>if</em> <b>and</b> <em>when</em> needed.</p>
+<p class="">Of course, I could segment a good bunch of these functions so one part of them do everything up until the point where the generic action needs to be performed, return control to the user, and let them continue to the next part of the library function by performing the action on their concrete type themselves and passing the result to the next part of the function. But this felt rather unintuitive, especially when the functions were already pretty small and performed extra computation which would be stored in the local scope.</p>
+<p class="">I instead made the functions so that they take in a struct containing a <code>void*</code> for the generic type and a function pointer for the required action, of the correct type. The library function wouldn't use this <code>void*</code> directly (since that'd be unsafe) - but it could just pass it to the function pointer and call it.</p>
+<p class="">After some experimenting with that approach to make it more extensible and general, with a heavy dosage of inspiration from haskell (and also from rust) - this is where it ended up. An <code>Iterator</code> isn't the only typeclass I needed to implement, but it had the most potential for a demonstration - so here it is. </p>
+</div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->

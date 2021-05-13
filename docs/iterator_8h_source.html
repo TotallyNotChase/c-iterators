@@ -122,15 +122,16 @@ $(document).ready(function(){initNavTree('iterator_8h_source.html',''); initResi
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">    typedef typeclass(Maybe(T) (*const next)(void* self)) Iterator(T);                                                 \</span></div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">    typedef typeclass_instance(Iterator(T)) Iterable(T)</span></div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
-<div class="line"><a name="l00120"></a><span class="lineno"><a class="line" href="iterator_8h.html#a5718c013596753bd1bcc46172dba30fd">  120</a></span>&#160;<span class="preprocessor">#define impl_iterator(IterType, ElmntType, next_f, Name)                                                               \</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno"><a class="line" href="iterator_8h.html#a01e620430099d2eb6192db193e88cff0">  120</a></span>&#160;<span class="preprocessor">#define impl_iterator(IterType, ElmntType, Name, next_f)                                                               \</span></div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="preprocessor">    Iterable(ElmntType) Name(IterType x)                                                                               \</span></div>
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor">    {                                                                                                                  \</span></div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="preprocessor">        Maybe(ElmntType) (*const next_)(IterType self) = (next_f);                                                     \</span></div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="preprocessor">        (void)next_;                                                                                                   \</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="preprocessor">        return (Iterable(ElmntType)){.tc = {.next = (Maybe(ElmntType)(*const)(void*))next_f}, .self = x};              \</span></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="preprocessor">    }</span></div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* !IT_ITERATOR_H */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="preprocessor">        static Iterator(ElmntType) const tc = {.next = (Maybe(ElmntType)(*const)(void*))(next_f)};                     \</span></div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="preprocessor">        return (Iterable(ElmntType)){.tc = &amp;tc, .self = x};                                                            \</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="preprocessor">    }</span></div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* !IT_ITERATOR_H */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="amaybe_8h_html"><div class="ttname"><a href="maybe_8h.html">maybe.h</a></div><div class="ttdoc">Utilities to define and use a Maybe type.</div></div>
 <div class="ttc" id="atypeclass_8h_html"><div class="ttname"><a href="typeclass_8h.html">typeclass.h</a></div><div class="ttdoc">Utilities to define a typeclass and its instance.</div></div>
 </div><!-- fragment --></div><!-- contents -->
