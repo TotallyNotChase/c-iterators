@@ -34,6 +34,9 @@ void print_strit(Iterable(string) it)
 }
 
 // clang-format off
+/* Implement `take` functionality for uint32_t iterables */
 define_itertake_func(uint32_t)
+/* Implement `map` functionality for int -> int iterables */
 define_itermap_func(int, int)
+/* Implement `map` functionality for int -> char* iterables */
 define_itermap_func(int, string)

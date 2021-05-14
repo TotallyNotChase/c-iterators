@@ -4,6 +4,7 @@
 
 #include <stdlib.h>
 
+/* `next` implementation for the `Fibonacci` struct */
 static Maybe(uint32_t) fibnxt(Fibonacci* self)
 {
     uint32_t new_nxt = self->curr + self->next;
@@ -13,4 +14,5 @@ static Maybe(uint32_t) fibnxt(Fibonacci* self)
 }
 
 // clang-format off
+/* Implement `Iterator` for `Fibonacci*` */
 impl_iterator(Fibonacci*, uint32_t, prep_fib_itr, fibnxt)

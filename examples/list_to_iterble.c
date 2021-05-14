@@ -8,6 +8,7 @@
 IntList revlist_from_intit(Iterable(int) it)
 {
     IntList list = Nil;
+    /* Iterate through an int iterable, and keep prepending each value to a list */
     foreach (int, val, it) {
         list = Cons(val, list);
     }
@@ -16,6 +17,7 @@ IntList revlist_from_intit(Iterable(int) it)
 
 void test_list(void)
 {
+    /* Build an int list */
     IntList list = Cons(9, Cons(1, Cons(6, Cons(5, Nil))));
 
     /* Turn the list into an iterable */

@@ -13,8 +13,11 @@
     for (T x          = from_just_(UNIQVAR(res)); is_just(UNIQVAR(res));                                               \
          UNIQVAR(res) = (it).tc->next((it).self), x = from_just_(UNIQVAR(res)))
 
+/* Implement `IterTake` struct for uint32_t iterables */
 DefineIterTake(uint32_t);
+/* Implement `IterMap` struct for int -> int iterables */
 DefineIterMap(int, int);
+/* Implement `IterMap` struct for int -> char* iterables */
 DefineIterMap(int, string);
 
 /* Generic function to sum values from any iterable yielding int */

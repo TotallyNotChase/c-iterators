@@ -12,6 +12,7 @@
 typedef char* string;
 
 // clang-format off
+/* Define the necessary `Maybe(T)` and `Iterator(T)` structs */
 DefineMaybe(int)
 DefineMaybe(string)
 DefineMaybe(uint32_t)

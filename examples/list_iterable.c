@@ -40,14 +40,17 @@ IntList free_intlist(IntNode* head)
     return Nil;
 }
 
+/* `next` implementation for `ListIter(ConstIntList)` */
 static Maybe(int) intlistnxt(ListIter(ConstIntList) * self)
 {
     IntNode const* node = self->curr;
     if (node == Nil) {
         return Nothing(int);
     }
+    /* Progress the stored list pointer */
     self->curr = node->next;
     return Just(node->val, int);
 }
 
+/* Implement `Iterator` for `ListIter(ConstIntList) *`, which in turn is for a singular linked list of ints */
 impl_iterator(ListIter(ConstIntList) *, int, prep_listiter_of(ConstIntList), intlistnxt)
