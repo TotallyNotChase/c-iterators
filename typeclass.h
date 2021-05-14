@@ -43,8 +43,8 @@
 #define typeclass_instance(Typeclass)                                                                                  \
     struct                                                                                                             \
     {                                                                                                                  \
-        void* const self;                                                                                              \
-        Typeclass const* const tc;                                                                                     \
+        void* self;                                                                                                    \
+        Typeclass const* tc;                                                                                           \
     }
 
 #endif /* !IT_TYPECLASS_H */

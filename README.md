@@ -416,14 +416,14 @@ A typeclass instance contains a pointer to the typeclass struct in its `tc` memb
   ```
 * The `typeclass_instance` macro takes in the type name of the previously defined typeclass and defines the typeclass instance struct. It also doesn't name the struct.
   ```c
-  typedef typeclass_instnace(Enum) Enumerable;
+  typedef typeclass_instance(Enum) Enumerable;
   ```
   translates to
   ```c
   typedef struct
   {
-      void* const self;
-      Enum const* const tc;
+      void* self;
+      Enum const* tc;
   } Enumerable;
   ```
 
