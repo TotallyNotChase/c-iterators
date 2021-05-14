@@ -107,7 +107,7 @@ $(document).ready(function(){initNavTree('md_Typeclass_Pattern.html',''); initRe
 <div class="title">The Typeclass Pattern </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p class="">This document aims to describe the typeclass (or trait, or interface) based polymorphism pattern used.</p>
+<div class="textblock"><p class="">This document aims to describe the typeclass (or trait, or interface) based polymorphism pattern used in this demonstration.</p>
 <h1>Goals</h1>
 <p class="">Alongside describing the core parts of this pattern, this document will also describe how to <b>combine multiple typeclass constraints into one constraint</b>. As in, how you can have a type that is required to implement multiple typeclasses.</p>
 <h1>Brief</h1>
@@ -134,7 +134,7 @@ $(document).ready(function(){initNavTree('md_Typeclass_Pattern.html',''); initRe
 </div><!-- fragment --><p> or manually- </p><div class="fragment"><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span></div>
 <div class="line">{</div>
 <div class="line">    <span class="keywordtype">void</span>* <span class="keyword">self</span>;</div>
-<div class="line">    Show <span class="keyword">const</span>* <span class="keyword">const</span> tc;</div>
+<div class="line">    Show <span class="keyword">const</span>* tc;</div>
 <div class="line">} Showable;</div>
 </div><!-- fragment --> <h2>The <code>impl_</code> macro used to implement the typeclass</h2>
 <p class="">This is the convenience macro that defines a function for a specific type that wraps it into the typeclass instance.</p>
@@ -206,7 +206,104 @@ $(document).ready(function(){initNavTree('md_Typeclass_Pattern.html',''); initRe
 </div><!-- fragment --><h1>Combining multiple typeclasses</h1>
 <p class="">One of the core design goals of a typeclass is to be modular. A <code>Show</code> typeclass should only have actions directly related to "showing", a <code>Num</code> typeclass should only have actions directly related to numerical operations. Unlike objects, that may contain many different methods of arbitrary relevance to each other.</p>
 <p class="">This means that, more often than not, you'll want a type that can do multiple different classes of actions. A type that implements multiple typeclasses.</p>
-<p class="">You can model that pretty easily with this pattern- </p><div class="fragment"></div><!-- fragment --> </div></div><!-- contents -->
+<p class="">You can model that pretty easily with this pattern- </p><div class="fragment"><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span></div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordtype">void</span>* <span class="keyword">self</span>;</div>
+<div class="line">    Show <span class="keyword">const</span>* showtc;</div>
+<div class="line">    Enum <span class="keyword">const</span>* enumtc;</div>
+<div class="line">} ShowableEnumerable;</div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">#define impl_show_enum(T, Name, showimpl, enumimpl)                                                                    \</span></div>
+<div class="line"><span class="preprocessor">    ShowableEnumerable Name(T x)                                                                                       \</span></div>
+<div class="line"><span class="preprocessor">    {                                                                                                                  \</span></div>
+<div class="line"><span class="preprocessor">        Showable showable = showimpl(x);                                                                               \</span></div>
+<div class="line"><span class="preprocessor">        Enumerable enumerable = enumimpl(x);                                                                           \</span></div>
+<div class="line"><span class="preprocessor">        return (ShowableEnumerable){.showtc = showable.tc, .enumtc = enumerable.tc, .self = x};                        \</span></div>
+<div class="line"><span class="preprocessor">    }</span></div>
+</div><!-- fragment --><p class="">Where <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#t:Enum"><code>Enum</code></a> is also a typeclass defined like- </p><div class="fragment"><div class="line"><span class="keyword">typedef</span> <a class="code" href="typeclass_8h.html#ab36f9f0d3603452a867a683078618034">typeclass</a>(</div>
+<div class="line">    <span class="keywordtype">size_t</span> (*<span class="keyword">const</span> from_enum)(<span class="keywordtype">void</span>* <span class="keyword">self</span>);</div>
+<div class="line">    <span class="keywordtype">void</span>* (*<span class="keyword">const</span> to_enum)(<span class="keywordtype">size_t</span> x)</div>
+<div class="line">) Enum;</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">typedef</span> <a class="code" href="typeclass_8h.html#af018200b2431a3ab6c296cc8940ecbe3">typeclass_instance</a>(Enum) Enumerable;</div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">#define impl_enum(T, Name, from_enum_f, to_enum_f)                                                                     \</span></div>
+<div class="line"><span class="preprocessor">    Enumerable Name(T x)                                                                                               \</span></div>
+<div class="line"><span class="preprocessor">    {                                                                                                                  \</span></div>
+<div class="line"><span class="preprocessor">        size_t (*const from_enum_)(T e) = (from_enum_f);                                                               \</span></div>
+<div class="line"><span class="preprocessor">        T (*const to_enum_)(size_t x)   = (to_enum_f);                                                                 \</span></div>
+<div class="line"><span class="preprocessor">        (void)from_enum_;                                                                                              \</span></div>
+<div class="line"><span class="preprocessor">        (void)to_enum_;                                                                                                \</span></div>
+<div class="line"><span class="preprocessor">        static Enum const tc = {                                                                                       \</span></div>
+<div class="line"><span class="preprocessor">            .from_enum = (size_t (*const)(void*))(from_enum_f), .to_enum = (void* (*const)(size_t x))(to_enum_f)       \</span></div>
+<div class="line"><span class="preprocessor">        };                                                                                                             \</span></div>
+<div class="line"><span class="preprocessor">        return (Enumerable){.tc = &amp;tc, .self = x};                                                                     \</span></div>
+<div class="line"><span class="preprocessor">    }</span></div>
+</div><!-- fragment --><p class="">Essentially, you can have a struct that stores each of the typeclass pointers you want to combine, and the <code>self</code> member. The <code>impl</code> macro would also be very simple. It should simply define a function that puts the given value into <code>ShowableEnumerable</code>, into <code>self</code>, as well as use the impl functions to get the typeclass instances of that type.</p>
+<p class="">With this, if you implemented <code>Show</code> for <code>Antioch*</code> and defined the function as <code>prep_antioch_show</code>, and also implemented <code>Enum</code> with the function name <code>prep_antioch_enum</code>, you could call <code>impl_show_enum</code> using- </p><div class="fragment"><div class="line">impl_enum(Antioch*, prep_antioch_show_enum, prep_antioch_show, prep_antioch_enum)</div>
+</div><!-- fragment --><p> The defined function would have the signature- </p><div class="fragment"><div class="line">ShowableEnumerable prep_antioch_show_enum(Antioch* x);</div>
+</div><!-- fragment --><p class="">That's it!</p>
+<p class="">You can now have functions that require their argument to implement multiple typeclasses- </p><div class="fragment"><div class="line"><span class="keywordtype">void</span> foo(ShowableEnumerable se)</div>
+<div class="line">{</div>
+<div class="line">    <span class="comment">/* Use the enumerable abilities */</span></div>
+<div class="line">    <span class="keywordtype">size_t</span> x = se.enumtc-&gt;from_enum(se.self);</div>
+<div class="line">    <span class="comment">/* Use the showable abilities */</span></div>
+<div class="line">    <span class="keywordtype">char</span>* s = se.showtc-&gt;show(se.self);</div>
+<div class="line">}</div>
+</div><!-- fragment --><h1>Putting it all together into a fully generic <code>Iterator</code></h1>
+<p class="">Following the typeclass pattern - you can make an <code>Iterator</code> where each element is a typeclass instance. The typeclass instance can either just be for one typeclass (like <code>Show</code>), or it can be for multiple typeclasses (like <code>ShowableEnumerable</code>).</p>
+<p class="">Here's a full demonstration all in one snippet, turning an array of <code>Antioch</code>s into an <code>Iterable</code> of <code>Showable</code>s- </p><div class="fragment"><div class="line"><a class="code" href="maybe_8h.html#a0daf26d181160b7fb96d640ed20bb466">DefineMaybe</a>(Showable)</div>
+<div class="line"> </div>
+<div class="line"><a class="code" href="iterator_8h.html#a938f3e7187cb386e2bf4049753e2ff84">DefineIteratorOf</a>(Showable);</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">static</span> <span class="keywordtype">void</span> print(Showable showable)</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordtype">char</span>* s = showable.tc-&gt;show(showable.self);</div>
+<div class="line">    puts(s);</div>
+<div class="line">    free(s);</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">static</span> <span class="keywordtype">void</span> printit(<a class="code" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a>(Showable) it)</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordflow">foreach</span> (Showable, x, it) {</div>
+<div class="line">        print(x);</div>
+<div class="line">    }</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span></div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordtype">size_t</span> i;</div>
+<div class="line">    <span class="keywordtype">size_t</span> <span class="keyword">const</span> size;</div>
+<div class="line">    Antioch* <span class="keyword">const</span> arr;</div>
+<div class="line">} AntiochArrIter;</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">static</span> <a class="code" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a>(Showable) antiochshow_arr_nxt(AntiochArrIter* <span class="keyword">self</span>)</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordflow">if</span> (self-&gt;i &gt;= self-&gt;size) {</div>
+<div class="line">        <span class="keywordflow">return</span> <a class="code" href="maybe_8h.html#a65cd69857cc806545d68c79464270a97">Nothing</a>(Showable);</div>
+<div class="line">    }</div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code" href="maybe_8h.html#ae0832f95d5a7ff6845381aa8795fd2a3">Just</a>(prep_antioch_show(self-&gt;arr + self-&gt;i++), Showable);</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">static</span> <a class="code" href="iterator_8h.html#a01e620430099d2eb6192db193e88cff0">impl_iterator</a>(AntiochArrIter*, Showable, prep_antshowarr_itr, antiochshow_arr_nxt)</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">void</span>)</div>
+<div class="line">{</div>
+<div class="line">    Antioch antarr[] = {grenade, holy, hand};</div>
+<div class="line">    <a class="code" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a>(Showable) antshowit =</div>
+<div class="line">        prep_antshowarr_itr(&amp;(AntiochArrIter){.i = 0, .size = <span class="keyword">sizeof</span>(antarr) / <span class="keyword">sizeof</span>(*antarr), .arr = antarr});</div>
+<div class="line">    printit(antshowit);</div>
+<div class="line">    <span class="keywordflow">return</span> 0;</div>
+<div class="line">}</div>
+<div class="ttc" id="aiterator_8h_html_a01e620430099d2eb6192db193e88cff0"><div class="ttname"><a href="iterator_8h.html#a01e620430099d2eb6192db193e88cff0">impl_iterator</a></div><div class="ttdeci">#define impl_iterator(IterType, ElmntType, Name, next_f)</div><div class="ttdoc">Define a function to turn given IterType into an Iterable(ElmntType).</div><div class="ttdef"><b>Definition:</b> iterator.h:120</div></div>
+<div class="ttc" id="aiterator_8h_html_a78f1cf949c0e970b2105124f691f5c2a"><div class="ttname"><a href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a></div><div class="ttdeci">#define Iterable(T)</div><div class="ttdoc">Convenience macro to get the type of the Iterable (typeclass instance) with given element type.</div><div class="ttdef"><b>Definition:</b> iterator.h:45</div></div>
+<div class="ttc" id="aiterator_8h_html_a938f3e7187cb386e2bf4049753e2ff84"><div class="ttname"><a href="iterator_8h.html#a938f3e7187cb386e2bf4049753e2ff84">DefineIteratorOf</a></div><div class="ttdeci">#define DefineIteratorOf(T)</div><div class="ttdoc">Define an Iterator typeclass and its Iterable instance for given element type.</div><div class="ttdef"><b>Definition:</b> iterator.h:62</div></div>
+<div class="ttc" id="amaybe_8h_html_a0daf26d181160b7fb96d640ed20bb466"><div class="ttname"><a href="maybe_8h.html#a0daf26d181160b7fb96d640ed20bb466">DefineMaybe</a></div><div class="ttdeci">#define DefineMaybe(T)</div><div class="ttdoc">Define a Maybe&lt;T&gt; type.</div><div class="ttdef"><b>Definition:</b> maybe.h:57</div></div>
+<div class="ttc" id="amaybe_8h_html_a65cd69857cc806545d68c79464270a97"><div class="ttname"><a href="maybe_8h.html#a65cd69857cc806545d68c79464270a97">Nothing</a></div><div class="ttdeci">#define Nothing(T)</div><div class="ttdoc">Wrap a Nothing value into a Maybe(T).</div><div class="ttdef"><b>Definition:</b> maybe.h:108</div></div>
+<div class="ttc" id="amaybe_8h_html_ae0832f95d5a7ff6845381aa8795fd2a3"><div class="ttname"><a href="maybe_8h.html#ae0832f95d5a7ff6845381aa8795fd2a3">Just</a></div><div class="ttdeci">#define Just(v, T)</div><div class="ttdoc">Wrap a Just value into a Maybe(T).</div><div class="ttdef"><b>Definition:</b> maybe.h:91</div></div>
+<div class="ttc" id="amaybe_8h_html_af47a0e4269e370939835ecc0cf6c7875"><div class="ttname"><a href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a></div><div class="ttdeci">#define Maybe(T)</div><div class="ttdoc">Convenience macro to get the type of the Maybe defined with a certain type.</div><div class="ttdef"><b>Definition:</b> maybe.h:40</div></div>
+</div><!-- fragment --><p> Note: <code>Show</code> and <code>Antioch</code> here have their origins in <a href="#core-parts">Core Parts</a>. You'll remember, the <code>Show</code> impl function for <code>Antioch</code> has the signature- <code>Showable prep_antioch_show(Antioch* x);</code>. The <code>foreach</code> macro is defined in <a href="./examples/iterutils/iterable_utils.h">iterutils</a>. It's using the <code>CONCAT</code> macro, which is defined in <a href="./examples/func_iter.h">func_iter.h</a> </p>
+</div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
