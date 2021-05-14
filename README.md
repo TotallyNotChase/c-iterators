@@ -713,11 +713,11 @@ Emphasis on "general action". Typeclasses (or interfaces) allow you to have a ge
 
 ```c
 typedef typeclass(char* (*const show)(void* self)) Show;
-typedef typeclass_instance(Show);
+typedef typeclass_instance(Show) Showable;
 ```
 This is the [`Show`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Text-Show.html#t:Show) typeclass. It represents the ability of a type to be converted into a string (that may then be printed).
 
-If we had an `Iterator(Show)` - we could turn each element into the strings representing them, doesn't really matter what type the actual data is, as long as it implements `Show`. In the same way, you could have a [`Num`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#t:Num) typeclass for arithmetic operations.
+If we had an `Iterator(Showable)` - we could turn each element into the strings representing them, doesn't really matter what type the actual data is, as long as it implements `Show`. In the same way, you could have a [`Num`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#t:Num) typeclass for arithmetic operations.
 
 The pattern for defining and implementing such typeclasses in a type safe way, is the same as the pattern used to define and implement `Iterator`. The typeclass and typeclass_instance struct, and an `impl_iterator` macro that takes in some necessary info about the type for which the typeclass is being implemented, as well as the function implementations, type checks the function impls as a no-op, and returns the typeclass instance.
 

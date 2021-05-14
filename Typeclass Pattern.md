@@ -160,7 +160,7 @@ typedef struct
     }
 ```
 
-Where `Enum` is also a typeclass defined like-
+Where [`Enum`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#t:Enum) is also a typeclass defined like-
 ```c
 typedef typeclass(
     size_t (*const from_enum)(void* self);
@@ -242,10 +242,10 @@ static Maybe(Showable) antiochshow_arr_nxt(AntiochArrIter* self)
     if (self->i >= self->size) {
         return Nothing(Showable);
     }
-    return prep_antioch_show(self->arr + self->i++);
+    return Just(prep_antioch_show(self->arr + self->i++), Showable);
 }
 
-impl_iterator(AntiochArrIter*, Showable, prep_antshowarr_itr, antiochshow_arr_nxt)
+static impl_iterator(AntiochArrIter*, Showable, prep_antshowarr_itr, antiochshow_arr_nxt)
 
 int main(void)
 {
@@ -253,6 +253,7 @@ int main(void)
     Iterable(Showable) antshowit =
         prep_antshowarr_itr(&(AntiochArrIter){.i = 0, .size = sizeof(antarr) / sizeof(*antarr), .arr = antarr});
     printit(antshowit);
+    return 0;
 }
 ```
-Note: `Show` and `Antioch` here have their origins in [Core Parts](#core-parts). You'll remember, the `Show` impl function for `Antioch` has the signature- `Showable prep_antioch_show(Antioch* x);`.
+Note: `Show` and `Antioch` here have their origins in [Core Parts](#core-parts). You'll remember, the `Show` impl function for `Antioch` has the signature- `Showable prep_antioch_show(Antioch* x);`. The `foreach` macro is defined in [iterutils](./examples/iterutils/iterable_utils.h). It's using the `CONCAT` macro, which is defined in [func_iter.h](./examples/func_iter.h)
