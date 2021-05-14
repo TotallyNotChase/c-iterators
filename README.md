@@ -9,6 +9,33 @@ More info about the file structure can be found in the [Architecture document](.
 
 You can find the generated docs [here](https://TotallyNotChase.github.io/c-iterators).
 
+# A small taste
+Here's a snippet where the `Iterator` typeclass has been implemented for a "fibonacci struct". Giving you an iterable representing the infinite Fibonacci sequence.
+```c
+Iterable(uint32_t) it   = get_fibitr();                /* Create an infinite fibonacci sequence iterable */
+Iterable(uint32_t) it10 = take_from(it, 10, uint32_t); /* Iterable of the first 10 items in the sequence */
+/* Print the first 10 items */
+foreach (uint32_t, n, it10) {
+    printf("%" PRIu32 " ", n);
+}
+puts("");
+```
+
+The fibonacci struct for which `Iterator` has been implemented looks like-
+```c
+typedef struct fibonacci
+{
+    uint32_t curr;
+    uint32_t next;
+} Fibonacci;
+```
+
+The `get_fibitr` macro does nothing but just initialize that struct with `curr = 0`, and `next = 1`, turn it into an `Iterable` and return it.
+
+The `take_from` macro is explained in [Lazy Abstractions](#the-take-utility). You may be familiar with [`take`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html#v:take) already though.
+
+This entire construct is lazy. No extra iteration is performed. The only iteration that happens here is in the explicit `foreach` loop. Neither `get_fibitr` nor `take_from` does eager generation.
+
 # Highlights
 * Pure C99 support, no non standard extensions used
 * Type safety (through the usage of abstracted macros that monomorphize based on the type given)
