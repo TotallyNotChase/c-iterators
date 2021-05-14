@@ -242,6 +242,11 @@ static Maybe(Showable) antiochshow_arr_nxt(AntiochArrIter* self)
     if (self->i >= self->size) {
         return Nothing(Showable);
     }
+    /*
+    Note: This is re-using the address of the element in the array
+    This means that the return value goes out of scope once the src array
+    goes out of scope (or is freed).
+    */
     return Just(prep_antioch_show(self->arr + self->i++), Showable);
 }
 
