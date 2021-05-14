@@ -1,6 +1,8 @@
 # c-iterators
 A demonstration of implementing, and using, a "type safe", extensible, and lazy iterator interface in pure C99. The iterable is generic on the input side, but not output side - functions taking an `Iterable` don't need to know the concrete data structure backing up the `Iterable`, but the type of value the `Iterator` yields must be concrete and exact, no `void*`. (Well, you can still make it `void*` if you want - but I wouldn't suggest it.)
 
+This doesn't mean you *can't* have an iterable of generic elements though. More on that can be found in [Iterable of Generic Elements](#iterable-of-generic-elements) and [The Typeclass Pattern](./Typeclass%20Pattern.md) document.
+
 The only files you need to implement the `Iterator` typeclass, for your own types, are- `typeclass.h`, `maybe.h`, and `iterator.h`. The usages of these files, as well as extra utilities operating on iterables are shown in `examples/`. `examples/iterutils` also demonstrates the implementation of `take` and `map` utilites.
 
 More info about the file structure can be found in the [Architecture document](./ARCHITECTURE.md).

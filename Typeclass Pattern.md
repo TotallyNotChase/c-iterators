@@ -1,5 +1,5 @@
 # The Typeclass Pattern
-This document aims to describe the typeclass (or trait, or interface) based polymorphism pattern used.
+This document aims to describe the typeclass (or trait, or interface) based polymorphism pattern used in this demonstration.
 
 # Goals
 Alongside describing the core parts of this pattern, this document will also describe how to **combine multiple typeclass constraints into one constraint**. As in, how you can have a type that is required to implement multiple typeclasses.
