@@ -41,7 +41,7 @@ or manually-
 typedef struct
 {
     void* self;
-    Show const* const tc;
+    Show const* tc;
 } Showable;
 ```
 ## The `impl_` macro used to implement the typeclass
@@ -147,8 +147,8 @@ You can model that pretty easily with this pattern-
 typedef struct
 {
     void* self;
-    Show const* const showtc;
-    Enum const* const enumtc;
+    Show const* showtc;
+    Enum const* enumtc;
 } ShowableEnumerable;
 
 #define impl_show_enum(T, Name, showimpl, enumimpl)                                                                    \
@@ -206,3 +206,53 @@ void foo(ShowableEnumerable se)
     char* s = se.showtc->show(se.self);
 }
 ```
+
+# Putting it all together into a fully generic `Iterator`
+Following the typeclass pattern - you can make an `Iterator` where each element is a typeclass instance. The typeclass instance can either just be for one typeclass (like `Show`), or it can be for multiple typeclasses (like `ShowableEnumerable`).
+
+Here's a full demonstration all in one snippet, turning an array of `Antioch`s into an `Iterable` of `Showable`s-
+```c
+DefineMaybe(Showable)
+
+DefineIteratorOf(Showable);
+
+static void print(Showable showable)
+{
+    char* s = showable.tc->show(showable.self);
+    puts(s);
+    free(s);
+}
+
+static void printit(Iterable(Showable) it)
+{
+    foreach (Showable, x, it) {
+        print(x);
+    }
+}
+
+typedef struct
+{
+    size_t i;
+    size_t const size;
+    Antioch* const arr;
+} AntiochArrIter;
+
+static Maybe(Showable) antiochshow_arr_nxt(AntiochArrIter* self)
+{
+    if (self->i >= self->size) {
+        return Nothing(Showable);
+    }
+    return prep_antioch_show(self->arr + self->i++);
+}
+
+impl_iterator(AntiochArrIter*, Showable, prep_antshowarr_itr, antiochshow_arr_nxt)
+
+int main(void)
+{
+    Antioch antarr[] = {grenade, holy, hand};
+    Iterable(Showable) antshowit =
+        prep_antshowarr_itr(&(AntiochArrIter){.i = 0, .size = sizeof(antarr) / sizeof(*antarr), .arr = antarr});
+    printit(antshowit);
+}
+```
+Note: `Show` and `Antioch` here have their origins in [Core Parts](#core-parts). You'll remember, the `Show` impl function for `Antioch` has the signature- `Showable prep_antioch_show(Antioch* x);`.
