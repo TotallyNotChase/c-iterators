@@ -35,7 +35,7 @@
  *
  * @code
  * typedef typeclass(char* (*show)(void* self)) Show;
- * typdef typeclass_instance(Show) Showable; // Defines the typeclass instance for `Show` typeclass
+ * typedef typeclass_instance(Show) Showable; // Defines the typeclass instance for `Show` typeclass
  * @endcode
  *
  * @param Typeclass The semantic type (C type) of the typeclass defined with #typeclass(funcs).
