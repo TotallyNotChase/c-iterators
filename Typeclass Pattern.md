@@ -76,7 +76,7 @@ The `(void)show_;` line is to suppress the unused variable warning emitted by co
 Then it simply defines a static typeclass, stores the function pointer given and returns the `Showable` struct, wrapping the `x` argument within.
 
 # Usage
-Once the typeclass and typeclass instance structs have been defined, all the user has to do is call `impl_iterator` with their own type and the function implementation(s) required for the typeclass. The declaration of the function defined by `impl_iterator` can then be included in a header. After that, that function can be used to turn the concrete type into its typeclass instance.
+Once the typeclass and typeclass instance structs have been defined, all the user has to do is call the `impl_` macro with their own type and the function implementation(s) required for the typeclass. The declaration of the function defined by said macro can then be included in a header. After that, that function can be used to turn the concrete type into its typeclass instance.
 
 Here's an example of implementing the previously defined `Show` typeclass for an enum-
 ```c
@@ -126,7 +126,7 @@ I also like to have the `print` function that just works on `Showable`s directly
 ```c
 void print(Showable showable)
 {
-    char *s = showable.show(showable.self);
+    char* s = showable.show(showable.self);
     puts(s);
     free(s);
 }
