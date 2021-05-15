@@ -112,6 +112,23 @@ $(document).ready(function(){initNavTree('md_README.html',''); initResizable(); 
 <p class="">The only files you need to implement the <code>Iterator</code> typeclass, for your own types, are- <code><a class="el" href="typeclass_8h.html" title="Utilities to define a typeclass and its instance.">typeclass.h</a></code>, <code><a class="el" href="maybe_8h.html" title="Utilities to define and use a Maybe type.">maybe.h</a></code>, and <code><a class="el" href="iterator_8h.html" title="Utilities to define and implement an Iterable.">iterator.h</a></code>. The usages of these files, as well as extra utilities operating on iterables are shown in <code>examples/</code>. <code>examples/iterutils</code> also demonstrates the implementation of <code>take</code> and <code>map</code> utilites.</p>
 <p class="">More info about the file structure can be found in the C:/Users/Chase/Desktop/C Projects/Functional-Iterators/ARCHITECTURE.md "Architecture document".</p>
 <p class="">You can find the generated docs <a href="https://TotallyNotChase.github.io/c-iterators">here</a>.</p>
+<h1>A small taste</h1>
+<p class="">Here's a snippet where the <code>Iterator</code> typeclass has been implemented for a "fibonacci struct". Giving you an iterable representing the infinite Fibonacci sequence. </p><div class="fragment"><div class="line"><a class="code" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a>(uint32_t) it   = get_fibitr();                <span class="comment">/* Create an infinite fibonacci sequence iterable */</span></div>
+<div class="line"><a class="code" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a>(uint32_t) it10 = take_from(it, 10, uint32_t); <span class="comment">/* Iterable of the first 10 items in the sequence */</span></div>
+<div class="line"><span class="comment">/* Print the first 10 items */</span></div>
+<div class="line"><span class="keywordflow">foreach</span> (uint32_t, n, it10) {</div>
+<div class="line">    printf(<span class="stringliteral">&quot;%&quot;</span> PRIu32 <span class="stringliteral">&quot; &quot;</span>, n);</div>
+<div class="line">}</div>
+<div class="line">puts(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="ttc" id="aiterator_8h_html_a78f1cf949c0e970b2105124f691f5c2a"><div class="ttname"><a href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a></div><div class="ttdeci">#define Iterable(T)</div><div class="ttdoc">Convenience macro to get the type of the Iterable (typeclass instance) with given element type.</div><div class="ttdef"><b>Definition:</b> iterator.h:45</div></div>
+</div><!-- fragment --><p class="">The fibonacci struct for which <code>Iterator</code> has been implemented looks like- </p><div class="fragment"><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct </span>fibonacci</div>
+<div class="line">{</div>
+<div class="line">    uint32_t curr;</div>
+<div class="line">    uint32_t next;</div>
+<div class="line">} Fibonacci;</div>
+</div><!-- fragment --><p class="">The <code>get_fibitr</code> macro does nothing but just initialize that struct with <code>curr = 0</code>, and <code>next = 1</code>, turn it into an <code>Iterable</code> and return it.</p>
+<p class="">The <code>take_from</code> macro is explained in <a href="#the-take-utility">Lazy Abstractions</a>. You may be familiar with <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html#v:take"><code>take</code></a> already though.</p>
+<p class="">This entire construct is lazy. No extra iteration is performed. The only iteration that happens here is in the explicit <code>foreach</code> loop. Neither <code>get_fibitr</code> nor <code>take_from</code> does eager generation.</p>
 <h1>Highlights</h1>
 <ul>
 <li>Pure C99 support, no non standard extensions used</li>
@@ -162,7 +179,6 @@ $(document).ready(function(){initNavTree('md_README.html',''); initResizable(); 
 <div class="line">    <span class="comment">/* do stuff with x */</span></div>
 <div class="line">}</div>
 <div class="line"><span class="comment">/* Iterable returned `Nothing`, iteration finished - iterable has been fully consumed */</span></div>
-<div class="ttc" id="aiterator_8h_html_a78f1cf949c0e970b2105124f691f5c2a"><div class="ttname"><a href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a></div><div class="ttdeci">#define Iterable(T)</div><div class="ttdoc">Convenience macro to get the type of the Iterable (typeclass instance) with given element type.</div><div class="ttdef"><b>Definition:</b> iterator.h:45</div></div>
 <div class="ttc" id="amaybe_8h_html_a16682b211c71e2ad917edc9bdd298154"><div class="ttname"><a href="maybe_8h.html#a16682b211c71e2ad917edc9bdd298154">from_just_</a></div><div class="ttdeci">#define from_just_(x)</div><div class="ttdoc">&quot;Unsafe&quot; version of from_just(x, T).</div><div class="ttdef"><b>Definition:</b> maybe.h:151</div></div>
 <div class="ttc" id="amaybe_8h_html_a8ae2e9c065fbca1cd3a603ad0a71d8f2"><div class="ttname"><a href="maybe_8h.html#a8ae2e9c065fbca1cd3a603ad0a71d8f2">is_just</a></div><div class="ttdeci">#define is_just(x)</div><div class="ttdoc">Check if the given Maybe type is tagged with Just.</div><div class="ttdef"><b>Definition:</b> maybe.h:123</div></div>
 <div class="ttc" id="amaybe_8h_html_af47a0e4269e370939835ecc0cf6c7875"><div class="ttname"><a href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a></div><div class="ttdeci">#define Maybe(T)</div><div class="ttdoc">Convenience macro to get the type of the Maybe defined with a certain type.</div><div class="ttdef"><b>Definition:</b> maybe.h:40</div></div>

@@ -282,6 +282,11 @@ $(document).ready(function(){initNavTree('md_Typeclass_Pattern.html',''); initRe
 <div class="line">    <span class="keywordflow">if</span> (self-&gt;i &gt;= self-&gt;size) {</div>
 <div class="line">        <span class="keywordflow">return</span> <a class="code" href="maybe_8h.html#a65cd69857cc806545d68c79464270a97">Nothing</a>(Showable);</div>
 <div class="line">    }</div>
+<div class="line">    <span class="comment">/*</span></div>
+<div class="line"><span class="comment">    Note: This is re-using the address of the element in the array</span></div>
+<div class="line"><span class="comment">    This means that the return value goes out of scope once the src array</span></div>
+<div class="line"><span class="comment">    goes out of scope (or is freed).</span></div>
+<div class="line"><span class="comment">    */</span></div>
 <div class="line">    <span class="keywordflow">return</span> <a class="code" href="maybe_8h.html#ae0832f95d5a7ff6845381aa8795fd2a3">Just</a>(prep_antioch_show(self-&gt;arr + self-&gt;i++), Showable);</div>
 <div class="line">}</div>
 <div class="line"> </div>
