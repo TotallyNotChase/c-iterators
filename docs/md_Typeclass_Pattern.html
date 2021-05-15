@@ -161,7 +161,7 @@ $(document).ready(function(){initNavTree('md_Typeclass_Pattern.html',''); initRe
 <p class="">The <code>(void)show_;</code> line is to suppress the unused variable warning emitted by compilers. Since <code>show_</code> isn't actually used - it's only there for typechecking purposes. The 2 typechecking lines will be completely eliminated by any decent compiler.</p>
 <p class="">Then it simply defines a static typeclass, stores the function pointer given and returns the <code>Showable</code> struct, wrapping the <code>x</code> argument within.</p>
 <h1>Usage</h1>
-<p class="">Once the typeclass and typeclass instance structs have been defined, all the user has to do is call <code>impl_iterator</code> with their own type and the function implementation(s) required for the typeclass. The declaration of the function defined by <code>impl_iterator</code> can then be included in a header. After that, that function can be used to turn the concrete type into its typeclass instance.</p>
+<p class="">Once the typeclass and typeclass instance structs have been defined, all the user has to do is call the <code>impl_</code> macro with their own type and the function implementation(s) required for the typeclass. The declaration of the function defined by said macro can then be included in a header. After that, that function can be used to turn the concrete type into its typeclass instance.</p>
 <p class="">Here's an example of implementing the previously defined <code>Show</code> typeclass for an enum- </p><div class="fragment"><div class="line"><span class="keyword">typedef</span> <span class="keyword">enum</span></div>
 <div class="line">{</div>
 <div class="line">    holy,</div>
@@ -197,7 +197,7 @@ $(document).ready(function(){initNavTree('md_Typeclass_Pattern.html',''); initRe
 <div class="line">Showable antsh = prep_antioch_show(&amp;ant);</div>
 </div><!-- fragment --><p class="">I also like to have the <code>print</code> function that just works on <code>Showable</code>s directly- </p><div class="fragment"><div class="line"><span class="keywordtype">void</span> print(Showable showable)</div>
 <div class="line">{</div>
-<div class="line">    <span class="keywordtype">char</span> *s = showable.show(showable.self);</div>
+<div class="line">    <span class="keywordtype">char</span>* s = showable.show(showable.self);</div>
 <div class="line">    puts(s);</div>
 <div class="line">    free(s);</div>
 <div class="line">}</div>
