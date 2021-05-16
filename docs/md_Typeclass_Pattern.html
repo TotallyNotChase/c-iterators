@@ -113,41 +113,32 @@ $(document).ready(function(){initNavTree('md_Typeclass_Pattern.html',''); initRe
 <h1>Brief</h1>
 <p class="">Function pointer based polymorphism isn't new to C by any means. The major difference in the typeclass pattern, and the typical vtable based approach is simply that typeclasses are based around actions, rather than objects. This is very similar to an interface in OOP terms.</p>
 <h1>Core parts</h1>
-<p class="">There are 3 core parts to this pattern-</p><ul>
-<li>The typeclass struct definition</li>
-<li>The typeclass instance struct definition</li>
-<li>The macro used to implement the typeclass for a type in a **"type safe" way**</li>
-</ul>
-<p class="">We'll use these 3 parts to implement another typeclass - <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Text-Show.html#t:Show"><code>Show</code></a>.</p>
+<p class="">There are 3 core parts to this pattern. These parts will be demonstrated by implementing the <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Text-Show.html#t:Show"><code>Show</code></a> typeclass.</p>
 <h2>The <code>typeclass</code> struct definition</h2>
-<p class="">This is pretty simple, use the <code>typeclass</code> macro to pass the necessary function member for <code>Show</code>. We'll just be using the <code>show</code> function here, it takes in a type for which <code>Show</code> is implemented (i.e the <code>self</code>) and returns a printable string. </p><div class="fragment"><div class="line"><span class="keyword">typedef</span> <a class="code" href="typeclass_8h.html#ab36f9f0d3603452a867a683078618034">typeclass</a>(<span class="keywordtype">char</span>* (*<span class="keyword">const</span> show)(<span class="keywordtype">void</span>* <span class="keyword">self</span>)) Show;</div>
-<div class="ttc" id="atypeclass_8h_html_ab36f9f0d3603452a867a683078618034"><div class="ttname"><a href="typeclass_8h.html#ab36f9f0d3603452a867a683078618034">typeclass</a></div><div class="ttdeci">#define typeclass(funcs)</div><div class="ttdoc">Define a typeclass with the given functions.</div><div class="ttdef"><b>Definition:</b> typeclass.h:23</div></div>
-</div><!-- fragment --><p> You can also define it manually, without the macro- </p><div class="fragment"><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span></div>
+<p class="">This is the struct containing the function pointers related to the typeclass. For <code>Show</code>, we'll just be using the <code>show</code> function here, it takes in a value of the type for which <code>Show</code> is implemented (i.e <code>self</code>) and returns a printable string. </p><div class="fragment"><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span></div>
 <div class="line">{</div>
 <div class="line">    <span class="keywordtype">char</span>* (*<span class="keyword">const</span> show)(<span class="keywordtype">void</span>* <span class="keyword">self</span>);</div>
 <div class="line">} Show;</div>
-</div><!-- fragment --><p> A simple struct containing the "virtual functions". When the wrapper function is first called (to convert a certain type to its typeclass instance), a typeclass struct of <code>static</code> storage duration is created with the function pointers for that specific type (a vtable of sorts). The pointer to this struct is then used in all typeclass instances.</p>
+</div><!-- fragment --><p> This can be simplified using the <a href="https://totallynotchase.github.io/c-iterators/typeclass_8h.html#ab36f9f0d3603452a867a683078618034"><code>typeclass</code></a> macro provided in <a href="./typeclass.h">typeclass.h</a>. </p><div class="fragment"><div class="line"><span class="keyword">typedef</span> <a class="code" href="typeclass_8h.html#ab36f9f0d3603452a867a683078618034">typeclass</a>(<span class="keywordtype">char</span>* (*<span class="keyword">const</span> show)(<span class="keywordtype">void</span>* <span class="keyword">self</span>)) Show;</div>
+<div class="ttc" id="atypeclass_8h_html_ab36f9f0d3603452a867a683078618034"><div class="ttname"><a href="typeclass_8h.html#ab36f9f0d3603452a867a683078618034">typeclass</a></div><div class="ttdeci">#define typeclass(funcs)</div><div class="ttdoc">Define a typeclass with the given functions.</div><div class="ttdef"><b>Definition:</b> typeclass.h:23</div></div>
+</div><!-- fragment --><p class="">A simple struct containing the virtual function(s). When the wrapper function is first called (to convert a certain type to its typeclass instance), a typeclass struct of <code>static</code> storage duration is created with the function pointers for that specific type (a vtable of sorts). The pointer to this struct is then used in all typeclass instances. More on this will be discussed in the <code>impl_</code> macro part.</p>
 <h2>The <code>typeclass_instance</code> struct definition</h2>
-<p class="">This is the concrete instance to be used as a type constraint. It should contain a pointer to the typeclass, and the <code>self</code> member as a void pointer.</p>
-<p class="">You can use the <code>typeclass_instance</code> macro to define this struct- </p><div class="fragment"><div class="line"><span class="keyword">typedef</span> <a class="code" href="typeclass_8h.html#af018200b2431a3ab6c296cc8940ecbe3">typeclass_instance</a>(Show) Showable;</div>
-<div class="ttc" id="atypeclass_8h_html_af018200b2431a3ab6c296cc8940ecbe3"><div class="ttname"><a href="typeclass_8h.html#af018200b2431a3ab6c296cc8940ecbe3">typeclass_instance</a></div><div class="ttdeci">#define typeclass_instance(Typeclass)</div><div class="ttdoc">Define a typeclass instance for the given typeclass.</div><div class="ttdef"><b>Definition:</b> typeclass.h:43</div></div>
-</div><!-- fragment --><p> or manually- </p><div class="fragment"><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span></div>
+<p class="">This is the concrete instance to be used as a type constraint. It should contain a pointer to the typeclass, and the <code>self</code> member containing the value to pass to the functions in the typeclass struct. </p><div class="fragment"><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span></div>
 <div class="line">{</div>
 <div class="line">    <span class="keywordtype">void</span>* <span class="keyword">self</span>;</div>
 <div class="line">    Show <span class="keyword">const</span>* tc;</div>
 <div class="line">} Showable;</div>
-</div><!-- fragment --> <h2>The <code>impl_</code> macro used to implement the typeclass</h2>
-<p class="">This is the convenience macro that defines a function for a specific type that wraps it into the typeclass instance.</p>
-<p class="">Here's some general rules about this macro-</p><ul>
-<li>It should start with taking in the type name(s) of the type the implementation is for</li>
-<li>It should then take the function implementation(s) to be used for that specific type</li>
-<li>It should take in the name to define the wrapper function as</li>
-<li><p class="startli">The defined function <b>must</b> store the function implementations given into function pointers of the expected type.</p>
-<p class="startli">This can be a no-op typecheck. The expected types should replace the <code>void* self</code> with the concrete type the impl is for.</p>
+</div><!-- fragment --><p> This can also be simplified using the <a href="https://totallynotchase.github.io/c-iterators/typeclass_8h.html#af018200b2431a3ab6c296cc8940ecbe3"><code>typeclass_instance</code></a> macro provided in <a href="./typeclass.h">typeclass.h</a>. </p><div class="fragment"><div class="line"><span class="keyword">typedef</span> <a class="code" href="typeclass_8h.html#af018200b2431a3ab6c296cc8940ecbe3">typeclass_instance</a>(Show) Showable;</div>
+<div class="ttc" id="atypeclass_8h_html_af018200b2431a3ab6c296cc8940ecbe3"><div class="ttname"><a href="typeclass_8h.html#af018200b2431a3ab6c296cc8940ecbe3">typeclass_instance</a></div><div class="ttdeci">#define typeclass_instance(Typeclass)</div><div class="ttdoc">Define a typeclass instance for the given typeclass.</div><div class="ttdef"><b>Definition:</b> typeclass.h:43</div></div>
+</div><!-- fragment --><h2>The <code>impl_</code> macro used to implement the typeclass</h2>
+<p class="">This macro is the real heavy lifter when it comes to type safety.</p>
+<p class="">It takes in some information about the type you're implementing a typeclass for, and the exact function implementations that will be used for that type, and defines a function which does the following-</p><ul>
+<li>Takes in an argument of the type the implementation is for.</li>
+<li><p class="startli">Type checks the function implementations given.</p>
+<p class="startli">This is done by storing the given function implementations into function pointers of an exact and expected type.</p>
 </li>
-<li>The defined function <b>must</b> take in an argument of the specific type, to wrap it into the typeclass instance</li>
-<li>The defined function <b>must</b> define the typeclass as a <code>static</code> variable and store the function pointers in it.</li>
-<li>The function should return the typeclass instance, putting in a pointer to the <code>static</code> typeclass as well as filling the <code>self</code> member with the function argument.</li>
+<li>Initializes the typeclass struct to store these function pointers, with static storage duration.</li>
+<li>Creates and returns the typeclass instance, which stores a pointer to the aforementioned typeclass struct, and the function argument into the <code>self</code> member.</li>
 </ul>
 <p class="">Following these rules, this is what <code>impl_show</code> would look like- </p><div class="fragment"><div class="line"><span class="preprocessor">#define impl_show(T, Name, show_f)                                                                                     \</span></div>
 <div class="line"><span class="preprocessor">    Showable Name(T x)                                                                                                 \</span></div>
@@ -158,8 +149,8 @@ $(document).ready(function(){initNavTree('md_Typeclass_Pattern.html',''); initRe
 <div class="line"><span class="preprocessor">        return (Showable){.tc = &amp;tc, .self = x};                                                                       \</span></div>
 <div class="line"><span class="preprocessor">    }</span></div>
 </div><!-- fragment --><p> It takes the <code>show</code> implementation as its third argument. In the function definition, it stores that impl in a variable of type <code>char* (*const show_)(T e)</code>, which is the exact type it should be - <code>T</code> is the specific type the implementation is for. It <b>must be a pointer type</b>. Since it's stored into <code>void* self</code>.</p>
-<p class="">The <code>(void)show_;</code> line is to suppress the unused variable warning emitted by compilers. Since <code>show_</code> isn't actually used - it's only there for typechecking purposes. The 2 typechecking lines will be completely eliminated by any decent compiler.</p>
-<p class="">Then it simply defines a static typeclass, stores the function pointer given and returns the <code>Showable</code> struct, wrapping the <code>x</code> argument within.</p>
+<p class="">The <code>(void)show_;</code> line is to suppress the unused variable warning emitted by compilers, since <code>show_</code> isn't actually used. It's only there for typechecking purposes. These 2 typechecking lines will be completely eliminated by any decent compiler.</p>
+<p class="">Then it simply defines a static typeclass and stores the function pointer inside. Then it creates and returns the <code>Showable</code> struct, containing the <code>x</code> argument, and a pointer to the typeclass struct.</p>
 <h1>Usage</h1>
 <p class="">Once the typeclass and typeclass instance structs have been defined, all the user has to do is call the <code>impl_</code> macro with their own type and the function implementation(s) required for the typeclass. The declaration of the function defined by said macro can then be included in a header. After that, that function can be used to turn the concrete type into its typeclass instance.</p>
 <p class="">Here's an example of implementing the previously defined <code>Show</code> typeclass for an enum- </p><div class="fragment"><div class="line"><span class="keyword">typedef</span> <span class="keyword">enum</span></div>
@@ -176,8 +167,13 @@ $(document).ready(function(){initNavTree('md_Typeclass_Pattern.html',''); initRe
 <div class="line">    <span class="keywordflow">return</span> s;</div>
 <div class="line">}</div>
 <div class="line"> </div>
+<div class="line"><span class="comment">/* The `show` function implementation for `Antioch*` */</span></div>
 <div class="line"><span class="keyword">static</span> <span class="keywordtype">char</span>* antioch_show(Antioch* x)</div>
 <div class="line">{</div>
+<div class="line">    <span class="comment">/*</span></div>
+<div class="line"><span class="comment">    Note: The `show` function of a `Showable` is expected to return a malloc&#39;ed value</span></div>
+<div class="line"><span class="comment">    The users of a generic `Showable` are expected to `free` the returned pointer from the function `show`.</span></div>
+<div class="line"><span class="comment">    */</span></div>
 <div class="line">    <span class="keywordflow">switch</span> (*x)</div>
 <div class="line">    {</div>
 <div class="line">        <span class="keywordflow">case</span> holy:</div>
@@ -191,11 +187,25 @@ $(document).ready(function(){initNavTree('md_Typeclass_Pattern.html',''); initRe
 <div class="line">    }</div>
 <div class="line">}</div>
 <div class="line"> </div>
+<div class="line"><span class="comment">/*</span></div>
+<div class="line"><span class="comment">Implement the `Show` typeclass for the type `Antioch*`</span></div>
+<div class="line"><span class="comment"></span> </div>
+<div class="line"><span class="comment">This will define a function to convert a value of type `Antioch*` into a `Showable`, the function will be named `prep_antioch_show`</span></div>
+<div class="line"><span class="comment"></span> </div>
+<div class="line"><span class="comment">The `show` implementation used will be the `antioch_show` function</span></div>
+<div class="line"><span class="comment">*/</span></div>
 <div class="line">impl_show(Antioch*, prep_antioch_show, antioch_show)</div>
-</div><!-- fragment --><p> The signature of defined function should be- </p><div class="fragment"><div class="line">Showable prep_antioch_show(Antioch* x);</div>
+</div><!-- fragment --><p> The <code>impl_show</code> macro here, simply translates to- </p><div class="fragment"><div class="line">Showable prep_antioch_show(Antioch* x)</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordtype">char</span>* (*<span class="keyword">const</span> show_)(Antioch* e) = (show_f);</div>
+<div class="line">    (void)show_;</div>
+<div class="line">    <span class="keyword">static</span> Show <span class="keyword">const</span> tc = {.show = (<span class="keywordtype">char</span>* (*const)(<span class="keywordtype">void</span>*)(show_f) };</div>
+<div class="line">    <span class="keywordflow">return</span> (Showable){.tc = &amp;tc, .self = x};</div>
+<div class="line">}</div>
 </div><!-- fragment --><p class="">Now, you can convert an <code>Antioch</code> into a <code>Showable</code> like so- </p><div class="fragment"><div class="line">Antioch ant = holy;</div>
 <div class="line">Showable antsh = prep_antioch_show(&amp;ant);</div>
-</div><!-- fragment --><p class="">I also like to have the <code>print</code> function that just works on <code>Showable</code>s directly- </p><div class="fragment"><div class="line"><span class="keywordtype">void</span> print(Showable showable)</div>
+</div><!-- fragment --><p> And this <code>Showable</code> will automatically dispatch to the <code>antioch_show</code> function whenever someone calls the <code>show</code> function inside it.</p>
+<p class="">Now you can make polymorphic functions that works on <code>Showable</code>s. Here's one of them- </p><div class="fragment"><div class="line"><span class="keywordtype">void</span> print(Showable showable)</div>
 <div class="line">{</div>
 <div class="line">    <span class="keywordtype">char</span>* s = showable.show(showable.self);</div>
 <div class="line">    puts(s);</div>
@@ -203,10 +213,12 @@ $(document).ready(function(){initNavTree('md_Typeclass_Pattern.html',''); initRe
 <div class="line">}</div>
 </div><!-- fragment --><p> You can now easily print an <code>Antioch</code> with these abstractions- </p><div class="fragment"><div class="line">Antioch ant = holy;</div>
 <div class="line">print(prep_antioch_show(&amp;ant));</div>
-</div><!-- fragment --><h1>Combining multiple typeclasses</h1>
+</div><!-- fragment --><p> Where this really shines though, is when you have multiple types that implement <code>Show</code> - all of them can be used with <code>print</code>. Or any other function that works on a generic <code>Showable</code>!</p>
+<h1>Combining multiple typeclasses</h1>
 <p class="">One of the core design goals of a typeclass is to be modular. A <code>Show</code> typeclass should only have actions directly related to "showing", a <code>Num</code> typeclass should only have actions directly related to numerical operations. Unlike objects, that may contain many different methods of arbitrary relevance to each other.</p>
 <p class="">This means that, more often than not, you'll want a type that can do multiple different classes of actions. A type that implements multiple typeclasses.</p>
-<p class="">You can model that pretty easily with this pattern- </p><div class="fragment"><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span></div>
+<p class="">You can model that pretty easily with this pattern- </p><div class="fragment"><div class="line"><span class="comment">/* Type constraint that requires both `Show` and `Enum` to be implemented */</span></div>
+<div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span></div>
 <div class="line">{</div>
 <div class="line">    <span class="keywordtype">void</span>* <span class="keyword">self</span>;</div>
 <div class="line">    Show <span class="keyword">const</span>* showtc;</div>
