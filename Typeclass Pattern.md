@@ -8,35 +8,25 @@ Alongside describing the core parts of this pattern, this document will also des
 Function pointer based polymorphism isn't new to C by any means. The major difference in the typeclass pattern, and the typical vtable based approach is simply that typeclasses are based around actions, rather than objects. This is very similar to an interface in OOP terms.
 
 # Core parts
-There are 3 core parts to this pattern-
-* The typeclass struct definition
-* The typeclass instance struct definition
-* The macro used to implement the typeclass for a type in a **"type safe" way**
-
-We'll use these 3 parts to implement another typeclass - [`Show`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Text-Show.html#t:Show).
+There are 3 core parts to this pattern. These parts will be demonstrated by implementing the [`Show`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Text-Show.html#t:Show) typeclass.
 
 ## The `typeclass` struct definition
-This is pretty simple, use the `typeclass` macro to pass the necessary function member for `Show`. We'll just be using the `show` function here, it takes in a type for which `Show` is implemented (i.e the `self`) and returns a printable string.
-```c
-typedef typeclass(char* (*const show)(void* self)) Show;
-```
-You can also define it manually, without the macro-
+This is the struct containing the function pointers related to the typeclass. For `Show`, we'll just be using the `show` function here, it takes in a value of the type for which `Show` is implemented (i.e `self`) and returns a printable string.
 ```c
 typedef struct
 {
     char* (*const show)(void* self);
 } Show;
 ```
-A simple struct containing the "virtual functions". When the wrapper function is first called (to convert a certain type to its typeclass instance), a typeclass struct of `static` storage duration is created with the function pointers for that specific type (a vtable of sorts). The pointer to this struct is then used in all typeclass instances.
+This can be simplified using the [`typeclass`](https://totallynotchase.github.io/c-iterators/typeclass_8h.html#ab36f9f0d3603452a867a683078618034) macro provided in [typeclass.h](./typeclass.h).
+```c
+typedef typeclass(char* (*const show)(void* self)) Show;
+```
+
+A simple struct containing the virtual function(s). When the wrapper function is first called (to convert a certain type to its typeclass instance), a typeclass struct of `static` storage duration is created with the function pointers for that specific type (a vtable of sorts). The pointer to this struct is then used in all typeclass instances. More on this will be discussed in the `impl_` macro part.
 
 ## The `typeclass_instance` struct definition
-This is the concrete instance to be used as a type constraint. It should contain a pointer to the typeclass, and the `self` member as a void pointer.
-
-You can use the `typeclass_instance` macro to define this struct-
-```c
-typedef typeclass_instance(Show) Showable;
-```
-or manually-
+This is the concrete instance to be used as a type constraint. It should contain a pointer to the typeclass, and the `self` member containing the value to pass to the functions in the typeclass struct.
 ```c
 typedef struct
 {
@@ -44,19 +34,21 @@ typedef struct
     Show const* tc;
 } Showable;
 ```
-## The `impl_` macro used to implement the typeclass
-This is the convenience macro that defines a function for a specific type that wraps it into the typeclass instance.
+This can also be simplified using the [`typeclass_instance`](https://totallynotchase.github.io/c-iterators/typeclass_8h.html#af018200b2431a3ab6c296cc8940ecbe3) macro provided in [typeclass.h](./typeclass.h).
+```c
+typedef typeclass_instance(Show) Showable;
+```
 
-Here's some general rules about this macro-
-* It should start with taking in the type name(s) of the type the implementation is for
-* It should then take the function implementation(s) to be used for that specific type
-* It should take in the name to define the wrapper function as
-* The defined function **must** store the function implementations given into function pointers of the expected type.
+## The `impl_` macro used to implement the typeclass
+This macro is the real heavy lifter when it comes to type safety.
+
+It takes in some information about the type you're implementing a typeclass for, and the exact function implementations that will be used for that type, and defines a function which does the following-
+* Takes in an argument of the type the implementation is for.
+* Type checks the function implementations given.
   
-  This can be a no-op typecheck. The expected types should replace the `void* self` with the concrete type the impl is for.
-* The defined function **must** take in an argument of the specific type, to wrap it into the typeclass instance
-* The defined function **must** define the typeclass as a `static` variable and store the function pointers in it.
-* The function should return the typeclass instance, putting in a pointer to the `static` typeclass as well as filling the `self` member with the function argument.
+  This is done by storing the given function implementations into function pointers of an exact and expected type.
+* Initializes the typeclass struct to store these function pointers, with static storage duration.
+* Creates and returns the typeclass instance, which stores a pointer to the aforementioned typeclass struct, and the function argument into the `self` member.
 
 Following these rules, this is what `impl_show` would look like-
 ```c
@@ -71,9 +63,9 @@ Following these rules, this is what `impl_show` would look like-
 ```
 It takes the `show` implementation as its third argument. In the function definition, it stores that impl in a variable of type `char* (*const show_)(T e)`, which is the exact type it should be - `T` is the specific type the implementation is for. It **must be a pointer type**. Since it's stored into `void* self`.
 
-The `(void)show_;` line is to suppress the unused variable warning emitted by compilers. Since `show_` isn't actually used - it's only there for typechecking purposes. The 2 typechecking lines will be completely eliminated by any decent compiler.
+The `(void)show_;` line is to suppress the unused variable warning emitted by compilers, since `show_` isn't actually used. It's only there for typechecking purposes. These 2 typechecking lines will be completely eliminated by any decent compiler.
 
-Then it simply defines a static typeclass, stores the function pointer given and returns the `Showable` struct, wrapping the `x` argument within.
+Then it simply defines a static typeclass and stores the function pointer inside. Then it creates and returns the `Showable` struct, containing the `x` argument, and a pointer to the typeclass struct.
 
 # Usage
 Once the typeclass and typeclass instance structs have been defined, all the user has to do is call the `impl_` macro with their own type and the function implementation(s) required for the typeclass. The declaration of the function defined by said macro can then be included in a header. After that, that function can be used to turn the concrete type into its typeclass instance.
@@ -94,8 +86,13 @@ static inline char* strdup_(char const* x)
     return s;
 }
 
+/* The `show` function implementation for `Antioch*` */
 static char* antioch_show(Antioch* x)
 {
+    /*
+    Note: The `show` function of a `Showable` is expected to return a malloc'ed value
+    The users of a generic `Showable` are expected to `free` the returned pointer from the function `show`.
+    */
     switch (*x)
     {
         case holy:
@@ -109,11 +106,24 @@ static char* antioch_show(Antioch* x)
     }
 }
 
+/*
+Implement the `Show` typeclass for the type `Antioch*`
+
+This will define a function to convert a value of type `Antioch*` into a `Showable`, the function will be named `prep_antioch_show`
+
+The `show` implementation used will be the `antioch_show` function
+*/
 impl_show(Antioch*, prep_antioch_show, antioch_show)
 ```
-The signature of defined function should be-
+The `impl_show` macro here, simply translates to-
 ```c
-Showable prep_antioch_show(Antioch* x);
+Showable prep_antioch_show(Antioch* x)
+{
+    char* (*const show_)(Antioch* e) = (show_f);
+    (void)show_;
+    static Show const tc = {.show = (char* (*const)(void*)(show_f) };
+    return (Showable){.tc = &tc, .self = x};
+}
 ```
 
 Now, you can convert an `Antioch` into a `Showable` like so-
@@ -121,8 +131,9 @@ Now, you can convert an `Antioch` into a `Showable` like so-
 Antioch ant = holy;
 Showable antsh = prep_antioch_show(&ant);
 ```
+And this `Showable` will automatically dispatch to the `antioch_show` function whenever someone calls the `show` function inside it.
 
-I also like to have the `print` function that just works on `Showable`s directly-
+Now you can make polymorphic functions that works on `Showable`s. Here's one of them-
 ```c
 void print(Showable showable)
 {
@@ -136,6 +147,7 @@ You can now easily print an `Antioch` with these abstractions-
 Antioch ant = holy;
 print(prep_antioch_show(&ant));
 ```
+Where this really shines though, is when you have multiple types that implement `Show` - all of them can be used with `print`. Or any other function that works on a generic `Showable`!
 
 # Combining multiple typeclasses
 One of the core design goals of a typeclass is to be modular. A `Show` typeclass should only have actions directly related to "showing", a `Num` typeclass should only have actions directly related to numerical operations. Unlike objects, that may contain many different methods of arbitrary relevance to each other.
@@ -144,6 +156,7 @@ This means that, more often than not, you'll want a type that can do multiple di
 
 You can model that pretty easily with this pattern-
 ```c
+/* Type constraint that requires both `Show` and `Enum` to be implemented */
 typedef struct
 {
     void* self;
