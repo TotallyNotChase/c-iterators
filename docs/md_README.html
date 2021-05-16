@@ -128,7 +128,14 @@ $(document).ready(function(){initNavTree('md_README.html',''); initResizable(); 
 <div class="line">} Fibonacci;</div>
 </div><!-- fragment --><p class="">The <code>get_fibitr</code> macro does nothing but just initialize that struct with <code>curr = 0</code>, and <code>next = 1</code>, turn it into an <code>Iterable</code> and return it.</p>
 <p class="">The <code>take_from</code> macro is explained in <a href="#the-take-utility">Lazy Abstractions</a>. You may be familiar with <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html#v:take"><code>take</code></a> already though.</p>
-<p class="">This entire construct is lazy. No extra iteration is performed. The only iteration that happens here is in the explicit <code>foreach</code> loop. Neither <code>get_fibitr</code> nor <code>take_from</code> does eager generation.</p>
+<p class="">This entire construct is lazy. No extra iteration is performed. The only iteration that happens here is in the explicit <code>foreach</code> loop. Neither <code>get_fibitr</code> nor <code>take_from</code> does eager generation. In fact, you could even do <code>take</code> and <code>map</code> at <em>the same time</em>, and <em>both would be evaluated together</em> - in a <b>singular iteration</b>. </p><div class="fragment"><div class="line"><span class="comment">/* A function that increments and returns the given integer */</span></div>
+<div class="line"><span class="keyword">static</span> uint32_t incr(uint32_t x) { <span class="keywordflow">return</span> x + 1; }</div>
+<div class="line">...</div>
+<div class="line"> </div>
+<div class="line">Iterable(uint32_t) it       = get_fibitr();                <span class="comment">/* Create an infinite fibonacci sequence iterable */</span></div>
+<div class="line"><a class="code" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a>(uint32_t) it10     = take_from(it, 10, uint32_t); <span class="comment">/* Iterable of the first 10 items in the sequence */</span></div>
+<div class="line"><a class="code" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a>(uint32_t) incrit10 = map_over(it10, incr, uint32_t, uint32_t); <span class="comment">/* Map the `incr` function over it10 */</span></div>
+</div><!-- fragment --><p> How cool is that? You can see the <code>map</code> utility in action at <a href="./examples/map_over.c">map_over.c</a>. Its implementation is explained in <a href="#the-map-utility">Lazy Abstractions</a></p>
 <h1>Highlights</h1>
 <ul>
 <li>Pure C99 support, no non standard extensions used</li>
