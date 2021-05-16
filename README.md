@@ -34,7 +34,17 @@ The `get_fibitr` macro does nothing but just initialize that struct with `curr =
 
 The `take_from` macro is explained in [Lazy Abstractions](#the-take-utility). You may be familiar with [`take`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html#v:take) already though.
 
-This entire construct is lazy. No extra iteration is performed. The only iteration that happens here is in the explicit `foreach` loop. Neither `get_fibitr` nor `take_from` does eager generation.
+This entire construct is lazy. No extra iteration is performed. The only iteration that happens here is in the explicit `foreach` loop. Neither `get_fibitr` nor `take_from` does eager generation. In fact, you could even do `take` and `map` at *the same time*, and *both would be evaluated together* - in a **singular iteration**.
+```c
+/* A function that increments and returns the given integer */
+static uint32_t incr(uint32_t x) { return x + 1; }
+...
+
+Iterable(uint32_t) it       = get_fibitr();                /* Create an infinite fibonacci sequence iterable */
+Iterable(uint32_t) it10     = take_from(it, 10, uint32_t); /* Iterable of the first 10 items in the sequence */
+Iterable(uint32_t) incrit10 = map_over(it10, incr, uint32_t, uint32_t); /* Map the `incr` function over it10 */
+```
+How cool is that? You can see the `map` utility in action at [map_over.c](./examples/map_over.c). Its implementation is explained in [Lazy Abstractions](#the-map-utility)
 
 # Highlights
 * Pure C99 support, no non standard extensions used
