@@ -137,7 +137,7 @@ Now you can make polymorphic functions that works on `Showable`s. Here's one of 
 ```c
 void print(Showable showable)
 {
-    char* s = showable.show(showable.self);
+    char* s = showable.tc->show(showable.self);
     puts(s);
     free(s);
 }
