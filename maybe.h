@@ -102,7 +102,7 @@ typedef enum
  * @endcode
  *
  * @param T The type of value the `Maybe` will hold. Must be alphanumeric.
- * 
+ *
  * @note If `T` is a pointer, it needs to be typedef-ed into a type that does not contain the `*`. Only alphanumerics.
  */
 #define Nothing(T) ((Maybe(T)){0})
