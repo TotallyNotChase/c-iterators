@@ -207,7 +207,7 @@ $(document).ready(function(){initNavTree('md_Typeclass_Pattern.html',''); initRe
 </div><!-- fragment --><p> And this <code>Showable</code> will automatically dispatch to the <code>antioch_show</code> function whenever someone calls the <code>show</code> function inside it.</p>
 <p class="">Now you can make polymorphic functions that works on <code>Showable</code>s. Here's one of them- </p><div class="fragment"><div class="line"><span class="keywordtype">void</span> print(Showable showable)</div>
 <div class="line">{</div>
-<div class="line">    <span class="keywordtype">char</span>* s = showable.show(showable.self);</div>
+<div class="line">    <span class="keywordtype">char</span>* s = showable.tc-&gt;show(showable.self);</div>
 <div class="line">    puts(s);</div>
 <div class="line">    free(s);</div>
 <div class="line">}</div>
