@@ -9,6 +9,8 @@ More info about the file structure can be found in the [Architecture document](.
 
 You can find the generated docs [here](https://TotallyNotChase.github.io/c-iterators).
 
+If you're looking for functional, lazy abstractions on top of base iterators, check out [Lazy Abstractions](#lazy-abstractions) and [c-iterplus](https://github.com/TotallyNotChase/c-iterplus).
+
 # A small taste
 Here's a snippet where the `Iterator` typeclass has been implemented for a "fibonacci struct". Giving you an iterable representing the infinite Fibonacci sequence.
 ```c
@@ -520,7 +522,7 @@ Note the first 2 lines - those make sure the passed `next` function impl has the
 
 # Advanced Usage
 ## Lazy Abstractions
-This lazy iterator interface demonstrated, lets you achieve strong abstractions that are also lazy. 2 such abstractions, `take` and `map` are demonstrated in [fibonacci.c](./examples/fibbonacci.c) and [map_over.c](./examples/map_over.c) respectively.
+This lazy iterator interface demonstrated, lets you achieve strong abstractions that are also lazy. 2 such abstractions, `take` and `map` are demonstrated in [fibonacci.c](./examples/fibbonacci.c) and [map_over.c](./examples/map_over.c) respectively. If you'd like even more abstractions, you can find them in [c-iterplus](https://github.com/TotallyNotChase/c-iterplus).
 
 Many of these abstractions follow the same basic pattern. Have a custom struct that wraps a given iterable - have some extra context in that struct to operate on the elements of said iterable, and a `next` function implementation that simply iterates through the src iterable and does some necessary action based on the stored context. No extra iteration is done, the extra functionality is simply applied on top of the source iterable's `next` function on demand.
 
