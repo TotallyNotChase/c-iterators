@@ -9,6 +9,9 @@
 #include "maybe.h"
 #include "typeclass.h"
 
+#define CONCAT_(A, B) A##B
+#define CONCAT(A, B)  CONCAT_(A, B)
+
 /**
  * @def Iterator(T)
  * @brief Convenience macro to get the type of the Iterator (typeclass) with given element type.
@@ -118,6 +121,12 @@
  * @note This should not be delimited by a semicolon.
  */
 #define impl_iterator(IterType, ElmntType, Name, next_f)                                                               \
+    static inline Maybe(ElmntType) CONCAT(next_f, __)(void* self)                                                      \
+    {                                                                                                                  \
+        Maybe(ElmntType) (*const next_)(IterType self) = (next_f);                                                     \
+        (void)next_;                                                                                                   \
+        return (next_f)(self);                                                                                         \
+    }                                                                                                                  \
     Iterable(ElmntType) Name(IterType x)                                                                               \
     {                                                                                                                  \
         Maybe(ElmntType) (*const next_)(IterType self) = (next_f);                                                     \
