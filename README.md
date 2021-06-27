@@ -354,7 +354,7 @@ Finally, we can have a nice helper macro to convert a list to an iterable-
 * If you're making a custom iterable utility that is backed up by another iterable (see [`map`](./examples/iterutils/map.h), [`take`](./examples/iterutils/take.h)) - the source iterable is **also consumed** when you iterate over the wrapper. This is demonstrated, and taken advantage of, in the [fibonacci example](./examples/fibbonacci.c).
 * Be very careful about lifetimes when you're using the very convenient macros showcased in the examples! All the macros that create and return an `Iterable` **take the address** of a [*compound literal*](https://en.cppreference.com/w/c/language/compound_literal). Compound literals are local to the scope and hence the address is valid for the [lifetime of that scope](https://stackoverflow.com/questions/34880638/compound-literal-lifetime-and-if-blocks). Don't use the `Iterable` outside that scope. As a rule of thumb, **always** declare and initialize the `Iterable`s in the same line (using the macros).
 * If you **need to return** an `Iterable` from a function - you should make sure its `self` member's lifetime doesn't end upon returning. Since `self` is a pointer, the data it is pointing to may have any storage duration. If you're responsible for filling this `self` member - make sure you pay attention to its lifetime.
-  
+
   As mentioned previously, the utility macros, used in the examples to build `Iterable`s, use compound literals - whose lifetimes end once the enclosing scope ends. `Iterable`s built in this way are **not suitable** to be returned (or used) outside of their enclosing scope.
 * The `tc` member of the typeclass contains a pointer to a struct with `static` storage duration - so this pointer is totally reusable in any scope.
 
@@ -373,7 +373,7 @@ struct maybe_t
     MaybeTag tag;
     /* Don't access this member manually */
     T val;
-};  
+};
 ```
 It's a tagged "union", nothing special. The `Just` tag is used to indicate the presence of a value in `val`, and `Nothing` is used to indicate the absence of a value in `val`.
 
@@ -426,7 +426,7 @@ Alongside the utilities to define and refer to a `Maybe` of a certain type - the
 
   `Nothing(int)` translates to `((Maybe(int)){0})`. I decided to zero initialize the struct since I've set the `Nothing` tag to `0` explicitly. However, it'd be totally valid to only set the tag to `Nothing` and leave the `val` member indeterminate. Since you shouldn't access `val` if tag is `Nothing` anyway.
 * `from_just` and `from_just_` have previously been mentioned briefly.
-  
+
   `from_just` takes in a `Maybe` struct, and the `T` (type the `Maybe` contains) and calls the `T##_from_just` function above. The function checks if the `Maybe` is indeed `Just`, and returns the value. If it is `Nothing`, however, the program aborts.
 
   `from_just_` directly accesses and returns the `val` member of the given `Maybe` struct, it does not take in the `T` parameter, since it doesn't need to. Only use this after you've made sure the `Maybe` struct is a `Just`. Otherwise the behavior is undefined. Though in practical terms, if the `Maybe` struct was built using the `Nothing` macro, `val` would just be zero initialized. This should not be relied on however.
@@ -495,7 +495,7 @@ It defines a function, which turns the custom type (for which the impl is for) i
 It takes in-
 * `IterType`, the custom type `Iterator` is being implemented for
 * `ElmntType`, the type this `Iterator` will yield.
-  
+
   An `Iterator(ElmntType)` (and `Iterable(ElmntType)`) should already exist, obviously.
 
   Must be alphanumeric just like everywhere else.
@@ -506,7 +506,7 @@ It takes in-
 
   Must be of type `Maybe(ElmntType) (*)(IterType)`. It should take in a value of `IterType`, and return a `Maybe(ElmntType)`.
 
-Generally, you need to include the declaration of this function in a header file yourself. However, you can also mark this function as `static` if you so desire; all you have to do, is prepend `static` to the `impl_iterator` call- `static impl_iterator(...)`.
+Generally, you need to include the declaration of this function in a header file yourself.
 
 In the [array_iterable.c](./examples/array_iterable.c) example. The `impl_iterator(ArrIter(int)*, int, prep_arriter_of(int), intarrnxt)` translates to-
 ```c
@@ -534,7 +534,7 @@ Let's look at how the `take`-like utility is implemented. You can find the imple
 The struct we'll use to implement this utility looks like-
 ```c
 struct
-{ 
+{
     size_t i;
     size_t const limit;
     Iterable(T) const src;
@@ -558,7 +558,7 @@ static Maybe(T) IterTake(T)_nxt(IterTake(T) * self)
 {
     if (self->i < self->limit) {
         ++(self->i);
-        Iterable(T) srcit = self->src;                                                                     
+        Iterable(T) srcit = self->src;
         return srcit.tc->next(srcit.self);
     }
     return Nothing(T);
