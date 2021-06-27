@@ -8,6 +8,9 @@
 static IntNode* create_intnode(int val)
 {
     IntNode* node = malloc(sizeof(*node));
+    if (node == NULL) {
+        return NULL;
+    }
     node->val     = val;
     node->next    = NULL;
     return node;
@@ -16,6 +19,10 @@ static IntNode* create_intnode(int val)
 IntList prepend_intnode(int val, IntList list)
 {
     IntNode* node = create_intnode(val);
+    if (node == NULL) {
+        fprintf(stderr, "OOM in prepend_intnode");
+        exit(1);
+    }
     node->next    = list;
     return node;
 }
