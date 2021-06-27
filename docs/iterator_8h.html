@@ -117,6 +117,12 @@ $(document).ready(function(){initNavTree('iterator_8h.html',''); initResizable()
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
+<tr class="memitem:afbb1d812395d5f5a9e08819f9ca90254"><td class="memItemLeft" align="right" valign="top"><a id="afbb1d812395d5f5a9e08819f9ca90254"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>CONCAT_</b>(A,  B)&#160;&#160;&#160;A##B</td></tr>
+<tr class="separator:afbb1d812395d5f5a9e08819f9ca90254"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0feb7e0b940efad526132db03f9febf9"><td class="memItemLeft" align="right" valign="top"><a id="a0feb7e0b940efad526132db03f9febf9"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>CONCAT</b>(A,  B)&#160;&#160;&#160;CONCAT_(A, B)</td></tr>
+<tr class="separator:a0feb7e0b940efad526132db03f9febf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6c3a22862dc6db425dd4389987c0dbaf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="iterator_8h.html#a6c3a22862dc6db425dd4389987c0dbaf">Iterator</a>(T)&#160;&#160;&#160;T##Iterator</td></tr>
 <tr class="memdesc:a6c3a22862dc6db425dd4389987c0dbaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience macro to get the type of the Iterator (typeclass) with given element type.  <a href="iterator_8h.html#a6c3a22862dc6db425dd4389987c0dbaf">More...</a><br /></td></tr>
 <tr class="separator:a6c3a22862dc6db425dd4389987c0dbaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -150,8 +156,8 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">    <span class="keyword">typedef</span> <a class="code" href="typeclass_8h.html#ab36f9f0d3603452a867a683078618034">typeclass</a>(<a class="code" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a>(T) (*<span class="keyword">const</span> next)(<span class="keywordtype">void</span>* <span class="keyword">self</span>)) <a class="code" href="iterator_8h.html#a6c3a22862dc6db425dd4389987c0dbaf">Iterator</a>(T);                                                 \</div>
 <div class="line">    typedef <a class="code" href="typeclass_8h.html#af018200b2431a3ab6c296cc8940ecbe3">typeclass_instance</a>(<a class="code" href="iterator_8h.html#a6c3a22862dc6db425dd4389987c0dbaf">Iterator</a>(T)) <a class="code" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a>(T)</div>
-<div class="ttc" id="aiterator_8h_html_a6c3a22862dc6db425dd4389987c0dbaf"><div class="ttname"><a href="iterator_8h.html#a6c3a22862dc6db425dd4389987c0dbaf">Iterator</a></div><div class="ttdeci">#define Iterator(T)</div><div class="ttdoc">Convenience macro to get the type of the Iterator (typeclass) with given element type.</div><div class="ttdef"><b>Definition:</b> iterator.h:28</div></div>
-<div class="ttc" id="aiterator_8h_html_a78f1cf949c0e970b2105124f691f5c2a"><div class="ttname"><a href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a></div><div class="ttdeci">#define Iterable(T)</div><div class="ttdoc">Convenience macro to get the type of the Iterable (typeclass instance) with given element type.</div><div class="ttdef"><b>Definition:</b> iterator.h:45</div></div>
+<div class="ttc" id="aiterator_8h_html_a6c3a22862dc6db425dd4389987c0dbaf"><div class="ttname"><a href="iterator_8h.html#a6c3a22862dc6db425dd4389987c0dbaf">Iterator</a></div><div class="ttdeci">#define Iterator(T)</div><div class="ttdoc">Convenience macro to get the type of the Iterator (typeclass) with given element type.</div><div class="ttdef"><b>Definition:</b> iterator.h:31</div></div>
+<div class="ttc" id="aiterator_8h_html_a78f1cf949c0e970b2105124f691f5c2a"><div class="ttname"><a href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a></div><div class="ttdeci">#define Iterable(T)</div><div class="ttdoc">Convenience macro to get the type of the Iterable (typeclass instance) with given element type.</div><div class="ttdef"><b>Definition:</b> iterator.h:48</div></div>
 <div class="ttc" id="amaybe_8h_html_af47a0e4269e370939835ecc0cf6c7875"><div class="ttname"><a href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a></div><div class="ttdeci">#define Maybe(T)</div><div class="ttdoc">Convenience macro to get the type of the Maybe defined with a certain type.</div><div class="ttdef"><b>Definition:</b> maybe.h:40</div></div>
 <div class="ttc" id="atypeclass_8h_html_ab36f9f0d3603452a867a683078618034"><div class="ttname"><a href="typeclass_8h.html#ab36f9f0d3603452a867a683078618034">typeclass</a></div><div class="ttdeci">#define typeclass(funcs)</div><div class="ttdoc">Define a typeclass with the given functions.</div><div class="ttdef"><b>Definition:</b> typeclass.h:23</div></div>
 <div class="ttc" id="atypeclass_8h_html_af018200b2431a3ab6c296cc8940ecbe3"><div class="ttname"><a href="typeclass_8h.html#af018200b2431a3ab6c296cc8940ecbe3">typeclass_instance</a></div><div class="ttdeci">#define typeclass_instance(Typeclass)</div><div class="ttdoc">Define a typeclass instance for the given typeclass.</div><div class="ttdef"><b>Definition:</b> typeclass.h:43</div></div>
@@ -159,7 +165,7 @@ Macros</h2></td></tr>
 <p>Define an Iterator typeclass and its Iterable instance for given element type. </p>
 <h1>Example</h1>
 <div class="fragment"><div class="line"><a class="code" href="iterator_8h.html#a938f3e7187cb386e2bf4049753e2ff84">DefineIteratorOf</a>(<span class="keywordtype">int</span>); <span class="comment">// Defines an Iterator(int) typeclass as well as its instance</span></div>
-<div class="ttc" id="aiterator_8h_html_a938f3e7187cb386e2bf4049753e2ff84"><div class="ttname"><a href="iterator_8h.html#a938f3e7187cb386e2bf4049753e2ff84">DefineIteratorOf</a></div><div class="ttdeci">#define DefineIteratorOf(T)</div><div class="ttdoc">Define an Iterator typeclass and its Iterable instance for given element type.</div><div class="ttdef"><b>Definition:</b> iterator.h:62</div></div>
+<div class="ttc" id="aiterator_8h_html_a938f3e7187cb386e2bf4049753e2ff84"><div class="ttname"><a href="iterator_8h.html#a938f3e7187cb386e2bf4049753e2ff84">DefineIteratorOf</a></div><div class="ttdeci">#define DefineIteratorOf(T)</div><div class="ttdoc">Define an Iterator typeclass and its Iterable instance for given element type.</div><div class="ttdef"><b>Definition:</b> iterator.h:65</div></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">T</td><td>The type of value the <code>Iterator</code> instance will yield. Must be alphanumeric.</td></tr>
@@ -209,7 +215,13 @@ A <a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875" title="Co
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <a class="code" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a>(ElmntType) Name(IterType x)                                                                               \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a>(ElmntType) CONCAT(next_f, __)(<span class="keywordtype">void</span>* <span class="keyword">self</span>)                                                      \</div>
+<div class="line">    {                                                                                                                  \</div>
+<div class="line">        Maybe(ElmntType) (*<span class="keyword">const</span> next_)(IterType <span class="keyword">self</span>) = (next_f);                                                     \</div>
+<div class="line">        (void)next_;                                                                                                   \</div>
+<div class="line">        return (next_f)(<span class="keyword">self</span>);                                                                                         \</div>
+<div class="line">    }                                                                                                                  \</div>
+<div class="line">    Iterable(ElmntType) Name(IterType x)                                                                               \</div>
 <div class="line">    {                                                                                                                  \</div>
 <div class="line">        Maybe(ElmntType) (*<span class="keyword">const</span> next_)(IterType <span class="keyword">self</span>) = (next_f);                                                     \</div>
 <div class="line">        (void)next_;                                                                                                   \</div>
@@ -246,7 +258,7 @@ A <a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875" title="Co
 <div class="line"><span class="comment">// Define a function named `prep_fib_itr`, which takes in a `Fibonacci*` and returns an `Iterable(int)`</span></div>
 <div class="line"><span class="comment">// The returned iterable is an infinite fibonacci sequence</span></div>
 <div class="line"><a class="code" href="iterator_8h.html#a01e620430099d2eb6192db193e88cff0">impl_iterator</a>(Fibonacci*, uint32_t, prep_fib_itr, fibnxt)</div>
-<div class="ttc" id="aiterator_8h_html_a01e620430099d2eb6192db193e88cff0"><div class="ttname"><a href="iterator_8h.html#a01e620430099d2eb6192db193e88cff0">impl_iterator</a></div><div class="ttdeci">#define impl_iterator(IterType, ElmntType, Name, next_f)</div><div class="ttdoc">Define a function to turn given IterType into an Iterable(ElmntType).</div><div class="ttdef"><b>Definition:</b> iterator.h:120</div></div>
+<div class="ttc" id="aiterator_8h_html_a01e620430099d2eb6192db193e88cff0"><div class="ttname"><a href="iterator_8h.html#a01e620430099d2eb6192db193e88cff0">impl_iterator</a></div><div class="ttdeci">#define impl_iterator(IterType, ElmntType, Name, next_f)</div><div class="ttdoc">Define a function to turn given IterType into an Iterable(ElmntType).</div><div class="ttdef"><b>Definition:</b> iterator.h:123</div></div>
 <div class="ttc" id="amaybe_8h_html_a0daf26d181160b7fb96d640ed20bb466"><div class="ttname"><a href="maybe_8h.html#a0daf26d181160b7fb96d640ed20bb466">DefineMaybe</a></div><div class="ttdeci">#define DefineMaybe(T)</div><div class="ttdoc">Define a Maybe&lt;T&gt; type.</div><div class="ttdef"><b>Definition:</b> maybe.h:57</div></div>
 <div class="ttc" id="amaybe_8h_html_ae0832f95d5a7ff6845381aa8795fd2a3"><div class="ttname"><a href="maybe_8h.html#ae0832f95d5a7ff6845381aa8795fd2a3">Just</a></div><div class="ttdeci">#define Just(v, T)</div><div class="ttdoc">Wrap a Just value into a Maybe(T).</div><div class="ttdef"><b>Definition:</b> maybe.h:91</div></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
