@@ -129,9 +129,7 @@
     }                                                                                                                  \
     Iterable(ElmntType) Name(IterType x)                                                                               \
     {                                                                                                                  \
-        Maybe(ElmntType) (*const next_)(IterType self) = (next_f);                                                     \
-        (void)next_;                                                                                                   \
-        static Iterator(ElmntType) const tc = {.next = (Maybe(ElmntType)(*const)(void*))(next_f)};                     \
+        static Iterator(ElmntType) const tc = {.next = (CONCAT(next_f, __))};                                          \
         return (Iterable(ElmntType)){.tc = &tc, .self = x};                                                            \
     }
 
