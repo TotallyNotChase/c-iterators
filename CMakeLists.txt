@@ -18,8 +18,12 @@ else()
   add_compile_options(-Wall -Wextra -pedantic -Werror)
 endif()
 if(WIN32)
-    # But ignore the Microsoft "Use *_s functions" warning
+  # But ignore the Microsoft "Use *_s functions" warning
+  if (MSVC)
+    add_compile_options(/wd4996)
+  else()
     add_compile_options(-Wno-deprecated-declarations)
+  endif()
 endif()
 
 # Add link time optimization (if possible) in release mode
