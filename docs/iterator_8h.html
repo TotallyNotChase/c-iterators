@@ -223,9 +223,7 @@ A <a class="el" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875" title="Co
 <div class="line">    }                                                                                                                  \</div>
 <div class="line">    Iterable(ElmntType) Name(IterType x)                                                                               \</div>
 <div class="line">    {                                                                                                                  \</div>
-<div class="line">        Maybe(ElmntType) (*<span class="keyword">const</span> next_)(IterType <span class="keyword">self</span>) = (next_f);                                                     \</div>
-<div class="line">        (void)next_;                                                                                                   \</div>
-<div class="line">        static <a class="code" href="iterator_8h.html#a6c3a22862dc6db425dd4389987c0dbaf">Iterator</a>(ElmntType) <span class="keyword">const</span> tc = {.next = (<a class="code" href="maybe_8h.html#af47a0e4269e370939835ecc0cf6c7875">Maybe</a>(ElmntType)(*const)(<span class="keywordtype">void</span>*))(next_f)};                     \</div>
+<div class="line">        static <a class="code" href="iterator_8h.html#a6c3a22862dc6db425dd4389987c0dbaf">Iterator</a>(ElmntType) <span class="keyword">const</span> tc = {.next = (CONCAT(next_f, __))};                                          \</div>
 <div class="line">        return (<a class="code" href="iterator_8h.html#a78f1cf949c0e970b2105124f691f5c2a">Iterable</a>(ElmntType)){.tc = &amp;tc, .self = x};                                                            \</div>
 <div class="line">    }</div>
 </div><!-- fragment -->
