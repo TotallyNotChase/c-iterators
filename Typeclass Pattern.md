@@ -1,7 +1,7 @@
 # The Typeclass Pattern
 This document aims to describe the typeclass (or trait, or interface) based polymorphism pattern used in this demonstration.
 
-*Note: An extended and updated version of this document can be found at [typeclass-interface-pattern](https://github.com/TotallyNotChase/typeclass-interface-pattern).*
+**Note**: The information in this document is outdated. An extended version of this document can be found at [typeclass-interface-pattern](https://github.com/TotallyNotChase/typeclass-interface-pattern).
 
 # Goals
 Alongside describing the core parts of this pattern, this document will also describe how to **combine multiple typeclass constraints into one constraint**. As in, how you can have a type that is required to implement multiple typeclasses.
@@ -47,7 +47,7 @@ This macro is the real heavy lifter when it comes to type safety.
 It takes in some information about the type you're implementing a typeclass for, and the exact function implementations that will be used for that type, and defines a function which does the following-
 * Takes in an argument of the type the implementation is for.
 * Type checks the function implementations given.
-  
+
   This is done by storing the given function implementations into function pointers of an exact and expected type.
 * Initializes the typeclass struct to store these function pointers, with static storage duration.
 * Creates and returns the typeclass instance, which stores a pointer to the aforementioned typeclass struct, and the function argument into the `self` member.
